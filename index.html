@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Monitor de Compliance Empresarial</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pri:#1a3a5c;--sec:#2196f3;--verde:#2e7d32;--rojo:#c62828;--naranja:#e65100;--amarillo:#f9a825;--bg:#f0f4f8;--card:#fff;--texto:#1a1a2e;--muted:#6b7280;--borde:#dde3ea}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--texto);padding-top:108px;line-height:1.6}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--pri);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.nav-brand{color:#fff;font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.nav-brand span{font-size:.72rem;opacity:.6;font-weight:400}
+.nav-empresa{color:#a8c7e8;font-size:.8rem;font-weight:600}
+.lang-sel{display:flex;gap:.25rem}
+.lang-btn{background:rgba(255,255,255,.12);border:none;color:#cde;font-size:.72rem;font-weight:700;padding:.25rem .5rem;border-radius:4px;cursor:pointer}
+.lang-btn.active{background:#2196f3;color:#fff}
+.nav-tabs{display:flex;overflow-x:auto;padding:.3rem .8rem;gap:.15rem;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.tab-btn{color:#a8c7e8;font-size:.74rem;font-weight:600;padding:.38rem .7rem;border-radius:5px;border:none;background:transparent;cursor:pointer;white-space:nowrap;transition:background .15s}
+.tab-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab-btn.active{background:#2196f3;color:#fff}
+header{background:linear-gradient(135deg,var(--pri) 0%,#0d2137 100%);color:#fff;padding:1.8rem 1rem 1.3rem;text-align:center}
+header h1{font-size:1.5rem;margin-bottom:.25rem}
+header p{opacity:.75;font-size:.88rem}
+.wrap{max-width:900px;margin:0 auto;padding:1.4rem .9rem}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border-radius:10px;padding:1.2rem;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1rem;border-top:3px solid var(--pri)}
+.card h2{color:var(--pri);font-size:1.05rem;margin-bottom:.8rem}
+.card h3{color:var(--pri);font-size:.9rem;margin:.8rem 0 .5rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1rem}
+@media(max-width:560px){.grid4{grid-template-columns:repeat(2,1fr)}}
+.eje{text-align:center;padding:.7rem .4rem;border-radius:8px;border-left:3px solid}
+.eje.verde{border-color:var(--verde);background:#e8f5e9}.eje.naranja{border-color:var(--naranja);background:#fff3e0}.eje.rojo{border-color:var(--rojo);background:#fdecea}
+.eje-num{font-size:1.25rem;font-weight:700}.eje-name{font-size:.72rem;color:var(--muted);font-weight:600}
+.eje.verde .eje-num{color:var(--verde)}.eje.naranja .eje-num{color:var(--naranja)}.eje.rojo .eje-num{color:var(--rojo)}
+.score-wrap{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;margin-bottom:1rem}
+.score-ring{position:relative;width:130px;height:130px;flex-shrink:0}
+.score-ring canvas{position:absolute;top:0;left:0}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-size:2rem;font-weight:800;line-height:1}
+.alerta{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .8rem;border-radius:7px;margin-bottom:.5rem;font-size:.84rem}
+.alerta.roja{background:#fdecea;border-left:3px solid var(--rojo);color:#7f1d1d}
+.alerta.naranja{background:#fff3e0;border-left:3px solid var(--naranja);color:#7c3a00}
+.alerta.verde{background:#e8f5e9;border-left:3px solid var(--verde);color:#1b5e20}
+.alerta-ico{flex-shrink:0;margin-top:.05rem}
+.check-item{display:flex;align-items:flex-start;gap:.7rem;padding:.65rem;border-radius:8px;margin-bottom:.45rem;background:#f8fafc}
+.check-badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700}
+.badge-ok{background:#e8f5e9;color:var(--verde)}.badge-prog{background:#fff3e0;color:var(--naranja)}.badge-pend{background:#fdecea;color:var(--rojo)}
+.check-label{font-size:.86rem;font-weight:600}.check-evidencia{font-size:.76rem;color:var(--muted);margin-top:.12rem}
+.pill{display:inline-block;font-size:.68rem;font-weight:700;padding:.12rem .42rem;border-radius:8px;margin-left:.35rem}
+.pill-ok{background:#e8f5e9;color:var(--verde)}.pill-prog{background:#fff3e0;color:var(--naranja)}.pill-pend{background:#fdecea;color:var(--rojo)}
+.pill-oblig{background:#fdecea;color:var(--rojo)}
+.prog-bar-wrap{margin:.3rem 0 .7rem}
+.prog-label{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:.22rem}
+.prog-track{background:#e0e7ef;border-radius:4px;height:7px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;transition:width .5s}
+.prog-fill.verde{background:var(--verde)}.prog-fill.naranja{background:var(--naranja)}.prog-fill.rojo{background:var(--rojo)}
+.madurez-bar{display:flex;gap:3px;height:11px;border-radius:5px;overflow:hidden;margin:.5rem 0}
+.mseg{flex:1;background:#e0e7ef}.mseg.on.inicial{background:var(--rojo)}.mseg.on.medio{background:var(--naranja)}.mseg.on.avanzado{background:var(--verde)}
+.riesgo-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .8rem;border-radius:8px;margin-bottom:.4rem;background:#f8fafc}
+.rdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.rdot.alto{background:var(--rojo)}.rdot.medio{background:var(--naranja)}.rdot.bajo{background:var(--verde)}
+.rarea{font-size:.85rem;font-weight:600;min-width:180px}.rdesc{font-size:.78rem;color:var(--muted);flex:1}
+.rpill{font-size:.68rem;font-weight:700;padding:.18rem .5rem;border-radius:7px}
+.rpill.alto{background:#fdecea;color:var(--rojo)}.rpill.medio{background:#fff3e0;color:var(--naranja)}.rpill.bajo{background:#e8f5e9;color:var(--verde)}
+.cap-item{padding:.75rem;background:#f8fafc;border-radius:8px;margin-bottom:.5rem}
+.cap-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.3rem;margin-bottom:.35rem}
+.cap-nombre{font-size:.85rem;font-weight:600}.cap-pct{font-size:.8rem;font-weight:700;color:var(--pri)}
+.dd-form{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem}
+.dd-input{flex:1;min-width:180px;font-family:inherit;font-size:.86rem;padding:.5rem .75rem;border:1px solid var(--borde);border-radius:6px;background:#fff}
+.dd-input:focus{outline:2px solid var(--sec);border-color:var(--sec)}
+.btn{background:var(--pri);color:#fff;border:none;padding:.5rem 1.1rem;border-radius:6px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:#0d2137}.btn.verde{background:var(--verde)}.btn.verde:hover{background:#1b5e20}
+.dd-res{padding:.8rem;border-radius:8px;margin-bottom:.7rem;font-size:.86rem}
+.dd-res.ok{background:#e8f5e9;border-left:4px solid var(--verde);color:#1b5e20}
+.dd-res.alerta{background:#fdecea;border-left:4px solid var(--rojo);color:#7f1d1d}
+.dd-res.loading{background:#e3f2fd;border-left:4px solid var(--sec);color:#0d47a1}
+.hist-row{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border-bottom:1px solid var(--borde);font-size:.8rem;flex-wrap:wrap}
+.hist-row:last-child{border-bottom:none}
+.rite-estado{display:flex;align-items:center;gap:.9rem;border-radius:8px;padding:.9rem 1rem;margin-bottom:.9rem}
+.rite-ico{font-size:1.8rem}
+.rite-paso{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--borde)}
+.rite-paso:last-child{border-bottom:none}
+.rite-num{width:22px;height:22px;border-radius:50%;background:var(--pri);color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.12rem}
+.int-ley{background:#f8fafc;border-radius:8px;padding:.8rem;margin-bottom:.5rem}
+.int-head{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem}
+.int-flag{font-size:1.2rem}.int-nombre{font-size:.88rem;font-weight:700;color:var(--pri);flex:1}
+.int-sub{font-size:.73rem;color:var(--muted)}
+.int-aplica{font-size:.68rem;font-weight:700;padding:.18rem .45rem;border-radius:4px}
+.int-aplica.si{background:#e8f5e9;color:var(--verde)}.int-aplica.no{background:#f5f5f5;color:#999}
+.int-desc{font-size:.8rem;color:#444;line-height:1.5}.int-art{font-size:.76rem;color:var(--muted);margin-top:.3rem}
+.leg-cat{margin-bottom:1.3rem}
+.leg-cat-titulo{font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:.35rem 0;border-bottom:2px solid var(--borde);margin-bottom:.6rem}
+.leg-norma{padding:.7rem;background:#f8fafc;border-radius:8px;margin-bottom:.4rem}
+.leg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.4rem;flex-wrap:wrap}
+.leg-titulo{font-size:.86rem;font-weight:700;color:var(--pri)}
+.leg-desc{font-size:.78rem;color:#444;margin-top:.25rem;line-height:1.5}
+.leg-link{font-size:.73rem;color:var(--sec);text-decoration:none;font-weight:600}
+.leg-link:hover{text-decoration:underline}
+.leg-pais{font-size:.68rem;font-weight:700;padding:.12rem .4rem;border-radius:4px;background:#e3f2fd;color:#0d47a1;flex-shrink:0}
+.leg-search{width:100%;max-width:380px;font-family:inherit;font-size:.86rem;padding:.5rem .85rem;border:1px solid var(--borde);border-radius:6px;margin-bottom:1.1rem}
+.leg-search:focus{outline:2px solid var(--sec);border-color:var(--sec)}
+.plan-item{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem;background:#f8fafc;border-radius:7px;margin-bottom:.4rem}
+.prio-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+.prio-alta{background:#fdecea;color:var(--rojo)}.prio-media{background:#fff3e0;color:var(--naranja)}.prio-baja{background:#e8f5e9;color:var(--verde)}
+.plan-label{font-size:.85rem;font-weight:600}.plan-meta{font-size:.76rem;color:var(--muted);margin-top:.12rem}
+.rep-row{display:flex;gap:.4rem;padding:.28rem 0;border-bottom:1px solid #f0f4f8;font-size:.83rem}
+.rep-row:last-child{border-bottom:none}
+.rep-row dt{font-weight:600;min-width:200px;color:var(--pri)}.rep-row dd{color:#444}
+.rep-sec{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--borde)}
+.rep-sec:last-child{border-bottom:none}
+.chart-wrap{position:relative;margin:.5rem 0}
+footer{text-align:center;padding:1.8rem;color:var(--muted);font-size:.76rem}
+a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
+@media print{nav,header{display:none}body{padding-top:0}.panel{display:block!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-top">
+    <div class="nav-brand">⚖️ Monitor de Compliance <span id="nav-v">v1.0</span></div>
+    <div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap">
+      <span class="nav-empresa" id="nav-nombre">—</span>
+      <div class="lang-sel">
+        <button class="lang-btn active" onclick="setLang('es')">🇦🇷 ES</button>
+        <button class="lang-btn" onclick="setLang('en')">🇺🇸 EN</button>
+        <button class="lang-btn" onclick="setLang('pt')">🇧🇷 PT</button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-tabs" id="nav-tabs">
+    <button class="tab-btn active" data-panel="dashboard">📊 Dashboard</button>
+    <button class="tab-btn" data-panel="ley27401">⚖️ Ley 27.401</button>
+    <button class="tab-btn" data-panel="riesgo">🗺️ Riesgo</button>
+    <button class="tab-btn" data-panel="capacitacion">📚 Capacitación</button>
+    <button class="tab-btn" data-panel="duediligence">🔍 Due Diligence</button>
+    <button class="tab-btn" data-panel="internacional">🌍 Internacional</button>
+    <button class="tab-btn" data-panel="rite">🏛️ RITE</button>
+    <button class="tab-btn" data-panel="mejoras">📈 Mejoras & Alertas</button>
+    <button class="tab-btn" data-panel="legislacion">📋 Legislación</button>
+    <button class="tab-btn" data-panel="reporte">📄 Reporte</button>
+  </div>
+</nav>
+
+<header>
+  <h1 id="h-titulo">Monitor de Compliance Empresarial</h1>
+  <p id="h-sub">Programa de Integridad · Ley 27.401 · Estándares Internacionales</p>
+</header>
+
+<!-- DASHBOARD -->
+<div class="panel active" id="panel-dashboard">
+  <div class="wrap">
+    <div class="card">
+      <h2 id="t-score">Score de Compliance</h2>
+      <div class="score-wrap">
+        <div class="score-ring">
+          <canvas id="ch-score" width="130" height="130"></canvas>
+          <div class="score-center"><div class="score-num" id="score-num">—</div><div style="font-size:.72rem;color:var(--muted)">/100</div></div>
+        </div>
+        <div style="flex:1;min-width:180px">
+          <div id="score-nivel" style="font-size:1.05rem;font-weight:700;margin-bottom:.35rem"></div>
+          <div id="score-desc" style="font-size:.83rem;color:var(--muted);margin-bottom:.6rem"></div>
+          <div id="score-sig" style="font-size:.8rem;color:#1565c0;background:#e3f2fd;padding:.45rem .65rem;border-radius:6px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid4" id="ejes-grid"></div>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0"><h2>Programa</h2><div class="chart-wrap" style="height:190px"><canvas id="ch-prog"></canvas></div></div>
+      <div class="card" style="margin-bottom:0"><h2>Capacitación</h2><div class="chart-wrap" style="height:190px"><canvas id="ch-cap-dash"></canvas></div></div>
+    </div><br>
+    <div class="card"><h2>Riesgo por área</h2><div class="chart-wrap" style="height:200px"><canvas id="ch-riesgo-dash"></canvas></div></div>
+    <div class="card"><h2 id="t-alertas">Alertas activas</h2><div id="alertas-cont"></div></div>
+    <div class="card"><h2 id="t-venc">Próximos vencimientos</h2><div id="venc-cont"></div></div>
+  </div>
+</div>
+
+<!-- LEY 27401 -->
+<div class="panel" id="panel-ley27401">
+  <div class="wrap">
+    <div class="card">
+      <h2>Nivel de madurez del Programa</h2>
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <div id="mad-label" style="font-size:1.2rem;font-weight:800"></div>
+        <div style="flex:1;min-width:180px">
+          <div class="madurez-bar" id="mad-bar"></div>
+          <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted)"><span>Inicial</span><span>Medio</span><span>Avanzado</span></div>
+        </div>
+      </div>
+      <div id="mad-desc" style="font-size:.83rem;color:var(--muted);margin-top:.5rem"></div>
+    </div>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0"><h2>Estado general</h2><div class="chart-wrap" style="height:190px"><canvas id="ch-27-estado"></canvas></div></div>
+      <div class="card" style="margin-bottom:0"><h2>Obligatorios</h2><div class="chart-wrap" style="height:190px"><canvas id="ch-27-oblig"></canvas></div></div>
+    </div><br>
+    <div class="card"><h2>Elementos obligatorios — Art. 23</h2><p style="font-size:.8rem;color:var(--muted);margin-bottom:.7rem">Requeridos para contratar con el Estado Nacional (Art. 24)</p><div id="check-oblig"></div></div>
+    <div class="card"><h2>Elementos opcionales — Fortalecen el Programa</h2><p style="font-size:.8rem;color:var(--muted);margin-bottom:.7rem">Elevan el nivel de madurez y reducen responsabilidad penal (Art. 9)</p><div id="check-opc"></div></div>
+    <div class="card"><h2>¿Qué falta para el siguiente nivel?</h2><div id="sig-nivel"></div></div>
+  </div>
+</div>
+
+<!-- RIESGO -->
+<div class="panel" id="panel-riesgo">
+  <div class="wrap">
+    <div class="card"><h2>Radar de riesgo</h2><div class="chart-wrap" style="height:260px"><canvas id="ch-radar"></canvas></div></div>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0"><h2>Distribución</h2><div class="chart-wrap" style="height:190px"><canvas id="ch-riesgo-dona"></canvas></div><div id="riesgo-ley"></div></div>
+      <div class="card" style="margin-bottom:0"><h2>Detalle por área</h2><div id="riesgo-detalle"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CAPACITACION -->
+<div class="panel" id="panel-capacitacion">
+  <div class="wrap">
+    <div class="card"><h2>Progreso por módulo</h2><div class="chart-wrap" style="height:230px"><canvas id="ch-cap-barras"></canvas></div></div>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0"><h2>Radar de completitud</h2><div class="chart-wrap" style="height:200px"><canvas id="ch-cap-radar"></canvas></div></div>
+      <div class="card" style="margin-bottom:0"><h2>Módulos</h2><div id="cap-lista"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DUE DILIGENCE -->
+<div class="panel" id="panel-duediligence">
+  <div class="wrap">
+    <div class="card">
+      <h2>🔍 Verificador de CUIT — Lista OCDE</h2>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:.8rem">Verificá si un proveedor tiene antecedentes en casos internacionales de corrupción. Powered by <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a>.</p>
+      <div class="dd-form">
+        <input class="dd-input" id="dd-input" placeholder="Ej: 30-54667581-3 (Siemens)">
+        <button class="btn" onclick="verificarCuit()">Verificar →</button>
+      </div>
+      <div id="dd-res"></div>
+      <p style="font-size:.73rem;color:var(--muted)">Ejemplos: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)</p>
+    </div>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0"><h2>Resumen verificaciones</h2><div class="chart-wrap" style="height:180px"><canvas id="ch-dd"></canvas></div></div>
+      <div class="card" style="margin-bottom:0"><h2>Historial</h2><div id="dd-hist"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INTERNACIONAL -->
+<div class="panel" id="panel-internacional">
+  <div class="wrap">
+    <div class="card"><h2>Exposición internacional</h2><div id="int-exp"></div></div>
+    <div class="card"><h2>Marco legal aplicable</h2><div id="int-leyes"></div></div>
+    <div class="card">
+      <h2>Monitor MEACI</h2>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:.7rem">31 casos de resoluciones multijurisdiccionales (MJR) OCDE 2008-2026 con presencia en Argentina.</p>
+      <a href="https://meaci-production.up.railway.app" target="_blank" class="btn" style="display:inline-block;padding:.55rem 1.1rem;text-decoration:none">🔍 Abrir MEACI →</a>
+    </div>
+  </div>
+</div>
+
+<!-- RITE -->
+<div class="panel" id="panel-rite">
+  <div class="wrap">
+    <div class="card">
+      <h2>🏛️ Registro RITE — Oficina Anticorrupción</h2>
+      <p style="font-size:.85rem;margin-bottom:.9rem">Plataforma oficial de la OA para desarrollar y registrar Programas de Integridad. Voluntario, gratuito y clave para contratar con el Estado.</p>
+      <div id="rite-estado-box"></div>
+    </div>
+    <div class="card">
+      <h2>¿Por qué registrarse?</h2>
+      <div class="alerta verde"><span class="alerta-ico">✅</span><span>Acredita el Programa ante el Estado para licitaciones (Art. 24 Ley 27.401)</span></div>
+      <div class="alerta verde"><span class="alerta-ico">✅</span><span>Reduce responsabilidad penal en investigaciones (Art. 9)</span></div>
+      <div class="alerta verde"><span class="alerta-ico">✅</span><span>Mejora reputación ante clientes, socios e inversores</span></div>
+      <div class="alerta verde"><span class="alerta-ico">✅</span><span>Facilita due diligence con otras empresas</span></div>
+      <div class="alerta verde"><span class="alerta-ico">✅</span><span>La UNODC destacó al RITE como referencia internacional en 2024</span></div>
+    </div>
+    <div class="card">
+      <h2>Módulos del RITE</h2>
+      <div class="int-ley"><div class="int-head"><span class="int-flag">📋</span><div><div class="int-nombre">Programa de Integridad</div><div class="int-sub">Módulo principal</div></div></div><div class="int-desc">Evalúa nivel de madurez (inicial/medio/avanzado) según Art. 23 Ley 27.401. Cuestionario diferenciado por tamaño de empresa.</div></div>
+      <div class="int-ley"><div class="int-head"><span class="int-flag">🔍</span><div><div class="int-nombre">Debida Diligencia</div><div class="int-sub">Confidencial</div></div></div><div class="int-desc">Antecedentes judiciales, acciones de remediación y beneficiarios finales.</div></div>
+      <div class="int-ley"><div class="int-head"><span class="int-flag">🔒</span><div><div class="int-nombre">Datos Personales</div><div class="int-sub">Nuevo 2024</div></div></div><div class="int-desc">Estado de políticas de privacidad y estrategias de protección de datos.</div></div>
+    </div>
+    <div class="card">
+      <h2>Cómo registrarse</h2>
+      <div class="rite-paso"><div class="rite-num">1</div><div style="font-size:.85rem">Ingresá a <a href="https://www.rite.gob.ar" target="_blank"><strong>rite.gob.ar</strong></a> y creá cuenta con el CUIT de la empresa</div></div>
+      <div class="rite-paso"><div class="rite-num">2</div><div style="font-size:.85rem">Completá el cuestionario inicial para clasificar el tamaño (Micro/Pequeña, Mediana o Grande)</div></div>
+      <div class="rite-paso"><div class="rite-num">3</div><div style="font-size:.85rem">Respondé los módulos: Programa de Integridad, Debida Diligencia y Datos Personales</div></div>
+      <div class="rite-paso"><div class="rite-num">4</div><div style="font-size:.85rem">Obtené tu certificación de nivel y la constancia de registro</div></div>
+      <div class="rite-paso"><div class="rite-num">5</div><div style="font-size:.85rem">Actualizá anualmente para mantener vigente la acreditación</div></div>
+      <div style="margin-top:.9rem;display:flex;gap:.5rem;flex-wrap:wrap">
+        <a href="https://www.rite.gob.ar" target="_blank" class="btn" style="display:inline-block;padding:.55rem 1.1rem;text-decoration:none">🏛️ Ir al RITE →</a>
+        <a href="https://www.rite.gob.ar/empresas" target="_blank" class="btn" style="display:inline-block;padding:.55rem 1.1rem;text-decoration:none;background:#455a64">Ver empresas registradas →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEJORAS & ALERTAS -->
+<div class="panel" id="panel-mejoras">
+  <div class="wrap">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <h2>🔴 Alertas activas</h2>
+        <div id="mej-alertas"></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h2>📈 Evolución del score</h2>
+        <div class="chart-wrap" style="height:190px"><canvas id="ch-evol"></canvas></div>
+      </div>
+    </div><br>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <h2>🎯 Brechas vs estándar OA</h2>
+        <div class="chart-wrap" style="height:220px"><canvas id="ch-brechas"></canvas></div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem;font-size:.74rem">
+          <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--pri);border-radius:2px;display:inline-block"></span>Actual</span>
+          <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--verde);border-radius:2px;display:inline-block"></span>Mínimo OA</span>
+          <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--naranja);border-radius:2px;display:inline-block"></span>Nivel avanzado</span>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h2>📋 Plan de mejora priorizado</h2>
+        <div id="plan-mejora"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGISLACION -->
+<div class="panel" id="panel-legislacion">
+  <div class="wrap">
+    <input class="leg-search" id="leg-search" placeholder="🔍 Buscar norma, artículo o tema..." oninput="filtrarLeg()">
+    <div id="leg-cont"></div>
+  </div>
+</div>
+
+<!-- REPORTE -->
+<div class="panel" id="panel-reporte">
+  <div class="wrap">
+    <div class="card">
+      <h2>📄 Reporte Ejecutivo de Compliance</h2>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:.9rem">Generado automáticamente. Apto para presentar ante la Oficina Anticorrupción, directorio o auditores externos.</p>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">1. Datos de la organización</h3><dl id="rep-empresa"></dl></div>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">2. Estado del Programa de Integridad</h3><dl id="rep-programa"></dl></div>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">3. Score de compliance</h3><dl id="rep-score"></dl></div>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">4. Elementos pendientes</h3><div id="rep-pend"></div></div>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">5. Capacitación</h3><dl id="rep-cap"></dl></div>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">6. Registro RITE</h3><dl id="rep-rite"></dl></div>
+      <div class="rep-sec"><h3 style="color:var(--pri);margin-bottom:.6rem">7. Plan de mejora</h3><div id="rep-plan"></div></div>
+      <div style="background:#f0f4f8;border-radius:8px;padding:.8rem;font-size:.76rem;color:var(--muted);margin-top:.7rem">
+        Reporte generado por el Monitor de Compliance Empresarial. No reemplaza la evaluación profesional de un abogado o compliance officer.
+        Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Ecosistema Transparencia</a>
+      </div>
+      <button class="btn verde" onclick="window.print()" style="margin-top:.8rem">🖨️ Imprimir / Guardar PDF</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Monitor de Compliance Empresarial · Ley 27.401 · Estándares Internacionales ·
+  Ph.D. Vicente H. Monteverde ·
+  <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Mapa Transparencia</a> ·
+  <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a>
+</footer>
+
+<script src="config.js"></script>
+<script>
+// ── i18n ───────────────────────────────────────────────────────────────────
+const T={es:{dashboard:'Dashboard',ley27401:'Ley 27.401',riesgo:'Riesgo',capacitacion:'Capacitación',duediligence:'Due Diligence',internacional:'Internacional',rite:'RITE',mejoras:'Mejoras & Alertas',legislacion:'Legislación',reporte:'Reporte',completo:'Completo',en_progreso:'En progreso',pendiente:'Pendiente',alto:'ALTO',medio:'MEDIO',bajo:'BAJO',h_titulo:'Monitor de Compliance Empresarial',h_sub:'Programa de Integridad · Ley 27.401 · Estándares Internacionales'},en:{dashboard:'Dashboard',ley27401:'Law 27.401',riesgo:'Risk Map',capacitacion:'Training',duediligence:'Due Diligence',internacional:'International',rite:'RITE',mejoras:'Improvements',legislacion:'Legislation',reporte:'Report',completo:'Complete',en_progreso:'In progress',pendiente:'Pending',alto:'HIGH',medio:'MEDIUM',bajo:'LOW',h_titulo:'Corporate Compliance Monitor',h_sub:'Integrity Program · Law 27.401 · International Standards'},pt:{dashboard:'Dashboard',ley27401:'Lei 27.401',riesgo:'Mapa de Risco',capacitacion:'Treinamento',duediligence:'Due Diligence',internacional:'Internacional',rite:'RITE',mejoras:'Melhorias',legislacion:'Legislação',reporte:'Relatório',completo:'Completo',en_progreso:'Em andamento',pendiente:'Pendente',alto:'ALTO',medio:'MÉDIO',bajo:'BAIXO',h_titulo:'Monitor de Compliance Empresarial',h_sub:'Programa de Integridade · Lei 27.401 · Padrões Internacionais'}};
+let lang='es';
+const t=k=>T[lang][k]||k;
+function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');document.getElementById('h-titulo').textContent=t('h_titulo');document.getElementById('h-sub').textContent=t('h_sub');renderAll();}
+
+// ── Nav ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+    renderPanel(btn.dataset.panel);
+  });
+});
+
+// ── Score ─────────────────────────────────────────────────────────────────
+function calcScore(){
+  const pi=CONFIG.programa_integridad;
+  const ob=pi.elementos_obligatorios,op=pi.elementos_opcionales,cap=CONFIG.capacitaciones;
+  const ok_ob=ob.filter(e=>e.estado==='completo').length,prog_ob=ob.filter(e=>e.estado==='en_progreso').length;
+  const p_ob=Math.round((ok_ob*30+prog_ob*10)/(ob.length*30)*30);
+  const ok_op=op.filter(e=>e.estado==='completo').length,prog_op=op.filter(e=>e.estado==='en_progreso').length;
+  const p_op=Math.round((ok_op*10+prog_op*3)/(op.length*10)*10);
+  const avg=cap.reduce((a,c)=>a+c.completado,0)/cap.length;
+  const p_cap=Math.round(avg/100*25);
+  const p_dd=Math.min(20,CONFIG.cuits_verificados.length*4);
+  const p_ri=CONFIG.mapa_riesgo.length>=5?15:Math.round(CONFIG.mapa_riesgo.length/8*15);
+  return{total:Math.min(100,p_ob+p_op+p_cap+p_dd+p_ri),programa:p_ob+p_op,capacitacion:p_cap,due_diligence:p_dd,riesgo:p_ri,ok_ob,prog_ob,ok_op,prog_op,avg_cap:Math.round(avg)};
+}
+const scColor=s=>s>=75?'#2e7d32':s>=45?'#e65100':'#c62828';
+
+// ── Charts ────────────────────────────────────────────────────────────────
+const charts={};
+const dc=()=>matchMedia('(prefers-color-scheme: dark)').matches;
+function destroyC(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function gc2(){return dc()?'#9c9a92':'#888780';}
+function gl(){return dc()?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';}
+
+function mkDona(id,data,labels,colors,cutout='65%'){
+  destroyC(id);
+  const ctx=document.getElementById(id);if(!ctx)return;
+  charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0}]},options:{cutout,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},animation:{duration:700}}});
+}
+function mkBar(id,labels,data,colors,horizontal=false,maxVal=null){
+  destroyC(id);
+  const ctx=document.getElementById(id);if(!ctx)return;
+  const opts={scales:{},plugins:{legend:{display:false}},animation:{duration:600}};
+  if(horizontal){
+    opts.indexAxis='y';
+    opts.scales.x={display:maxVal?true:false,max:maxVal||undefined,ticks:{callback:v=>maxVal?v+'%':v,font:{size:9}},grid:{color:gl()}};
+    opts.scales.y={ticks:{font:{size:9},color:gc2()},grid:{display:false}};
+  } else {
+    opts.scales.y={max:maxVal||undefined,ticks:{callback:v=>maxVal?v+'%':v,font:{size:9}},grid:{color:gl()}};
+    opts.scales.x={ticks:{font:{size:9},color:gc2()},grid:{display:false}};
+  }
+  charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4,borderWidth:0}]},options:opts});
+}
+function mkRadar(id,labels,datasets){
+  destroyC(id);
+  const ctx=document.getElementById(id);if(!ctx)return;
+  charts[id]=new Chart(ctx,{type:'radar',data:{labels,datasets},options:{scales:{r:{min:0,ticks:{font:{size:8}},pointLabels:{font:{size:9},color:gc2()}}},plugins:{legend:{display:false}},animation:{duration:600}}});
+}
+function mkLine(id,labels,data){
+  destroyC(id);
+  const ctx=document.getElementById(id);if(!ctx)return;
+  charts[id]=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Score',data,borderColor:'#1a3a5c',backgroundColor:'rgba(26,58,92,.08)',borderWidth:2,fill:true,tension:.4,pointBackgroundColor:'#1a3a5c',pointRadius:4}]},options:{scales:{y:{min:0,max:100,ticks:{font:{size:9}},grid:{color:gl()}},x:{ticks:{font:{size:9},color:gc2()},grid:{display:false}}},plugins:{legend:{display:false}},animation:{duration:700}}});
+}
+
+// ── Renders ───────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const sc=calcScore();
+  // score ring
+  destroyC('ch-score');
+  const ctx=document.getElementById('ch-score');
+  if(ctx){const c=scColor(sc.total);charts['ch-score']=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[sc.total,100-sc.total],backgroundColor:[c,'#e0e7ef'],borderWidth:0}]},options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:800}}});}
+  document.getElementById('score-num').textContent=sc.total;
+  document.getElementById('score-num').style.color=scColor(sc.total);
+  const niv=sc.total>=75?'Nivel Avanzado':sc.total>=45?'Nivel Medio':'Nivel Inicial';
+  document.getElementById('score-nivel').innerHTML=`<span style="color:${scColor(sc.total)}">${niv}</span>`;
+  document.getElementById('score-desc').textContent=sc.total>=75?'Programa robusto y bien documentado':sc.total>=45?'Programa en desarrollo con avances significativos':'Programa en etapa inicial';
+  document.getElementById('score-sig').textContent=sc.total>=75?'✅ Nivel máximo alcanzado':sc.total>=45?'Para Avanzado: completar elementos pendientes y superar 80% en capacitaciones':'Para Medio: completar los 3 obligatorios del Art. 23 y superar 50% en capacitaciones';
+  // ejes
+  const ejes=[{l:'Programa',v:sc.programa,m:40},{l:'Capacitación',v:sc.capacitacion,m:25},{l:'Due Diligence',v:sc.due_diligence,m:20},{l:'Riesgo',v:sc.riesgo,m:15}];
+  document.getElementById('ejes-grid').innerHTML=ejes.map(e=>{const p=Math.round(e.v/e.m*100),c=p>=75?'verde':p>=45?'naranja':'rojo';return`<div class="eje ${c}"><div class="eje-num">${e.v}/${e.m}</div><div class="eje-name">${e.l}</div></div>`;}).join('');
+  // charts
+  mkDona('ch-prog',
+    [sc.ok_ob,sc.prog_ob,sc.ok_op,CONFIG.programa_integridad.elementos_opcionales.length-sc.ok_op-CONFIG.programa_integridad.elementos_opcionales.filter(e=>e.estado==='en_progreso').length],
+    ['Oblig. OK','En progreso','Opc. OK','Pendientes'],
+    ['#2e7d32','#e65100','#66bb6a','#e0e7ef'],'60%');
+  mkDona('ch-cap-dash',CONFIG.capacitaciones.map(c=>c.completado),CONFIG.capacitaciones.map(c=>c.modulo.substring(0,16)),['#1a3a5c','#2196f3','#2e7d32','#e65100','#c62828','#7b1fa2'],'60%');
+  const mr=CONFIG.mapa_riesgo;
+  mkBar('ch-riesgo-dash',mr.map(r=>r.area.length>16?r.area.substring(0,16)+'…':r.area),mr.map(r=>r.riesgo==='alto'?3:r.riesgo==='medio'?2:1),mr.map(r=>r.riesgo==='alto'?'#c62828':r.riesgo==='medio'?'#e65100':'#2e7d32'),true,3.5);
+  // alertas
+  const al=[];
+  const ob_inc=CONFIG.programa_integridad.elementos_obligatorios.filter(e=>e.estado!=='completo');
+  if(ob_inc.length) al.push({t:'roja',i:'🔴',txt:`${ob_inc.length} elemento(s) obligatorio(s) del Art. 23 incompletos`});
+  const cap_at=CONFIG.capacitaciones.filter(c=>c.obligatorio&&c.completado<60);
+  if(cap_at.length) al.push({t:'naranja',i:'⚠️',txt:`${cap_at.length} módulo(s) obligatorio(s) con menos del 60% completitud`});
+  const dd_al=CONFIG.cuits_verificados.filter(c=>c.resultado==='alerta_ocde');
+  if(dd_al.length) al.push({t:'roja',i:'🔴',txt:`${dd_al.length} proveedor(es) con alerta OCDE en historial`});
+  if(!CONFIG.programa_integridad.registrado_rite) al.push({t:'naranja',i:'⚠️',txt:'No registrada en RITE — recomendado para contratar con el Estado'});
+  if(!al.length) al.push({t:'verde',i:'✅',txt:'Sin alertas críticas activas'});
+  document.getElementById('alertas-cont').innerHTML=al.map(a=>`<div class="alerta ${a.t}"><span class="alerta-ico">${a.i}</span><span>${a.txt}</span></div>`).join('');
+  // vencimientos
+  const hoy=new Date();
+  const prox=CONFIG.capacitaciones.filter(c=>c.fecha_limite).map(c=>({...c,dias:Math.round((new Date(c.fecha_limite)-hoy)/86400000)})).filter(c=>c.dias>0&&c.dias<120).sort((a,b)=>a.dias-b.dias);
+  document.getElementById('venc-cont').innerHTML=prox.length?prox.map(c=>`<div class="alerta ${c.dias<30?'roja':c.dias<60?'naranja':'verde'}"><span class="alerta-ico">${c.dias<30?'🔴':c.dias<60?'⚠️':'📅'}</span><span><strong>${c.modulo}</strong> — vence ${c.fecha_limite} (${c.dias} días) · ${c.destinatarios}</span></div>`).join(''):'<div class="alerta verde"><span class="alerta-ico">✅</span><span>Sin vencimientos en los próximos 120 días</span></div>';
+}
+
+function renderLey27401(){
+  const pi=CONFIG.programa_integridad;
+  const niv=pi.nivel_madurez;
+  const cols={inicial:'#c62828',medio:'#e65100',avanzado:'#2e7d32'};
+  const labs={inicial:'Inicial',medio:'Medio',avanzado:'Avanzado'};
+  document.getElementById('mad-label').textContent=labs[niv];
+  document.getElementById('mad-label').style.color=cols[niv];
+  document.getElementById('mad-bar').innerHTML=['inicial','medio','avanzado'].map(s=>`<div class="mseg ${s===niv?'on '+niv:''}"></div>`).join('');
+  document.getElementById('mad-desc').textContent={inicial:'Cuenta con los elementos mínimos. Debe completar los 3 obligatorios para contratar con el Estado.',medio:'Programa en desarrollo. Completó los obligatorios y avanzó en opcionales.',avanzado:'Programa robusto y documentado. Máxima protección (Art. 9 Ley 27.401).'}[niv];
+  const todos=[...pi.elementos_obligatorios,...pi.elementos_opcionales];
+  const ok=todos.filter(e=>e.estado==='completo').length,prog=todos.filter(e=>e.estado==='en_progreso').length,pend=todos.filter(e=>e.estado==='pendiente').length;
+  mkDona('ch-27-estado',[ok,prog,pend],['Completo','En progreso','Pendiente'],['#2e7d32','#e65100','#c62828']);
+  const ob=pi.elementos_obligatorios;
+  mkBar('ch-27-oblig',ob.map(e=>e.label.substring(0,18)+'…'),ob.map(e=>e.estado==='completo'?100:e.estado==='en_progreso'?50:10),ob.map(e=>e.estado==='completo'?'#2e7d32':e.estado==='en_progreso'?'#e65100':'#c62828'),false,100);
+  function renderChk(lista,id){
+    document.getElementById(id).innerHTML=lista.map(e=>{
+      const ico=e.estado==='completo'?'✓':e.estado==='en_progreso'?'~':'!';
+      const bc=e.estado==='completo'?'badge-ok':e.estado==='en_progreso'?'badge-prog':'badge-pend';
+      const pc=e.estado==='completo'?'pill-ok':e.estado==='en_progreso'?'pill-prog':'pill-pend';
+      const pt=e.estado==='completo'?t('completo'):e.estado==='en_progreso'?t('en_progreso'):t('pendiente');
+      return`<div class="check-item"><div class="check-badge ${bc}">${ico}</div><div><div class="check-label">${e.label}<span class="pill ${pc}">${pt}</span></div>${e.evidencia?`<div class="check-evidencia">📎 ${e.evidencia}</div>`:''}</div></div>`;
+    }).join('');
+  }
+  renderChk(pi.elementos_obligatorios,'check-oblig');
+  renderChk(pi.elementos_opcionales,'check-opc');
+  const pend_list=todos.filter(e=>e.estado!=='completo');
+  document.getElementById('sig-nivel').innerHTML=pend_list.length?pend_list.map(e=>`<div class="alerta naranja"><span class="alerta-ico">📌</span><span>${e.label}</span></div>`).join(''):'<div class="alerta verde"><span class="alerta-ico">✅</span><span>Todos los elementos completados</span></div>';
+}
+
+function renderRiesgo(){
+  const mr=CONFIG.mapa_riesgo;
+  mkRadar('ch-radar',mr.map(r=>r.area.length>12?r.area.substring(0,12)+'…':r.area),[{label:'Riesgo',data:mr.map(r=>r.riesgo==='alto'?3:r.riesgo==='medio'?2:1),backgroundColor:'rgba(198,40,40,.15)',borderColor:'#c62828',pointBackgroundColor:'#c62828',borderWidth:1.5}]);
+  charts['ch-radar']&&(charts['ch-radar'].options.scales.r.max=3,charts['ch-radar'].options.scales.r.ticks={stepSize:1,callback:v=>v===3?'A':v===2?'M':v===1?'B':'',font:{size:8}},charts['ch-radar'].update());
+  const alto=mr.filter(r=>r.riesgo==='alto').length,medio=mr.filter(r=>r.riesgo==='medio').length,bajo=mr.filter(r=>r.riesgo==='bajo').length;
+  mkDona('ch-riesgo-dona',[alto,medio,bajo],['Alto','Medio','Bajo'],['#c62828','#e65100','#2e7d32']);
+  document.getElementById('riesgo-ley').innerHTML=`<div style="display:flex;flex-direction:column;gap:.3rem;margin-top:.5rem;font-size:.8rem">
+    <span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#c62828;display:inline-block"></span>Alto: ${alto} área(s)</span>
+    <span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#e65100;display:inline-block"></span>Medio: ${medio} área(s)</span>
+    <span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#2e7d32;display:inline-block"></span>Bajo: ${bajo} área(s)</span></div>`;
+  document.getElementById('riesgo-detalle').innerHTML=mr.map(r=>`<div class="riesgo-item"><div class="rdot ${r.riesgo}"></div><div class="rarea">${r.area}</div><div class="rdesc">${r.descripcion}</div><div class="rpill ${r.riesgo}">${t(r.riesgo)}</div></div>`).join('');
+}
+
+function renderCapacitacion(){
+  const cap=CONFIG.capacitaciones;
+  mkBar('ch-cap-barras',cap.map(c=>c.modulo.length>20?c.modulo.substring(0,20)+'…':c.modulo),cap.map(c=>c.completado),cap.map(c=>c.completado>=80?'#2e7d32':c.completado>=50?'#e65100':'#c62828'),true,100);
+  mkRadar('ch-cap-radar',cap.map(c=>c.modulo.length>14?c.modulo.substring(0,14)+'…':c.modulo),[{label:'%',data:cap.map(c=>c.completado),backgroundColor:'rgba(26,58,92,.15)',borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',borderWidth:1.5}]);
+  charts['ch-cap-radar']&&(charts['ch-cap-radar'].options.scales.r.max=100,charts['ch-cap-radar'].options.scales.r.ticks={stepSize:25,callback:v=>v+'%',font:{size:8}},charts['ch-cap-radar'].update());
+  document.getElementById('cap-lista').innerHTML=cap.map(c=>{const cls=c.completado>=80?'verde':c.completado>=50?'naranja':'rojo';return`<div class="cap-item"><div class="cap-head"><div class="cap-nombre">${c.modulo}${c.obligatorio?'<span class="pill pill-oblig">Oblig.</span>':''}</div><div class="cap-pct">${c.completado}%</div></div><div class="prog-bar-wrap"><div class="prog-label"><span>${c.destinatarios}</span><span>${c.fecha_limite}</span></div><div class="prog-track"><div class="prog-fill ${cls}" style="width:${c.completado}%"></div></div></div></div>`;}).join('');
+}
+
+function renderDD(){
+  mkDona('ch-dd',[CONFIG.cuits_verificados.filter(c=>c.resultado==='sin_antecedentes').length,CONFIG.cuits_verificados.filter(c=>c.resultado==='alerta_ocde').length],['Sin antecedentes','Alerta OCDE'],['#2e7d32','#c62828']);
+  document.getElementById('dd-hist').innerHTML=`<div style="display:flex;font-size:.73rem;font-weight:700;color:var(--muted);padding:.35rem .6rem;background:#f0f4f8;border-radius:5px 5px 0 0"><span style="flex:2">Razón social</span><span style="flex:1">CUIT</span><span style="flex:1">Fecha</span><span style="flex:1">Resultado</span></div>`+CONFIG.cuits_verificados.map(v=>`<div class="hist-row"><span style="flex:2;font-weight:600">${v.razon_social}</span><span style="flex:1;font-family:monospace;font-size:.75rem">${v.cuit}</span><span style="flex:1;color:var(--muted);font-size:.76rem">${v.fecha}</span><span style="flex:1">${v.resultado==='sin_antecedentes'?'<span class="pill pill-ok">✓ OK</span>':'<span class="pill pill-pend">⚠ OCDE</span>'}</span></div>`).join('');
+}
+
+async function verificarCuit(){
+  const cuit=document.getElementById('dd-input').value.trim();
+  if(!cuit){return;}
+  const res=document.getElementById('dd-res');
+  res.innerHTML='<div class="dd-res loading">⏳ Consultando base OCDE-MEACI...</div>';
+  try{
+    const r=await fetch(`${CONFIG.meaci_api}?cuit=${cuit}`);
+    const d=await r.json();
+    if(d.sancionada_ocde){res.innerHTML=`<div class="dd-res alerta">🔴 <strong>ALERTA:</strong> ${cuit} → <strong>${d.empresa||'empresa sancionada'}</strong> — caso OCDE: ${d.caso||'—'} — <a href="${CONFIG.meaci_url}" target="_blank">Ver en MEACI →</a></div>`;}
+    else{res.innerHTML=`<div class="dd-res ok">✅ <strong>Sin antecedentes:</strong> CUIT ${cuit} no figura en base OCDE.</div>`;}
+  }catch(e){res.innerHTML=`<div class="dd-res ok">✅ Sin antecedentes detectados para ${cuit}. (Verificar conectividad MEACI)</div>`;}
+}
+
+function renderInternacional(){
+  const exp=CONFIG.exposicion_internacional;
+  const paises=[{nombre:'Estados Unidos',opera:exp.opera_en_usa,flag:'🇺🇸'},{nombre:'Reino Unido',opera:exp.opera_en_uk,flag:'🇬🇧'},{nombre:'Francia / UE',opera:exp.opera_en_ue,flag:'🇫🇷'},{nombre:'Brasil',opera:exp.opera_en_brasil,flag:'🇧🇷'}];
+  document.getElementById('int-exp').innerHTML=paises.map(p=>`<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem;border-bottom:1px solid var(--borde);font-size:.86rem"><span style="font-size:1.2rem">${p.flag}</span><span style="flex:1;font-weight:600">${p.nombre}</span><span class="int-aplica ${p.opera?'si':'no'}">${p.opera?'✓ Opera':'No aplica'}</span></div>`).join('')+`<div style="margin-top:.7rem;font-size:.8rem;color:var(--muted)">Leyes aplicables: ${exp.leyes_aplicables.join(' · ')}</div>`;
+  const leyes=[
+    {flag:'🇺🇸',nombre:'FCPA — Foreign Corrupt Practices Act',sub:'USA · 1977 · DOJ + SEC',aplica:exp.opera_en_usa,desc:'Prohíbe el soborno a funcionarios públicos extranjeros. Aplicación extraterritorial. Voluntary self-disclosure reduce penas hasta 50%.',arts:'15 U.S.C. §§ 78dd-1, -2, -3 · § 78m Books & Records · USSG Chapter 8'},
+    {flag:'🇬🇧',nombre:'UK Bribery Act 2010',sub:'Reino Unido · SFO · Strict liability',aplica:exp.opera_en_uk,desc:'La más estricta del mundo. Sección 7: strict liability por falla corporativa en prevenir soborno. Compliance efectivo = defensa completa.',arts:'Sec. 1 Soborno activo · Sec. 6 Funcionario extranjero · Sec. 7 Falla corporativa'},
+    {flag:'🇫🇷',nombre:'Loi Sapin II',sub:'Francia · 2016 · AFA · CJIP',aplica:exp.opera_en_ue,desc:'Obliga a empresas +500 empleados. Crea el CJIP y la AFA como supervisor de compliance por 3 años post-CJIP.',arts:'Art. 41-1-2 CPP — CJIP · AFA supervisor'},
+    {flag:'🇧🇷',nombre:'Lei Anticorrupção 12.846/2013',sub:'Brasil · Responsabilidad objetiva',aplica:exp.opera_en_brasil,desc:'Responsabilidad objetiva — no requiere probar culpa. Acordo de Leniência reduce multas y preserva contratos públicos.',arts:'Art. 1 Resp. objetiva · Art. 16 Acordo Leniência · Multas 0.1%-20%'},
+    {flag:'🇩🇪',nombre:'OWiG + LkSG',sub:'Alemania · Multas regulatorias',aplica:false,desc:'OWiG: multas por falla de supervisión (§30, §130). LkSG 2023: due diligence en cadena de suministro.',arts:'§30 OWiG · §130 OWiG · LkSG supply chain'},
+    {flag:'🇪🇸',nombre:'Código Penal Art. 31 bis',sub:'España · Responsabilidad penal empresarial',aplica:false,desc:'Compliance efectivo = eximente completo o atenuante. Circular FGE 1/2016 establece estándares del Ministerio Fiscal.',arts:'Art. 31 bis CP · Circular FGE 1/2016'},
+    {flag:'🌍',nombre:'Convención OCDE Antibribery 1997',sub:'46 partes · Base MJR',aplica:true,desc:'Primer instrumento vinculante. Base de los 31 casos MJR del MEACI.',arts:'Art. 1 · Art. 3 · Recomendación 2021 MJR'},
+    {flag:'🇪🇺',nombre:'Directiva UE 2019/1937 — Whistleblowers',sub:'Unión Europea · Canal de denuncias',aplica:exp.opera_en_ue,desc:'Obliga a empresas +50 empleados en la UE a implementar canales de denuncia y proteger denunciantes.',arts:'Art. 8 Canal interno · Art. 19 No represalias'},
+  ];
+  document.getElementById('int-leyes').innerHTML=leyes.map(l=>`<div class="int-ley"><div class="int-head"><span class="int-flag">${l.flag}</span><div style="flex:1"><div class="int-nombre">${l.nombre}</div><div class="int-sub">${l.sub}</div></div><span class="int-aplica ${l.aplica?'si':'no'}">${l.aplica?'✓ Aplica':'No aplica'}</span></div><div class="int-desc">${l.desc}</div><div class="int-art">📋 ${l.arts}</div></div>`).join('');
+}
+
+function renderRite(){
+  const reg=CONFIG.programa_integridad.registrado_rite;
+  document.getElementById('rite-estado-box').innerHTML=reg?`<div class="rite-estado" style="background:#e8f5e9"><span class="rite-ico">✅</span><div><strong>Empresa registrada en RITE</strong><br><span style="font-size:.82rem;color:#1b5e20">Nivel: ${CONFIG.programa_integridad.nivel_madurez} · <a href="${CONFIG.programa_integridad.url_rite}" target="_blank">Ver registro →</a></span></div></div>`:`<div class="rite-estado" style="background:#fff3e0"><span class="rite-ico">⚠️</span><div><strong>No registrada en RITE</strong><br><span style="font-size:.82rem;color:#7c3a00">Registrarse es recomendable para contratar con el Estado.</span></div></div>`;
+}
+
+function renderMejoras(){
+  // alertas
+  const al=[];
+  CONFIG.programa_integridad.elementos_obligatorios.filter(e=>e.estado!=='completo').forEach(e=>al.push({t:'roja',i:'🔴',txt:`Obligatorio incompleto: "${e.label}"`}));
+  CONFIG.capacitaciones.filter(c=>c.obligatorio&&c.completado<70).forEach(c=>{const dias=Math.round((new Date(c.fecha_limite)-new Date())/86400000);al.push({t:dias<30?'roja':'naranja',i:dias<30?'🔴':'⚠️',txt:`"${c.modulo}" al ${c.completado}% — vence ${c.fecha_limite} (${dias} días)`});});
+  CONFIG.cuits_verificados.filter(c=>c.resultado==='alerta_ocde').forEach(c=>al.push({t:'roja',i:'🔴',txt:`Proveedor con alerta OCDE: ${c.razon_social} (${c.cuit})`}));
+  CONFIG.programa_integridad.elementos_opcionales.filter(e=>e.estado==='pendiente').forEach(e=>al.push({t:'naranja',i:'⚠️',txt:`Opcional pendiente: "${e.label}"`}));
+  if(!al.length) al.push({t:'verde',i:'✅',txt:'Sin alertas activas — programa en buen estado'});
+  document.getElementById('mej-alertas').innerHTML=al.map(a=>`<div class="alerta ${a.t}"><span class="alerta-ico">${a.i}</span><span>${a.txt}</span></div>`).join('');
+  // evolución
+  const hs=CONFIG.historial_score;
+  mkLine('ch-evol',hs.map(h=>h.mes),hs.map(h=>h.score));
+  // brechas radar
+  destroyC('ch-brechas');
+  const ctx=document.getElementById('ch-brechas');if(ctx){
+    charts['ch-brechas']=new Chart(ctx,{type:'radar',
+      data:{labels:['Programa','Capacitación','Due Dilig.','Riesgo','Comunicación','Investigación'],
+        datasets:[
+          {label:'Actual',data:[68,65,60,100,20,30],backgroundColor:'rgba(26,58,92,.15)',borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',borderWidth:1.5},
+          {label:'Mínimo OA',data:[60,60,40,60,40,40],backgroundColor:'rgba(46,125,50,.07)',borderColor:'#2e7d32',borderDash:[4,3],pointBackgroundColor:'#2e7d32',borderWidth:1.2},
+          {label:'Avanzado',data:[100,100,100,100,100,100],backgroundColor:'rgba(230,81,0,.04)',borderColor:'#e65100',borderDash:[2,4],pointRadius:0,borderWidth:1}
+        ]},
+      options:{scales:{r:{min:0,max:100,ticks:{display:false},pointLabels:{font:{size:9},color:gc2()}}},plugins:{legend:{display:false}},animation:{duration:700}}});
+  }
+  // plan de mejora
+  const pm=CONFIG.plan_mejora;
+  document.getElementById('plan-mejora').innerHTML=pm.map((p,i)=>{
+    const pc=p.prioridad==='alta'?'prio-alta':p.prioridad==='media'?'prio-media':'prio-baja';
+    const ec=p.estado==='completo'?'pill-ok':p.estado==='en_progreso'?'pill-prog':'pill-pend';
+    const et=p.estado==='completo'?'Completo':p.estado==='en_progreso'?'En progreso':'Pendiente';
+    return`<div class="plan-item"><div class="prio-badge ${pc}">${i+1}</div><div><div class="plan-label">${p.accion}<span class="pill ${ec}">${et}</span></div><div class="plan-meta">👤 ${p.responsable} · 📅 ${p.vence}</div></div></div>`;
+  }).join('');
+}
+
+// ── Legislación ────────────────────────────────────────────────────────────
+const LEYES=[
+  {cat:'1. Ética y Transparencia',normas:[
+    {t:'Ley 25.188 — Ética en la Función Pública',p:'🇦🇷 AR',d:'Regula deberes, prohibiciones e incompatibilidades del funcionario público. Régimen de Declaraciones Juradas y obsequios.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/60847/norma.htm'},
+    {t:'Ley 26.857 — Declaraciones Juradas Públicas',p:'🇦🇷 AR',d:'Establece que las declaraciones patrimoniales de funcionarios son de acceso público en internet.',l:''},
+    {t:'Ley 27.275 — Acceso a la Información Pública',p:'🇦🇷 AR',d:'Garantiza el derecho de acceso a la información pública y crea la AAIP.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/265000-269999/265949/norma.htm'},
+  ]},
+  {cat:'2. Régimen Penal y Responsabilidad Corporativa',normas:[
+    {t:'Código Penal — Título XI: Delitos contra la Administración Pública',p:'🇦🇷 AR',d:'Tipifica cohecho, tráfico de influencias, malversación, negociaciones incompatibles, exacciones ilegales y enriquecimiento ilícito.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/15000-19999/16546/texact.htm'},
+    {t:'Ley 27.401 — Responsabilidad Penal de Personas Jurídicas',p:'🇦🇷 AR',d:'Responsabilidad penal corporativa por corrupción. Programa de Integridad obligatorio para contratar con el Estado (Art. 24). Atenuante/eximente penal (Art. 9).',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/300000-304999/304130/norma.htm'},
+    {t:'Ley 27.319 — Delitos Complejos',p:'🇦🇷 AR',d:'Herramientas especiales de investigación: agente revelador, encubierto, informante y entrega vigilada.',l:''},
+    {t:'Ley 27.304 — Ley del Arrepentido',p:'🇦🇷 AR',d:'Reduce pena a quien brinde información útil para esclarecer delitos complejos de corrupción.',l:''},
+  ]},
+  {cat:'3. Prevención del Lavado de Activos',normas:[
+    {t:'Ley 25.246 — Lavado de Activos / UIF',p:'🇦🇷 AR',d:'Crea la Unidad de Información Financiera (UIF). Define Sujetos Obligados a reportar operaciones sospechosas. Alineada con estándares GAFI.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/63230/norma.htm'},
+  ]},
+  {cat:'4. Estructura Institucional y Decretos',normas:[
+    {t:'Ley 25.233 Art. 13 — Creación de la Oficina Anticorrupción',p:'🇦🇷 AR',d:'Constituye formalmente la OA en el ámbito del Poder Ejecutivo Nacional.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/61214/norma.htm'},
+    {t:'Decreto 102/99 — Competencias de la OA',p:'🇦🇷 AR',d:'Define objeto, funciones de investigación preventiva y diseño de políticas de transparencia de la OA.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/61468/norma.htm'},
+    {t:'Decreto 202/2017 — Conflictos de Intereses en Contrataciones',p:'🇦🇷 AR',d:'Exige Declaración Jurada de Intereses de oferentes en licitaciones ante vinculaciones con el Presidente, Vice, Jefe de Gabinete o Ministros.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/270000-274999/273030/norma.htm'},
+  ]},
+  {cat:'5. Convenciones Internacionales (Jerarquía Supralegal)',normas:[
+    {t:'Ley 24.759 — CICC (OEA)',p:'🌍 OEA',d:'Ratificación de la Convención Interamericana contra la Corrupción — primer instrumento internacional en la materia.',l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/40000-44999/41344/norma.htm'},
+    {t:'Ley 26.097 — UNCAC (ONU)',p:'🌍 ONU',d:'Ratificación de la Convención de las Naciones Unidas contra la Corrupción — prevención, criminalización, recupero de activos.',l:''},
+    {t:'Ley 25.319 — Convención OCDE Antibribery',p:'🌍 OCDE',d:'Ratificación del instrumento OCDE que penaliza el cohecho de funcionarios extranjeros en transacciones comerciales internacionales.',l:''},
+  ]},
+  {cat:'6. Resoluciones de la Oficina Anticorrupción',normas:[
+    {t:'Resolución OA 13/2024',p:'🇦🇷 OA',d:'Lineamientos estratégicos de integridad y transparencia en el sector público con articulación federal.',l:'https://www.anticorrupcion.gob.ar'},
+    {t:'Resolución OA 12/2025',p:'🇦🇷 OA',d:'Pautas operativas de prevención de corrupción administrativa (Ley 25.188 y Decreto 102/99).',l:'https://www.anticorrupcion.gob.ar'},
+    {t:'Buscador de Resoluciones OA',p:'🇦🇷 OA',d:'Repositorio oficial de dictámenes sobre incompatibilidades de funcionarios del Poder Ejecutivo.',l:'https://www.anticorrupcion.gob.ar'},
+  ]},
+  {cat:'7. Normas Profesionales (FACPCE / CPCECABA)',normas:[
+    {t:'Resolución 635/2024 FACPCE — Lavado de Activos',p:'🇦🇷 FACPCE',d:'Reemplaza la Res. 420/2011. Adapta normas del Contador Público al enfoque por riesgos de la UIF y el GAFI. Alcanza auditores de estados contables y síndicos.',l:'https://www.facpce.org.ar'},
+    {t:'Resolución CD 902/2024 CPCECABA',p:'🇦🇷 CPCECABA',d:'Adaptación en CABA de la norma nacional. Establece procedimientos de due diligence en papeles de trabajo del auditor.',l:'https://www.consejo.org.ar'},
+    {t:'RT N° 53 / IT 23 CENCyA',p:'🇦🇷 FACPCE',d:'Encargos de aseguramiento. El IT 23 define cómo el auditor evalúa riesgos de fraude y control interno sobre salvaguarda de activos.',l:'https://www.facpce.org.ar'},
+  ]},
+  {cat:'8. Legislación Internacional Antibribery',normas:[
+    {t:'FCPA — Foreign Corrupt Practices Act',p:'🇺🇸 USA',d:'Prohíbe soborno a funcionarios extranjeros. Aplicación extraterritorial. Voluntary self-disclosure reduce penas hasta 50%. DOJ + SEC.',l:'https://www.justice.gov/criminal/fraud/fcpa'},
+    {t:'UK Bribery Act 2010',p:'🇬🇧 UK',d:'La más estricta del mundo. Sección 7: strict liability por falla corporativa. Compliance efectivo = defensa completa.',l:'https://www.legislation.gov.uk/ukpga/2010/23/contents'},
+    {t:'Loi Sapin II (2016-1691)',p:'🇫🇷 FR',d:'Obliga empresas +500 empleados. Crea CJIP y AFA como supervisor de compliance.',l:'https://www.legifrance.gouv.fr'},
+    {t:'Lei Anticorrupção 12.846/2013',p:'🇧🇷 BR',d:'Responsabilidad objetiva. Acordo de Leniência reduce multas y preserva contratos públicos.',l:'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12846.htm'},
+    {t:'OWiG + LkSG',p:'🇩🇪 DE',d:'OWiG: multas por falla de supervisión (§30, §130). LkSG 2023: due diligence en cadena de suministro.',l:'https://www.gesetze-im-internet.de/owig_1968/'},
+    {t:'Código Penal Art. 31 bis — España',p:'🇪🇸 ES',d:'Responsabilidad penal empresarial. Compliance efectivo = eximente completo. Circular FGE 1/2016.',l:'https://www.boe.es'},
+    {t:'Convención OCDE Antibribery 1997',p:'🌍 OCDE',d:'Primer instrumento vinculante. Base de los 31 casos MJR del MEACI.',l:'https://legalinstruments.oecd.org/en/instruments/OECD-LEGAL-0293'},
+    {t:'UNCAC — ONU contra la Corrupción',p:'🌍 ONU',d:'189 estados parte. Prevención, criminalización, recupero de activos y cooperación internacional.',l:'https://www.unodc.org/unodc/en/corruption/uncac.html'},
+    {t:'Directiva UE 2019/1937 — Whistleblowers',p:'🇪🇺 UE',d:'Empresas +50 empleados en la UE deben implementar canales de denuncia y proteger denunciantes.',l:'https://eur-lex.europa.eu'},
+    {t:'FATF / GAFI — 40 Recomendaciones',p:'🌍 GAFI',d:'Estándar global contra lavado. Rec. 3 y 6 aplican a corrupción. Argentina en lista gris 2023-2024.',l:'https://www.fatf-gafi.org'},
+  ]},
+];
+
+function renderLegislacion(f=''){
+  const fl=f.toLowerCase();
+  let html='';
+  LEYES.forEach(cat=>{
+    const nf=cat.normas.filter(n=>!fl||n.t.toLowerCase().includes(fl)||n.d.toLowerCase().includes(fl));
+    if(!nf.length)return;
+    html+=`<div class="leg-cat"><div class="leg-cat-titulo">${cat.cat}</div>`;
+    nf.forEach(n=>{html+=`<div class="leg-norma"><div class="leg-head"><div class="leg-titulo">${n.t}</div><span class="leg-pais">${n.p}</span></div><div class="leg-desc">${n.d}</div>${n.l?`<a class="leg-link" href="${n.l}" target="_blank">Ver texto oficial →</a>`:''}</div>`;});
+    html+='</div>';
+  });
+  document.getElementById('leg-cont').innerHTML=html||'<p style="color:var(--muted);padding:1rem">Sin resultados.</p>';
+}
+function filtrarLeg(){renderLegislacion(document.getElementById('leg-search').value);}
+
+function renderReporte(){
+  const sc=calcScore(),e=CONFIG.empresa,pi=CONFIG.programa_integridad;
+  const rows=(id,data)=>{document.getElementById(id).innerHTML=data.map(r=>`<div class="rep-row"><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('');};
+  rows('rep-empresa',[['Razón social',e.nombre],['CUIT',e.cuit],['Sector',e.sector],['Tamaño',e.tamanio],['Provincias',e.provincias.join(', ')],['Internacional',e.internacional?'Sí':'No'],['Responsable compliance',e.responsable_compliance],['Contacto',e.contacto],['Fecha',new Date().toLocaleDateString('es-AR')]]);
+  rows('rep-programa',[['Nivel de madurez',pi.nivel_madurez],['Inicio del programa',pi.fecha_inicio],['Última revisión',pi.ultima_revision],['Registrado en RITE',pi.registrado_rite?'Sí':'No'],['Obligatorios completos',`${pi.elementos_obligatorios.filter(e=>e.estado==='completo').length} / ${pi.elementos_obligatorios.length}`],['Opcionales completos',`${pi.elementos_opcionales.filter(e=>e.estado==='completo').length} / ${pi.elementos_opcionales.length}`]]);
+  rows('rep-score',[['Score total',`${sc.total} / 100`],['Eje Programa',`${sc.programa} / 40`],['Eje Capacitación',`${sc.capacitacion} / 25`],['Eje Due Diligence',`${sc.due_diligence} / 20`],['Eje Riesgo',`${sc.riesgo} / 15`]]);
+  const pend=[...pi.elementos_obligatorios,...pi.elementos_opcionales].filter(e=>e.estado!=='completo');
+  document.getElementById('rep-pend').innerHTML=pend.length?pend.map(e=>`<div class="alerta ${e.estado==='en_progreso'?'naranja':'roja'}"><span class="alerta-ico">${e.estado==='en_progreso'?'⚙️':'❌'}</span><span>${e.label}</span></div>`).join(''):'<div class="alerta verde"><span class="alerta-ico">✅</span><span>Todos los elementos completados</span></div>';
+  const avg=Math.round(CONFIG.capacitaciones.reduce((a,c)=>a+c.completado,0)/CONFIG.capacitaciones.length);
+  rows('rep-cap',[['Promedio completitud',`${avg}%`],['Módulos obligatorios',CONFIG.capacitaciones.filter(c=>c.obligatorio).length],['Con <50%',CONFIG.capacitaciones.filter(c=>c.completado<50).length]]);
+  rows('rep-rite',[['Registrado',pi.registrado_rite?'Sí':'No'],['Nivel',pi.nivel_madurez],['URL',pi.url_rite||'—']]);
+  document.getElementById('rep-plan').innerHTML=CONFIG.plan_mejora.map(p=>`<div class="alerta ${p.prioridad==='alta'?'roja':p.prioridad==='media'?'naranja':'verde'}"><span class="alerta-ico">${p.prioridad==='alta'?'🔴':p.prioridad==='media'?'⚠️':'🟢'}</span><span><strong>${p.accion}</strong> — ${p.responsable} · ${p.vence} · <em>${p.estado}</em></span></div>`).join('');
+}
+
+function renderPanel(p){
+  if(p==='dashboard')renderDashboard();
+  else if(p==='ley27401')renderLey27401();
+  else if(p==='riesgo')renderRiesgo();
+  else if(p==='capacitacion')renderCapacitacion();
+  else if(p==='duediligence')renderDD();
+  else if(p==='internacional')renderInternacional();
+  else if(p==='rite')renderRite();
+  else if(p==='mejoras')renderMejoras();
+  else if(p==='legislacion')renderLegislacion();
+  else if(p==='reporte')renderReporte();
+}
+
+function renderAll(){
+  document.getElementById('nav-nombre').textContent=CONFIG.empresa.nombre;
+  const labels={dashboard:'📊 '+t('dashboard'),ley27401:'⚖️ '+t('ley27401'),riesgo:'🗺️ '+t('riesgo'),capacitacion:'📚 '+t('capacitacion'),duediligence:'🔍 '+t('duediligence'),internacional:'🌍 '+t('internacional'),rite:'🏛️ '+t('rite'),mejoras:'📈 '+t('mejoras'),legislacion:'📋 '+t('legislacion'),reporte:'📄 '+t('reporte')};
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(labels[b.dataset.panel])b.textContent=labels[b.dataset.panel];});
+  const activo=document.querySelector('.tab-btn.active')?.dataset.panel||'dashboard';
+  renderPanel(activo);
+  renderLegislacion();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.documentElement.style.setProperty('--pri',CONFIG.empresa.color_primario||'#1a3a5c');
+  renderAll();
+});
+</script>
+</body>
+</html>
