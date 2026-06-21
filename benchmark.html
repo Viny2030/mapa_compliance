@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title id="page-title">Benchmark GRC — Monitor de Compliance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pri:#1a3a5c;--sec:#2196f3;--verde:#2e7d32;--rojo:#c62828;--naranja:#e65100;--amarillo:#f9a825;--bg:#f0f4f8;--card:#fff;--texto:#1a1a2e;--muted:#6b7280;--borde:#dde3ea}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--texto);line-height:1.6;padding-bottom:2rem}
+header{background:linear-gradient(135deg,var(--pri) 0%,#0d2137 100%);color:#fff;padding:1.8rem 1rem 1.3rem;text-align:center}
+header h1{font-size:1.5rem;margin-bottom:.25rem}
+header p{opacity:.75;font-size:.88rem}
+.lang-sel{display:flex;gap:.25rem;justify-content:center;margin-top:.8rem}
+.lang-btn{background:rgba(255,255,255,.12);border:none;color:#cde;font-size:.72rem;font-weight:700;padding:.3rem .65rem;border-radius:4px;cursor:pointer}
+.lang-btn.active{background:#2196f3;color:#fff}
+.wrap{max-width:900px;margin:0 auto;padding:1.4rem .9rem}
+.card{background:var(--card);border-radius:10px;padding:1.2rem;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1rem;border-top:3px solid var(--pri)}
+.card h2{color:var(--pri);font-size:1.05rem;margin-bottom:.4rem}
+.card .sub{font-size:.8rem;color:var(--muted);margin-bottom:.9rem}
+.bm-summary{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem}
+.bm-summary-ring{position:relative;width:90px;height:90px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:#fff}
+.bm-summary-txt{flex:1;min-width:200px;font-size:.85rem;color:var(--muted)}
+.bm-row{display:flex;align-items:flex-start;gap:.8rem;padding:.85rem .9rem;border-radius:9px;margin-bottom:.6rem;background:#f8fafc;border-left:4px solid}
+.bm-row.completo{border-color:var(--verde)}
+.bm-row.parcial{border-color:var(--naranja)}
+.bm-row.pendiente{border-color:var(--rojo)}
+.bm-ico{flex-shrink:0;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:#fff;margin-top:.1rem}
+.bm-row.completo .bm-ico{background:var(--verde)}
+.bm-row.parcial .bm-ico{background:var(--naranja)}
+.bm-row.pendiente .bm-ico{background:var(--rojo)}
+.bm-body{flex:1}
+.bm-head{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
+.bm-titulo{font-size:.92rem;font-weight:700;color:var(--texto)}
+.bm-pill{font-size:.66rem;font-weight:800;padding:.16rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.03em}
+.bm-row.completo .bm-pill{background:#e8f5e9;color:var(--verde)}
+.bm-row.parcial .bm-pill{background:#fff3e0;color:var(--naranja)}
+.bm-row.pendiente .bm-pill{background:#fdecea;color:var(--rojo)}
+.bm-desc{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.bm-detalle{font-size:.77rem;color:#444;margin-top:.4rem;background:#fff;border-radius:6px;padding:.5rem .65rem;border:1px solid var(--borde)}
+.bm-fuente{font-size:.74rem;color:var(--muted);background:#fff8e1;border-left:3px solid var(--amarillo);padding:.6rem .8rem;border-radius:6px;margin-top:.6rem;display:flex;align-items:flex-start;gap:.5rem}
+.bm-cta{background:#e3f2fd;border-left:3px solid var(--sec);border-radius:8px;padding:.85rem 1rem;margin-top:.4rem;font-size:.84rem;color:#0d47a1}
+footer{text-align:center;padding:1.8rem;color:var(--muted);font-size:.76rem}
+a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="h-titulo" data-i18n="h_titulo">📊 Benchmark GRC — Estándar de industria</h1>
+  <p id="h-sub" data-i18n="h_sub">Cómo se posiciona tu Programa de Integridad frente a las categorías que evalúan las principales plataformas GRC del mercado</p>
+  <div class="lang-sel">
+    <button class="lang-btn active" onclick="setLang('es')">🇦🇷 ES</button>
+    <button class="lang-btn" onclick="setLang('en')">🇺🇸 EN</button>
+    <button class="lang-btn" onclick="setLang('pt')">🇧🇷 PT</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2 data-i18n="resumen_titulo">Resumen de cobertura</h2>
+    <p class="sub" data-i18n="resumen_sub">6 categorías estándar evaluadas por plataformas GRC líderes del mercado (Hyperproof, LogicGate y similares)</p>
+    <div class="bm-summary">
+      <div class="bm-summary-ring" id="bm-ring">—</div>
+      <div class="bm-summary-txt" id="bm-summary-txt"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="categorias_titulo">Categorías evaluadas</h2>
+    <p class="sub" data-i18n="categorias_sub">Estado actual de tu dashboard en cada categoría estándar de la industria</p>
+    <div id="bm-lista"></div>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="metodologia_titulo">Metodología</h2>
+    <p style="font-size:.82rem;color:#444;line-height:1.7" data-i18n="metodologia_texto">
+      Las categorías de esta comparación corresponden a funcionalidades estándar que evalúan las plataformas
+      de Gestión de Riesgo y Cumplimiento (GRC) del mercado internacional. No se reproduce contenido,
+      calificaciones ni reseñas de ningún sitio comparador — el estado de cada categoría refleja
+      exclusivamente las funcionalidades reales implementadas en este Monitor de Compliance.
+    </p>
+    <div class="bm-cta" data-i18n="metodologia_cta">
+      💡 Este benchmark es una herramienta de venta: muestra a clientes y auditores que el programa
+      cubre los mismos estándares funcionales que las plataformas GRC comerciales líderes, a una fracción del costo.
+    </div>
+  </div>
+
+</div>
+
+<footer data-i18n="footer_texto">
+  Monitor de Compliance Empresarial · Benchmark GRC · Ph.D. Vicente H. Monteverde
+</footer>
+
+<script>
+const T={
+  es:{
+    h_titulo:'📊 Benchmark GRC — Estándar de industria',
+    h_sub:'Cómo se posiciona tu Programa de Integridad frente a las categorías que evalúan las principales plataformas GRC del mercado',
+    page_title:'Benchmark GRC — Monitor de Compliance',
+    resumen_titulo:'Resumen de cobertura',
+    resumen_sub:'6 categorías estándar evaluadas por plataformas GRC líderes del mercado (Hyperproof, LogicGate y similares)',
+    categorias_titulo:'Categorías evaluadas',
+    categorias_sub:'Estado actual de tu dashboard en cada categoría estándar de la industria',
+    metodologia_titulo:'Metodología',
+    metodologia_texto:'Las categorías de esta comparación corresponden a funcionalidades estándar que evalúan las plataformas de Gestión de Riesgo y Cumplimiento (GRC) del mercado internacional. No se reproduce contenido, calificaciones ni reseñas de ningún sitio comparador — el estado de cada categoría refleja exclusivamente las funcionalidades reales implementadas en este Monitor de Compliance.',
+    metodologia_cta:'💡 Este benchmark es una herramienta de venta: muestra a clientes y auditores que el programa cubre los mismos estándares funcionales que las plataformas GRC comerciales líderes, a una fracción del costo.',
+    completo:'Completo',parcial:'Parcial',pendiente:'Pendiente',
+    cobertura_label:'de cobertura',
+    resumen_texto:'categorías completas, {parcial} en desarrollo, {pendiente} pendiente(s) sobre un total de 6 categorías estándar de la industria GRC.',
+    footer_texto:'Monitor de Compliance Empresarial · Benchmark GRC · Ph.D. Vicente H. Monteverde',
+    cat_access_t:'Access Controls / Permissions',
+    cat_access_d:'Control de acceso por roles y permisos diferenciados de usuario.',
+    cat_access_det:'Implementado: el sistema maneja distintos niveles de acceso según el rol del usuario.',
+    cat_audit_t:'Audit Trail',
+    cat_audit_d:'Registro de quién realizó cada cambio y cuándo, dentro del sistema.',
+    cat_audit_det:'Implementado: trazabilidad de cambios disponible en el sistema.',
+    cat_doc_t:'Document Management',
+    cat_doc_d:'Gestión de políticas y documentos: versionado, distribución y acuse de recibo.',
+    cat_doc_det:'En desarrollo: existe gestión documental base, pendiente el módulo de acuse de recibo y control de versiones (Módulo 3 en construcción).',
+    cat_incident_t:'Incident Management',
+    cat_incident_d:'Canal de denuncias e investigación de casos.',
+    cat_incident_det:'Implementado: canal de denuncias operativo con flujo de investigación de casos.',
+    cat_capa_t:'CAPA — Acciones correctivas y preventivas',
+    cat_capa_d:'Seguimiento de acciones correctivas y preventivas con responsables y plazos.',
+    cat_capa_det:'Implementado: cubierto por el Plan de Mejora priorizado, con responsable, prioridad y fecha de vencimiento por acción.',
+    cat_archiving_t:'Archiving & Retention',
+    cat_archiving_d:'Políticas de archivo y retención de documentos y registros.',
+    cat_archiving_det:'Implementado: los registros de capacitación, due diligence y plan de mejora se conservan con histórico.',
+  },
+  en:{
+    h_titulo:'📊 GRC Benchmark — Industry standard',
+    h_sub:'How your Integrity Program stands against the categories evaluated by leading GRC platforms in the market',
+    page_title:'GRC Benchmark — Compliance Monitor',
+    resumen_titulo:'Coverage summary',
+    resumen_sub:'6 standard categories evaluated by leading GRC platforms (Hyperproof, LogicGate and similar)',
+    categorias_titulo:'Evaluated categories',
+    categorias_sub:'Current status of your dashboard in each industry-standard category',
+    metodologia_titulo:'Methodology',
+    metodologia_texto:'The categories in this comparison correspond to standard functionalities evaluated by Governance, Risk and Compliance (GRC) platforms in the international market. No content, ratings or reviews from any comparison site are reproduced — the status of each category reflects exclusively the actual functionality implemented in this Compliance Monitor.',
+    metodologia_cta:'💡 This benchmark is a sales tool: it shows clients and auditors that the program covers the same functional standards as leading commercial GRC platforms, at a fraction of the cost.',
+    completo:'Complete',parcial:'Partial',pendiente:'Pending',
+    cobertura_label:'coverage',
+    resumen_texto:'complete categories, {parcial} in development, {pendiente} pending out of a total of 6 standard GRC industry categories.',
+    footer_texto:'Corporate Compliance Monitor · GRC Benchmark · Ph.D. Vicente H. Monteverde',
+    cat_access_t:'Access Controls / Permissions',
+    cat_access_d:'Role-based access control with differentiated user permissions.',
+    cat_access_det:'Implemented: the system supports different access levels based on user role.',
+    cat_audit_t:'Audit Trail',
+    cat_audit_d:'Record of who made each change and when, within the system.',
+    cat_audit_det:'Implemented: change traceability available in the system.',
+    cat_doc_t:'Document Management',
+    cat_doc_d:'Management of policies and documents: versioning, distribution and acknowledgment of receipt.',
+    cat_doc_det:'In development: basic document management exists; the acknowledgment-of-receipt and version control module is pending (Module 3 under construction).',
+    cat_incident_t:'Incident Management',
+    cat_incident_d:'Whistleblower reporting channel and case investigation.',
+    cat_incident_det:'Implemented: operational reporting channel with a case investigation workflow.',
+    cat_capa_t:'CAPA — Corrective and Preventive Actions',
+    cat_capa_d:'Tracking of corrective and preventive actions with owners and deadlines.',
+    cat_capa_det:'Implemented: covered by the prioritized Improvement Plan, with an owner, priority and due date per action.',
+    cat_archiving_t:'Archiving & Retention',
+    cat_archiving_d:'Archiving and retention policies for documents and records.',
+    cat_archiving_det:'Implemented: training, due diligence and improvement plan records are kept with full history.',
+  },
+  pt:{
+    h_titulo:'📊 Benchmark GRC — Padrão da indústria',
+    h_sub:'Como seu Programa de Integridade se posiciona frente às categorias avaliadas pelas principais plataformas GRC do mercado',
+    page_title:'Benchmark GRC — Monitor de Compliance',
+    resumen_titulo:'Resumo de cobertura',
+    resumen_sub:'6 categorias padrão avaliadas por plataformas GRC líderes do mercado (Hyperproof, LogicGate e similares)',
+    categorias_titulo:'Categorias avaliadas',
+    categorias_sub:'Status atual do seu dashboard em cada categoria padrão da indústria',
+    metodologia_titulo:'Metodologia',
+    metodologia_texto:'As categorias desta comparação correspondem a funcionalidades padrão avaliadas pelas plataformas de Governança, Risco e Compliance (GRC) do mercado internacional. Nenhum conteúdo, classificação ou avaliação de qualquer site comparador é reproduzido — o status de cada categoria reflete exclusivamente as funcionalidades reais implementadas neste Monitor de Compliance.',
+    metodologia_cta:'💡 Este benchmark é uma ferramenta de venda: mostra a clientes e auditores que o programa cobre os mesmos padrões funcionais das principais plataformas GRC comerciais, a uma fração do custo.',
+    completo:'Completo',parcial:'Parcial',pendiente:'Pendente',
+    cobertura_label:'de cobertura',
+    resumen_texto:'categorias completas, {parcial} em desenvolvimento, {pendiente} pendente(s) de um total de 6 categorias padrão da indústria GRC.',
+    footer_texto:'Monitor de Compliance Empresarial · Benchmark GRC · Ph.D. Vicente H. Monteverde',
+    cat_access_t:'Access Controls / Permissions',
+    cat_access_d:'Controle de acesso por funções e permissões diferenciadas de usuário.',
+    cat_access_det:'Implementado: o sistema gerencia diferentes níveis de acesso conforme a função do usuário.',
+    cat_audit_t:'Audit Trail',
+    cat_audit_d:'Registro de quem realizou cada alteração e quando, dentro do sistema.',
+    cat_audit_det:'Implementado: rastreabilidade de alterações disponível no sistema.',
+    cat_doc_t:'Document Management',
+    cat_doc_d:'Gestão de políticas e documentos: versionamento, distribuição e confirmação de recebimento.',
+    cat_doc_det:'Em desenvolvimento: existe gestão documental básica; pendente o módulo de confirmação de recebimento e controle de versões (Módulo 3 em construção).',
+    cat_incident_t:'Incident Management',
+    cat_incident_d:'Canal de denúncias e investigação de casos.',
+    cat_incident_det:'Implementado: canal de denúncias operacional com fluxo de investigação de casos.',
+    cat_capa_t:'CAPA — Ações corretivas e preventivas',
+    cat_capa_d:'Acompanhamento de ações corretivas e preventivas com responsáveis e prazos.',
+    cat_capa_det:'Implementado: coberto pelo Plano de Melhoria priorizado, com responsável, prioridade e prazo por ação.',
+    cat_archiving_t:'Archiving & Retention',
+    cat_archiving_d:'Políticas de arquivamento e retenção de documentos e registros.',
+    cat_archiving_det:'Implementado: os registros de treinamento, due diligence e plano de melhoria são mantidos com histórico completo.',
+  }
+};
+
+// Estado real del dashboard en cada categoría estándar de la industria GRC.
+// Confirmado por el cliente: Access Controls, Audit Trail, Incident Management,
+// CAPA y Archiving & Retention = completos. Document Management = parcial
+// (falta acuse de recibo / versionado, corresponde al Módulo 3 pendiente).
+const CATEGORIAS=[
+  {key:'access',estado:'completo',ico:'🔐'},
+  {key:'audit',estado:'completo',ico:'📋'},
+  {key:'doc',estado:'parcial',ico:'📄'},
+  {key:'incident',estado:'completo',ico:'🚨'},
+  {key:'capa',estado:'completo',ico:'🎯'},
+  {key:'archiving',estado:'completo',ico:'🗄️'},
+];
+
+let lang='es';
+const t=k=>T[lang][k]||k;
+
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.getElementById('page-title').textContent=t('page_title');
+  document.documentElement.lang=lang;
+}
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  applyStaticI18n();
+  renderAll();
+}
+
+function renderResumen(){
+  const completos=CATEGORIAS.filter(c=>c.estado==='completo').length;
+  const parciales=CATEGORIAS.filter(c=>c.estado==='parcial').length;
+  const pendientes=CATEGORIAS.filter(c=>c.estado==='pendiente').length;
+  const total=CATEGORIAS.length;
+  const pct=Math.round(((completos+parciales*0.5)/total)*100);
+  const color=pct>=85?'#2e7d32':pct>=60?'#e65100':'#c62828';
+
+  const ring=document.getElementById('bm-ring');
+  ring.style.background=color;
+  ring.textContent=pct+'%';
+
+  const texto=t('resumen_texto').replace('{parcial}',parciales).replace('{pendiente}',pendientes);
+  document.getElementById('bm-summary-txt').innerHTML=
+    `<strong style="color:${color};font-size:1rem">${completos}/${total} ${t('cobertura_label')}</strong><br>${completos} ${texto}`;
+}
+
+function renderLista(){
+  document.getElementById('bm-lista').innerHTML=CATEGORIAS.map(c=>{
+    const pillTxt=c.estado==='completo'?t('completo'):c.estado==='parcial'?t('parcial'):t('pendiente');
+    const checkIco=c.estado==='completo'?'✓':c.estado==='parcial'?'~':'!';
+    return `<div class="bm-row ${c.estado}">
+      <div class="bm-ico">${checkIco}</div>
+      <div class="bm-body">
+        <div class="bm-head">
+          <span class="bm-titulo">${c.ico} ${t('cat_'+c.key+'_t')}</span>
+          <span class="bm-pill">${pillTxt}</span>
+        </div>
+        <div class="bm-desc">${t('cat_'+c.key+'_d')}</div>
+        <div class="bm-detalle">${t('cat_'+c.key+'_det')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAll(){
+  renderResumen();
+  renderLista();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  applyStaticI18n();
+  renderAll();
+});
+</script>
+</body>
+</html>
