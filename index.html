@@ -134,6 +134,7 @@ header p{opacity:.75;font-size:.88rem}
 .heatmap-axis-label{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-align:center;margin-top:.4rem}
 .heatmap-axis-label.vert{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;margin:0;flex-shrink:0;align-self:stretch;display:flex;align-items:center;justify-content:center}
 .heatmap-fuente{font-size:.74rem;color:var(--muted);background:#fff8e1;border-left:3px solid var(--amarillo);padding:.5rem .7rem;border-radius:6px;margin-top:.8rem;display:flex;align-items:flex-start;gap:.4rem}
+.heatmap-dd-vinculo{font-size:.74rem;color:#7f1d1d;background:#fdecea;border-left:3px solid var(--rojo);padding:.5rem .7rem;border-radius:6px;margin-top:.5rem;display:flex;align-items:flex-start;gap:.4rem}
 @media(max-width:520px){.heatmap-grid{grid-template-rows:repeat(5,40px)}.heatmap-yaxis{height:var(--hm-h,200px)}.heatmap-yaxis span{height:40px}.heatmap-cell{font-size:.8rem}}
 .rdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 .rdot.alto{background:var(--rojo)}.rdot.medio{background:var(--naranja)}.rdot.bajo{background:var(--verde)}
@@ -154,6 +155,18 @@ header p{opacity:.75;font-size:.88rem}
 .dd-res.loading{background:#e3f2fd;border-left:4px solid var(--sec);color:#0d47a1}
 .hist-row{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border-bottom:1px solid var(--borde);font-size:.8rem;flex-wrap:wrap}
 .hist-row:last-child{border-bottom:none}
+.radar-row{display:flex;align-items:flex-start;gap:.7rem;padding:.6rem .75rem;border-radius:8px;margin-bottom:.4rem;background:#f8fafc;border-left:3px solid}
+.radar-row.alta{border-color:var(--rojo)}
+.radar-row.media{border-color:var(--naranja)}
+.radar-row.baja{border-color:var(--amarillo)}
+.radar-nivel-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:.4rem}
+.radar-row.alta .radar-nivel-dot{background:var(--rojo)}
+.radar-row.media .radar-nivel-dot{background:var(--naranja)}
+.radar-row.baja .radar-nivel-dot{background:var(--amarillo)}
+.radar-body{flex:1;min-width:0}
+.radar-empresa{font-size:.84rem;font-weight:700}
+.radar-desc{font-size:.76rem;color:var(--muted);margin-top:.15rem}
+.radar-loading{font-size:.82rem;color:var(--muted);padding:.8rem;text-align:center}
 .rite-estado{display:flex;align-items:center;gap:.9rem;border-radius:8px;padding:.9rem 1rem;margin-bottom:.9rem}
 .rite-ico{font-size:1.8rem}
 .rite-paso{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--borde)}
@@ -329,6 +342,11 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
       <div class="card" style="margin-bottom:0"><h2 data-i18n="resumen_verificaciones">Resumen verificaciones</h2><div class="chart-wrap" style="height:180px"><canvas id="ch-dd"></canvas></div></div>
       <div class="card" style="margin-bottom:0"><h2 data-i18n="historial">Historial</h2><div id="dd-hist"></div></div>
     </div>
+    <div class="card">
+      <h2 data-i18n="dd_radar_titulo">🌐 Radar de mercado — Empresas sancionadas OCDE con presencia en Argentina</h2>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.8rem" data-i18n="dd_radar_sub">Listado en vivo desde MEACI. No implica relación comercial con tu empresa — es información de contexto para evaluar terceros nuevos.</p>
+      <div id="dd-radar-meaci"></div>
+    </div>
   </div>
 </div>
 
@@ -497,6 +515,11 @@ const T={
     progreso_modulo:'Progreso por módulo',radar_completitud:'Radar de completitud',modulos:'Módulos',
     dd_titulo:'🔍 Verificador de CUIT — Lista OCDE',dd_desc:'Verificá si un proveedor tiene antecedentes en casos internacionales de corrupción. Powered by',
     dd_placeholder:'Ej: 30-54667581-3 (Siemens)',verificar_btn:'Verificar →',dd_ejemplos:'Ejemplos: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)',
+    dd_radar_titulo:'🌐 Radar de mercado — Empresas sancionadas OCDE con presencia en Argentina',
+    dd_radar_sub:'Listado en vivo desde MEACI. No implica relación comercial con tu empresa — es información de contexto para evaluar terceros nuevos.',
+    dd_radar_cargando:'Cargando alertas desde MEACI...',
+    dd_radar_error:'No se pudo conectar con MEACI en este momento. Probá nuevamente más tarde.',
+    dd_radar_nivel_alta:'Alta',dd_radar_nivel_media:'Media',dd_radar_nivel_baja:'Baja',
     resumen_verificaciones:'Resumen verificaciones',historial:'Historial',
     exposicion_internacional:'Exposición internacional',marco_legal:'Marco legal aplicable',monitor_meaci:'Monitor MEACI',
     monitor_meaci_desc:'31 casos de resoluciones multijurisdiccionales (MJR) OCDE 2008-2026 con presencia en Argentina.',abrir_meaci:'🔍 Abrir MEACI →',
@@ -621,6 +644,11 @@ const T={
     progreso_modulo:'Progress by module',radar_completitud:'Completion radar',modulos:'Modules',
     dd_titulo:'🔍 Tax ID Checker — OECD List',dd_desc:'Check if a vendor has a history in international corruption cases. Powered by',
     dd_placeholder:'E.g.: 30-54667581-3 (Siemens)',verificar_btn:'Verify →',dd_ejemplos:'Examples: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)',
+    dd_radar_titulo:'🌐 Market radar — OECD-sanctioned companies with presence in Argentina',
+    dd_radar_sub:'Live listing from MEACI. Does not imply a business relationship with your company — it is contextual information for evaluating new third parties.',
+    dd_radar_cargando:'Loading alerts from MEACI...',
+    dd_radar_error:'Could not connect to MEACI right now. Please try again later.',
+    dd_radar_nivel_alta:'High',dd_radar_nivel_media:'Medium',dd_radar_nivel_baja:'Low',
     resumen_verificaciones:'Verification summary',historial:'History',
     exposicion_internacional:'International exposure',marco_legal:'Applicable legal framework',monitor_meaci:'MEACI Monitor',
     monitor_meaci_desc:'31 cases of OECD multijurisdictional resolutions (MJR) 2008-2026 with presence in Argentina.',abrir_meaci:'🔍 Open MEACI →',
@@ -745,6 +773,11 @@ const T={
     progreso_modulo:'Progresso por módulo',radar_completitud:'Radar de completude',modulos:'Módulos',
     dd_titulo:'🔍 Verificador de CNPJ/CUIT — Lista OCDE',dd_desc:'Verifique se um fornecedor tem antecedentes em casos internacionais de corrupção. Powered by',
     dd_placeholder:'Ex: 30-54667581-3 (Siemens)',verificar_btn:'Verificar →',dd_ejemplos:'Exemplos: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)',
+    dd_radar_titulo:'🌐 Radar de mercado — Empresas sancionadas OCDE com presença na Argentina',
+    dd_radar_sub:'Lista em tempo real do MEACI. Não implica relação comercial com sua empresa — é informação de contexto para avaliar novos terceiros.',
+    dd_radar_cargando:'Carregando alertas do MEACI...',
+    dd_radar_error:'Não foi possível conectar ao MEACI neste momento. Tente novamente mais tarde.',
+    dd_radar_nivel_alta:'Alta',dd_radar_nivel_media:'Média',dd_radar_nivel_baja:'Baixa',
     resumen_verificaciones:'Resumo das verificações',historial:'Histórico',
     exposicion_internacional:'Exposição internacional',marco_legal:'Marco legal aplicável',monitor_meaci:'Monitor MEACI',
     monitor_meaci_desc:'31 casos de resoluções multijurisdicionais (MJR) OCDE 2008-2026 com presença na Argentina.',abrir_meaci:'🔍 Abrir MEACI →',
@@ -1037,9 +1070,9 @@ function clearAutoevalOverrides(){
 function getAreasConAlertaDD(){
   const out={};
   (CONFIG.cuits_verificados||[]).forEach(c=>{
-    if(c.resultado==='alerta_ocde' && c.area_relacionada!=null){
-      if(!out[c.area_relacionada]) out[c.area_relacionada]=[];
-      out[c.area_relacionada].push(c.razon_social);
+    if(c.resultado==='alerta_ocde' && c.area_vinculada!=null){
+      if(!out[c.area_vinculada]) out[c.area_vinculada]=[];
+      out[c.area_vinculada].push(c.razon_social);
     }
   });
   return out;
@@ -1054,12 +1087,16 @@ function getMapaRiesgoEfectivo(){
       return{...r,evaluacion:{...r.evaluacion,...ov,evaluado_por:CONFIG.empresa.responsable_compliance||''},
         riesgo:score<=5?'bajo':score<=11?'medio':'alto'};
     }
-    if(alertasDD[idx] && (!r.evaluacion || r.evaluacion.fuente==='default_sector')){
+    // getAreasConAlertaDD() indexa por nombre de área (r.area.es), no por
+    // posición en el array — el vínculo es "¿qué área aparece en area_vinculada
+    // de algún proveedor con alerta_ocde?", no "¿qué índice numérico coincide?".
+    const areaKey=r.area.es;
+    if(alertasDD[areaKey] && (!r.evaluacion || r.evaluacion.fuente==='default_sector')){
       const impacto=r.evaluacion?r.evaluacion.impacto:4;
       const probabilidad=Math.max(4,r.evaluacion?r.evaluacion.probabilidad:0);
       const score=probabilidad*impacto;
       return{...r,evaluacion:{probabilidad,impacto,fuente:'due_diligence',
-        nota:`${t('hm_dd_nota')}: ${alertasDD[idx].join(', ')}`},
+        nota:`${t('hm_dd_nota')}: ${alertasDD[areaKey].join(', ')}`},
         riesgo:score<=5?'bajo':score<=11?'medio':'alto'};
     }
     return r;
@@ -1218,6 +1255,15 @@ function renderHeatmap(){
   } else {
     avisoEl.innerHTML='';
   }
+
+  // Vínculo con Due Diligence: áreas cuya probabilidad fue elevada automáticamente
+  // por una alerta OCDE real de un proveedor vinculado (ver getMapaRiesgoEfectivo).
+  const conVinculoDD=mr.filter(r=>r.evaluacion && r.evaluacion.fuente==='due_diligence' && r.evaluacion.nota);
+  if(conVinculoDD.length){
+    avisoEl.innerHTML += conVinculoDD.map(r=>
+      `<div class="heatmap-dd-vinculo" id="heatmap-dd-vinculo">🔗 <span><strong>${tx(r.area)}</strong>: ${r.evaluacion.nota}</span></div>`
+    ).join('');
+  }
 }
 
 function renderRiesgo(){
@@ -1245,19 +1291,55 @@ function renderCapacitacion(){
 function renderDD(){
   mkDona('ch-dd',[CONFIG.cuits_verificados.filter(c=>c.resultado==='sin_antecedentes').length,CONFIG.cuits_verificados.filter(c=>c.resultado==='alerta_ocde').length],[t('dona_dd_sin'),t('dona_dd_alerta')],['#2e7d32','#c62828']);
   document.getElementById('dd-hist').innerHTML=`<div style="display:flex;font-size:.73rem;font-weight:700;color:var(--muted);padding:.35rem .6rem;background:#f0f4f8;border-radius:5px 5px 0 0"><span style="flex:2">${t('dd_th_razon')}</span><span style="flex:1">${t('dd_th_cuit')}</span><span style="flex:1">${t('dd_th_fecha')}</span><span style="flex:1">${t('dd_th_resultado')}</span></div>`+CONFIG.cuits_verificados.map(v=>`<div class="hist-row"><span style="flex:2;font-weight:600">${v.razon_social}</span><span style="flex:1;font-family:monospace;font-size:.75rem">${v.cuit}</span><span style="flex:1;color:var(--muted);font-size:.76rem">${v.fecha}</span><span style="flex:1">${v.resultado==='sin_antecedentes'?`<span class="pill pill-ok">${t('dd_ok')}</span>`:`<span class="pill pill-pend">${t('dd_ocde')}</span>`}</span></div>`).join('');
+  renderRadarMeaci();
+}
+
+// Radar de mercado: lista en vivo de las empresas con alerta OCDE y presencia
+// en Argentina, directamente desde MEACI (/api/alertas). Es informativo —
+// no se cruza con áreas internas ni con empleados, porque son multinacionales
+// globales y no necesariamente proveedores propios de la empresa.
+async function renderRadarMeaci(){
+  const cont=document.getElementById('dd-radar-meaci');
+  if(!cont) return;
+  cont.innerHTML=`<div class="radar-loading">${t('dd_radar_cargando')}</div>`;
+  try{
+    const alertas=await fetchAlertasMeaci();
+    const nivelOrden={alta:0,media:1,baja:2};
+    const ordenadas=[...alertas].sort((a,b)=>(nivelOrden[a.nivel]??9)-(nivelOrden[b.nivel]??9));
+    cont.innerHTML=ordenadas.map(a=>`
+      <div class="radar-row ${a.nivel}">
+        <div class="radar-nivel-dot"></div>
+        <div class="radar-body">
+          <div class="radar-empresa">${a.empresa} <span class="pill ${a.nivel==='alta'?'pill-pend':'pill-prog'}">${t('dd_radar_nivel_'+a.nivel)}</span></div>
+          <div class="radar-desc">${a.descripcion}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){
+    cont.innerHTML=`<div class="radar-loading">${t('dd_radar_error')}</div>`;
+  }
 }
 
 async function verificarCuit(){
-  const cuit=document.getElementById('dd-input').value.trim();
-  if(!cuit){return;}
+  const cuitInput=document.getElementById('dd-input').value.trim();
+  if(!cuitInput){return;}
   const res=document.getElementById('dd-res');
   res.innerHTML=`<div class="dd-res loading">${t('dd_consultando')}</div>`;
+  // MEACI almacena los CUIT sin guiones ni espacios (ej: "30546675813").
+  // El usuario puede tipear con guiones (formato AFIP estándar); normalizamos
+  // antes de mandar a la API para que el cruce funcione independientemente
+  // del formato ingresado.
+  const cuitNormalizado=cuitInput.replace(/[^0-9]/g,'');
   try{
-    const r=await fetch(`${CONFIG.meaci_api}?cuit=${cuit}`);
+    const r=await fetch(`${CONFIG.meaci_api}?cuit=${cuitNormalizado}`);
     const d=await r.json();
-    if(d.sancionada_ocde){res.innerHTML=`<div class="dd-res alerta">🔴 <strong>${t('dd_alerta_label')}</strong> ${cuit} → <strong>${d.empresa||t('dd_empresa_sancionada')}</strong> — ${t('dd_caso')} ${d.caso||'—'} — <a href="${CONFIG.meaci_url}" target="_blank">${t('dd_ver_meaci')}</a></div>`;}
-    else{res.innerHTML=`<div class="dd-res ok">✅ <strong>${t('dd_sin_antecedentes')}</strong> CUIT ${cuit} ${t('dd_no_figura')}</div>`;}
-  }catch(e){res.innerHTML=`<div class="dd-res ok">✅ ${t('dd_sin_detectados')} ${cuit}. ${t('dd_verificar_conn')}</div>`;}
+    if(d.sancionada_ocde){
+      const primerCaso=(d.casos&&d.casos.length)?d.casos[0]:null;
+      const empresaNombre=d.empresa_matriz||t('dd_empresa_sancionada');
+      const casoTexto=primerCaso?`${primerCaso.nombre} (${primerCaso.anio}) — ${primerCaso.tipo}`:'—';
+      res.innerHTML=`<div class="dd-res alerta">🔴 <strong>${t('dd_alerta_label')}</strong> ${cuitInput} → <strong>${empresaNombre}</strong> — ${t('dd_caso')} ${casoTexto} — <a href="${CONFIG.meaci_url}" target="_blank">${t('dd_ver_meaci')}</a></div>`;
+    }
+    else{res.innerHTML=`<div class="dd-res ok">✅ <strong>${t('dd_sin_antecedentes')}</strong> CUIT ${cuitInput} ${t('dd_no_figura')}</div>`;}
+  }catch(e){res.innerHTML=`<div class="dd-res ok">✅ ${t('dd_sin_detectados')} ${cuitInput}. ${t('dd_verificar_conn')}</div>`;}
 }
 
 function renderInternacional(){
@@ -1554,9 +1636,59 @@ function renderAll(){
   renderLegislacion();
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
+// ── Sincronización dinámica con MEACI (Due Diligence en vivo) ──────────────
+// CONFIG.cuits_verificados trae los proveedores reales de la empresa (con
+// area_vinculada, usado por el Mapa de Calor y por Conflicto de Interés).
+// El campo "resultado" de cada proveedor históricamente era manual; acá lo
+// recalculamos en vivo contra la lista real de empresas sancionadas OCDE que
+// expone MEACI (/api/alertas), cruzando por CUIT normalizado (sin guiones).
+// Si MEACI no responde, se conserva el valor que ya tenía config.js como
+// fallback, para que el dashboard nunca quede roto por falta de conectividad.
+let meaciAlertasCache=null;
+
+async function fetchAlertasMeaci(){
+  if(meaciAlertasCache) return meaciAlertasCache;
+  const r=await fetch(`${CONFIG.meaci_url}/api/alertas`);
+  const data=await r.json();
+  meaciAlertasCache=data;
+  return data;
+}
+
+function normalizarCuit(cuit){
+  return (cuit||'').replace(/[^0-9]/g,'');
+}
+
+async function sincronizarDueDiligenceConMeaci(){
+  try{
+    const alertas=await fetchAlertasMeaci();
+    // Construimos un set de CUITs sancionados consultando /api/empresas (que
+    // sí trae cuits_ar) y cruzando contra los nombres de /api/alertas, porque
+    // /api/alertas no expone CUIT directamente.
+    const r=await fetch(`${CONFIG.meaci_url}/api/empresas?presencia_ar=true`);
+    const empresas=await r.json();
+    const cuitsSancionados=new Set();
+    empresas.forEach(emp=>{
+      const enAlerta=alertas.some(a=>a.empresa===emp.nombre_matriz);
+      if(enAlerta){
+        try{
+          JSON.parse(emp.cuits_ar).forEach(c=>cuitsSancionados.add(normalizarCuit(c)));
+        }catch(e){/* formato inesperado, se ignora ese registro */}
+      }
+    });
+
+    CONFIG.cuits_verificados.forEach(prov=>{
+      const cuitNorm=normalizarCuit(prov.cuit);
+      prov.resultado = cuitsSancionados.has(cuitNorm) ? 'alerta_ocde' : 'sin_antecedentes';
+    });
+  }catch(e){
+    console.warn('No se pudo sincronizar con MEACI, se mantienen los valores locales de config.js',e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',async ()=>{
   document.documentElement.style.setProperty('--pri',CONFIG.empresa.color_primario||'#1a3a5c');
   applyStaticI18n();
+  await sincronizarDueDiligenceConMeaci();
   renderAll();
 });
 
