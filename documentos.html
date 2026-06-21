@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title id="page-title">Gestión Documental — Monitor de Compliance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pri:#1a3a5c;--sec:#2196f3;--verde:#2e7d32;--rojo:#c62828;--naranja:#e65100;--amarillo:#f9a825;--bg:#f0f4f8;--card:#fff;--texto:#1a1a2e;--muted:#6b7280;--borde:#dde3ea}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--texto);line-height:1.6;padding-bottom:2rem}
+header{background:linear-gradient(135deg,var(--pri) 0%,#0d2137 100%);color:#fff;padding:1.8rem 1rem 1.3rem;text-align:center}
+header h1{font-size:1.5rem;margin-bottom:.25rem}
+header p{opacity:.75;font-size:.88rem}
+.lang-sel{display:flex;gap:.25rem;justify-content:center;margin-top:.8rem}
+.lang-btn{background:rgba(255,255,255,.12);border:none;color:#cde;font-size:.72rem;font-weight:700;padding:.3rem .65rem;border-radius:4px;cursor:pointer}
+.lang-btn.active{background:#2196f3;color:#fff}
+.wrap{max-width:920px;margin:0 auto;padding:1.4rem .9rem}
+.card{background:var(--card);border-radius:10px;padding:1.2rem;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1rem;border-top:3px solid var(--pri)}
+.card h2{color:var(--pri);font-size:1.05rem;margin-bottom:.4rem}
+.card .sub{font-size:.8rem;color:var(--muted);margin-bottom:.9rem}
+.demo-banner{font-size:.78rem;color:#0d47a1;background:#e3f2fd;border-left:3px solid var(--sec);padding:.6rem .85rem;border-radius:6px;margin-bottom:1rem;display:flex;align-items:flex-start;gap:.5rem}
+
+.doc-select{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.doc-chip{font-size:.78rem;font-weight:600;padding:.45rem .8rem;border-radius:20px;border:1.5px solid var(--borde);background:#fff;cursor:pointer;color:var(--texto);transition:all .15s}
+.doc-chip:hover{border-color:var(--sec)}
+.doc-chip.active{background:var(--pri);border-color:var(--pri);color:#fff}
+
+.doc-detail{background:#f8fafc;border-radius:9px;padding:1rem 1.1rem;margin-bottom:1rem}
+.doc-detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;flex-wrap:wrap;margin-bottom:.4rem}
+.doc-detail-titulo{font-size:.98rem;font-weight:700;color:var(--pri)}
+.doc-detail-desc{font-size:.82rem;color:#444;margin-bottom:.6rem}
+.doc-detail-meta{font-size:.74rem;color:var(--muted);display:flex;gap:1rem;flex-wrap:wrap}
+
+.doc-progress-wrap{margin:.7rem 0}
+.doc-progress-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.3rem}
+.doc-progress-track{background:#e0e7ef;border-radius:5px;height:9px;overflow:hidden}
+.doc-progress-fill{height:100%;border-radius:5px;transition:width .4s}
+.doc-progress-fill.verde{background:var(--verde)}.doc-progress-fill.naranja{background:var(--naranja)}.doc-progress-fill.rojo{background:var(--rojo)}
+
+.emp-row{display:flex;align-items:center;gap:.8rem;padding:.65rem .8rem;border-radius:8px;margin-bottom:.4rem;background:#fff;border:1px solid var(--borde)}
+.emp-avatar{width:34px;height:34px;border-radius:50%;background:var(--pri);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}
+.emp-info{flex:1;min-width:0}
+.emp-nombre{font-size:.85rem;font-weight:600}
+.emp-area{font-size:.73rem;color:var(--muted)}
+.emp-status{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.emp-pill{font-size:.68rem;font-weight:800;padding:.2rem .55rem;border-radius:8px;white-space:nowrap}
+.emp-pill.leido{background:#e8f5e9;color:var(--verde)}
+.emp-pill.pendiente{background:#fdecea;color:var(--rojo)}
+.emp-fecha{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.emp-btn{font-size:.72rem;font-weight:700;padding:.35rem .65rem;border-radius:6px;border:none;cursor:pointer;background:var(--pri);color:#fff;white-space:nowrap}
+.emp-btn:hover{background:#0d2137}
+.emp-btn.deshacer{background:#fff;color:var(--rojo);border:1.5px solid var(--rojo)}
+.emp-btn.deshacer:hover{background:#fdecea}
+
+.doc-overview-row{display:flex;align-items:center;gap:.8rem;padding:.7rem .85rem;border-radius:8px;margin-bottom:.5rem;background:#f8fafc;border-left:4px solid}
+.doc-overview-row.verde{border-color:var(--verde)}
+.doc-overview-row.naranja{border-color:var(--naranja)}
+.doc-overview-row.rojo{border-color:var(--rojo)}
+.doc-overview-titulo{flex:1;font-size:.85rem;font-weight:600}
+.doc-overview-pct{font-size:.92rem;font-weight:800;min-width:48px;text-align:right}
+.doc-overview-pct.verde{color:var(--verde)}.doc-overview-pct.naranja{color:var(--naranja)}.doc-overview-pct.rojo{color:var(--rojo)}
+
+footer{text-align:center;padding:1.8rem;color:var(--muted);font-size:.76rem}
+a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="h-titulo" data-i18n="h_titulo">📄 Gestión Documental — Acuse de Recibo</h1>
+  <p id="h-sub" data-i18n="h_sub">Distribución de políticas y seguimiento de lectura confirmada por empleado</p>
+  <div class="lang-sel">
+    <button class="lang-btn active" onclick="setLang('es')">🇦🇷 ES</button>
+    <button class="lang-btn" onclick="setLang('en')">🇺🇸 EN</button>
+    <button class="lang-btn" onclick="setLang('pt')">🇧🇷 PT</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="demo-banner" data-i18n="demo_banner">
+    ⚠️ Módulo de demostración: los empleados y el estado de lectura son datos sintéticos. El acuse de recibo se guarda en este navegador (localStorage), sin conexión a un backend real.
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="overview_titulo">Resumen por documento</h2>
+    <p class="sub" data-i18n="overview_sub">Porcentaje de empleados con lectura confirmada por política</p>
+    <div id="doc-overview"></div>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="detalle_titulo">Detalle por documento</h2>
+    <p class="sub" data-i18n="detalle_sub">Seleccioná una política para ver el estado de lectura por empleado</p>
+    <div class="doc-select" id="doc-select"></div>
+    <div class="doc-detail" id="doc-detail"></div>
+    <div id="emp-lista"></div>
+  </div>
+
+</div>
+
+<footer data-i18n="footer_texto">
+  Monitor de Compliance Empresarial · Gestión Documental · Ph.D. Vicente H. Monteverde
+</footer>
+
+<script>
+const T={
+  es:{
+    h_titulo:'📄 Gestión Documental — Acuse de Recibo',
+    h_sub:'Distribución de políticas y seguimiento de lectura confirmada por empleado',
+    page_title:'Gestión Documental — Monitor de Compliance',
+    demo_banner:'⚠️ Módulo de demostración: los empleados y el estado de lectura son datos sintéticos. El acuse de recibo se guarda en este navegador (localStorage), sin conexión a un backend real.',
+    overview_titulo:'Resumen por documento',
+    overview_sub:'Porcentaje de empleados con lectura confirmada por política',
+    detalle_titulo:'Detalle por documento',
+    detalle_sub:'Seleccioná una política para ver el estado de lectura por empleado',
+    leido:'Leído',pendiente:'Pendiente',
+    marcar_leido:'✓ Marcar como leído',deshacer:'Deshacer',
+    version_label:'Versión',vigencia_label:'Vigente desde',obligatorio_label:'Obligatorio para',
+    footer_texto:'Monitor de Compliance Empresarial · Gestión Documental · Ph.D. Vicente H. Monteverde',
+    doc1_t:'Código de Ética y Conducta',
+    doc1_d:'Principios y normas de conducta esperadas de todos los integrantes de la organización.',
+    doc2_t:'Política Anticorrupción',
+    doc2_d:'Lineamientos para la prevención del cohecho, soborno y tráfico de influencias, conforme a la Ley 27.401.',
+    doc3_t:'Política de Regalos, Atenciones y Hospitalidad',
+    doc3_d:'Límites y procedimiento de registro para regalos, viajes e invitaciones recibidos u ofrecidos a terceros.',
+    doc4_t:'Política del Canal de Denuncias',
+    doc4_d:'Funcionamiento del canal de denuncias, garantías de confidencialidad y protección contra represalias.',
+    doc5_t:'Política de Conflicto de Interés',
+    doc5_d:'Procedimiento de declaración e identificación de situaciones de conflicto de interés real, potencial o aparente.',
+    todos:'Todos',
+  },
+  en:{
+    h_titulo:'📄 Document Management — Acknowledgment of Receipt',
+    h_sub:'Policy distribution and confirmed-reading tracking per employee',
+    page_title:'Document Management — Compliance Monitor',
+    demo_banner:'⚠️ Demo module: employees and reading status are synthetic data. Acknowledgment of receipt is saved in this browser (localStorage), with no connection to a real backend.',
+    overview_titulo:'Summary by document',
+    overview_sub:'Percentage of employees with confirmed reading per policy',
+    detalle_titulo:'Detail by document',
+    detalle_sub:'Select a policy to see the reading status per employee',
+    leido:'Read',pendiente:'Pending',
+    marcar_leido:'✓ Mark as read',deshacer:'Undo',
+    version_label:'Version',vigencia_label:'Effective since',obligatorio_label:'Mandatory for',
+    footer_texto:'Corporate Compliance Monitor · Document Management · Ph.D. Vicente H. Monteverde',
+    doc1_t:'Code of Ethics and Conduct',
+    doc1_d:'Principles and conduct standards expected of all members of the organization.',
+    doc2_t:'Anti-Corruption Policy',
+    doc2_d:'Guidelines for the prevention of bribery and influence peddling, in accordance with Law 27.401.',
+    doc3_t:'Gifts, Entertainment and Hospitality Policy',
+    doc3_d:'Limits and registration procedure for gifts, trips and invitations received or offered to third parties.',
+    doc4_t:'Whistleblowing Channel Policy',
+    doc4_d:'How the reporting channel works, confidentiality guarantees and protection against retaliation.',
+    doc5_t:'Conflict of Interest Policy',
+    doc5_d:'Procedure for declaring and identifying actual, potential or apparent conflict-of-interest situations.',
+    todos:'All',
+  },
+  pt:{
+    h_titulo:'📄 Gestão Documental — Confirmação de Recebimento',
+    h_sub:'Distribuição de políticas e acompanhamento de leitura confirmada por funcionário',
+    page_title:'Gestão Documental — Monitor de Compliance',
+    demo_banner:'⚠️ Módulo de demonstração: os funcionários e o status de leitura são dados sintéticos. A confirmação de recebimento é salva neste navegador (localStorage), sem conexão com um backend real.',
+    overview_titulo:'Resumo por documento',
+    overview_sub:'Percentual de funcionários com leitura confirmada por política',
+    detalle_titulo:'Detalhe por documento',
+    detalle_sub:'Selecione uma política para ver o status de leitura por funcionário',
+    leido:'Lido',pendiente:'Pendente',
+    marcar_leido:'✓ Marcar como lido',deshacer:'Desfazer',
+    version_label:'Versão',vigencia_label:'Vigente desde',obligatorio_label:'Obrigatório para',
+    footer_texto:'Monitor de Compliance Empresarial · Gestão Documental · Ph.D. Vicente H. Monteverde',
+    doc1_t:'Código de Ética e Conduta',
+    doc1_d:'Princípios e normas de conduta esperadas de todos os integrantes da organização.',
+    doc2_t:'Política Anticorrupção',
+    doc2_d:'Diretrizes para a prevenção de suborno e tráfico de influência, conforme a Lei 27.401.',
+    doc3_t:'Política de Presentes, Atenções e Hospitalidade',
+    doc3_d:'Limites e procedimento de registro para presentes, viagens e convites recebidos ou oferecidos a terceiros.',
+    doc4_t:'Política do Canal de Denúncias',
+    doc4_d:'Funcionamento do canal de denúncias, garantias de confidencialidade e proteção contra retaliação.',
+    doc5_t:'Política de Conflito de Interesse',
+    doc5_d:'Procedimento de declaração e identificação de situações de conflito de interesse real, potencial ou aparente.',
+    todos:'Todos',
+  }
+};
+
+// ── Datos sintéticos (demo) ──────────────────────────────────────────────
+// 8 empleados, uno por área de mapa_riesgo del dashboard principal, para
+// mantener coherencia con el resto del programa de integridad.
+const EMPLEADOS=[
+  {id:'e1',nombre:'Lucía Fernández',area:{es:'Comercial / Ventas',en:'Sales / Commercial',pt:'Comercial / Vendas'}},
+  {id:'e2',nombre:'Martín Acosta',area:{es:'Compras y Abastecimiento',en:'Procurement and Supply',pt:'Compras e Abastecimento'}},
+  {id:'e3',nombre:'Daniela Ríos',area:{es:'Finanzas y Contabilidad',en:'Finance and Accounting',pt:'Finanças e Contabilidade'}},
+  {id:'e4',nombre:'Gabriel Suárez',area:{es:'Recursos Humanos',en:'Human Resources',pt:'Recursos Humanos'}},
+  {id:'e5',nombre:'Valentina Ortiz',area:{es:'Gobierno Corporativo',en:'Corporate Governance',pt:'Governança Corporativa'}},
+  {id:'e6',nombre:'Tomás Belmonte',area:{es:'Operaciones / Producción',en:'Operations / Production',pt:'Operações / Produção'}},
+  {id:'e7',nombre:'Camila Sosa',area:{es:'Tecnología e Información',en:'Technology and Information',pt:'Tecnologia e Informação'}},
+  {id:'e8',nombre:'Ignacio Paz',area:{es:'Relaciones Institucionales',en:'Institutional Relations',pt:'Relações Institucionais'}},
+];
+
+// Estado inicial sintético (antes de cualquier interacción del usuario): simula
+// una empresa real donde la adopción nunca es 100% al instante. Las claves son
+// "docId:empleadoId" -> {leido:bool, fecha:"YYYY-MM-DD"|null}
+const ESTADO_INICIAL_DEMO={
+  doc1:{e1:true,e2:true,e3:true,e4:true,e5:true,e6:true,e7:false,e8:true},
+  doc2:{e1:true,e2:true,e3:true,e4:false,e5:true,e6:false,e7:false,e8:true},
+  doc3:{e1:true,e2:true,e3:false,e4:false,e5:true,e6:false,e7:false,e8:true},
+  doc4:{e1:true,e2:false,e3:true,e4:true,e5:true,e6:false,e7:true,e8:false},
+  doc5:{e1:false,e2:true,e3:false,e4:true,e5:true,e6:false,e7:false,e8:true},
+};
+
+const DOCUMENTOS=[
+  {id:'doc1',key:'doc1',version:'v3.1',vigencia:'2025-01-15',obligatorio:'todos'},
+  {id:'doc2',key:'doc2',version:'v2.0',vigencia:'2025-06-01',obligatorio:'todos'},
+  {id:'doc3',key:'doc3',version:'v1.4',vigencia:'2024-11-10',obligatorio:'todos'},
+  {id:'doc4',key:'doc4',version:'v2.2',vigencia:'2025-03-20',obligatorio:'todos'},
+  {id:'doc5',key:'doc5',version:'v1.1',vigencia:'2025-02-05',obligatorio:'todos'},
+];
+
+let lang='es';
+let docActivo='doc1';
+const t=k=>T[lang][k]||k;
+const tx=v=>{
+  if(v==null)return '';
+  if(typeof v==='object')return v[lang]??v.es??Object.values(v)[0]??'';
+  return v;
+};
+
+const LS_KEY='compliance_documentos_acuse';
+
+function getEstado(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  // Primera vez: sembrar con el estado inicial sintético de la demo.
+  const seed=JSON.parse(JSON.stringify(ESTADO_INICIAL_DEMO));
+  try{localStorage.setItem(LS_KEY,JSON.stringify(seed));}catch(e){}
+  return seed;
+}
+
+function setLecturaEstado(docId,empId,leido){
+  const estado=getEstado();
+  if(!estado[docId]) estado[docId]={};
+  estado[docId][empId]=leido;
+  try{localStorage.setItem(LS_KEY,JSON.stringify(estado));}catch(e){console.warn('No se pudo guardar en localStorage',e);}
+}
+
+function getFechaSimulada(docId,empId){
+  // Fecha estable y determinística por combinación doc+empleado, solo para mostrar
+  // algo creíble en la demo (no hay timestamp real guardado, salvo en localStorage
+  // nuevo donde sí usamos la fecha de hoy).
+  const base=new Date(DOCUMENTOS.find(d=>d.id===docId).vigencia);
+  const offsetDias=(empId.charCodeAt(1)*7)%45+3;
+  base.setDate(base.getDate()+offsetDias);
+  return base.toISOString().slice(0,10);
+}
+
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.getElementById('page-title').textContent=t('page_title');
+  document.documentElement.lang=lang;
+}
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  applyStaticI18n();
+  renderAll();
+}
+
+function pctDocumento(docId){
+  const estado=getEstado()[docId]||{};
+  const total=EMPLEADOS.length;
+  const leidos=EMPLEADOS.filter(e=>estado[e.id]).length;
+  return Math.round((leidos/total)*100);
+}
+
+function renderOverview(){
+  document.getElementById('doc-overview').innerHTML=DOCUMENTOS.map(d=>{
+    const pct=pctDocumento(d.id);
+    const cls=pct>=80?'verde':pct>=50?'naranja':'rojo';
+    return `<div class="doc-overview-row ${cls}">
+      <span class="doc-overview-titulo">${t(d.key+'_t')}</span>
+      <span class="doc-overview-pct ${cls}">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+function renderSelector(){
+  document.getElementById('doc-select').innerHTML=DOCUMENTOS.map(d=>
+    `<button class="doc-chip ${d.id===docActivo?'active':''}" onclick="seleccionarDoc('${d.id}')">${t(d.key+'_t')}</button>`
+  ).join('');
+}
+
+function seleccionarDoc(docId){
+  docActivo=docId;
+  renderSelector();
+  renderDetalle();
+}
+
+function renderDetalle(){
+  const doc=DOCUMENTOS.find(d=>d.id===docActivo);
+  const pct=pctDocumento(docActivo);
+  const cls=pct>=80?'verde':pct>=50?'naranja':'rojo';
+
+  document.getElementById('doc-detail').innerHTML=`
+    <div class="doc-detail-head">
+      <div class="doc-detail-titulo">${t(doc.key+'_t')}</div>
+    </div>
+    <div class="doc-detail-desc">${t(doc.key+'_d')}</div>
+    <div class="doc-detail-meta">
+      <span>📌 ${t('version_label')}: ${doc.version}</span>
+      <span>📅 ${t('vigencia_label')}: ${doc.vigencia}</span>
+      <span>👥 ${t('obligatorio_label')}: ${t('todos')}</span>
+    </div>
+    <div class="doc-progress-wrap">
+      <div class="doc-progress-label"><span>${t('leido')}</span><span>${pct}%</span></div>
+      <div class="doc-progress-track"><div class="doc-progress-fill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+
+  const estado=getEstado()[docActivo]||{};
+  document.getElementById('emp-lista').innerHTML=EMPLEADOS.map(e=>{
+    const leido=!!estado[e.id];
+    const iniciales=e.nombre.split(' ').map(p=>p[0]).join('').substring(0,2).toUpperCase();
+    const fecha=leido?getFechaSimulada(docActivo,e.id):null;
+    return `<div class="emp-row">
+      <div class="emp-avatar">${iniciales}</div>
+      <div class="emp-info">
+        <div class="emp-nombre">${e.nombre}</div>
+        <div class="emp-area">${tx(e.area)}</div>
+      </div>
+      <div class="emp-status">
+        ${leido?`<span class="emp-fecha">${fecha}</span>`:''}
+        <span class="emp-pill ${leido?'leido':'pendiente'}">${leido?t('leido'):t('pendiente')}</span>
+        ${leido
+          ?`<button class="emp-btn deshacer" onclick="toggleLectura('${e.id}',false)">${t('deshacer')}</button>`
+          :`<button class="emp-btn" onclick="toggleLectura('${e.id}',true)">${t('marcar_leido')}</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleLectura(empId,leido){
+  setLecturaEstado(docActivo,empId,leido);
+  renderOverview();
+  renderDetalle();
+}
+
+function renderAll(){
+  renderOverview();
+  renderSelector();
+  renderDetalle();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  applyStaticI18n();
+  renderAll();
+});
+</script>
+</body>
+</html>
