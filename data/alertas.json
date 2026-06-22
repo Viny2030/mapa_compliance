@@ -1,0 +1,30 @@
+{
+  "actualizado": "2026-06-22T10:23:58.511984Z",
+  "total": 3,
+  "alertas": [
+    {
+      "id": "v001",
+      "descripcion": "Renovación Canal de Denuncias — certificación anual",
+      "severidad": "rojo",
+      "categoria": "programa",
+      "vencimiento": "2026-07-07",
+      "fuente": "Interna"
+    },
+    {
+      "id": "v002",
+      "descripcion": "Actualización Mapa de Riesgos — revisión semestral",
+      "severidad": "naranja",
+      "categoria": "riesgo",
+      "vencimiento": "2026-08-06",
+      "fuente": "Ley 27.401 art. 23"
+    },
+    {
+      "id": "v003",
+      "descripcion": "Módulo de capacitación AML — cierre cohorte Q2",
+      "severidad": "naranja",
+      "categoria": "capacitacion",
+      "vencimiento": "2026-07-22",
+      "fuente": "UIF Res. 70/2011"
+    }
+  ]
+}

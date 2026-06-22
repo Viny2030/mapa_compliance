@@ -2,15 +2,23 @@ name: Health Check — Diario
 
 on:
   schedule:
-    - cron: "0 9 * * *"   # 9 AM UTC todos los días
+    - cron: "0 9 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   health:
     runs-on: ubuntu-latest
     steps:
-      - name: Check API en Railway
+      - name: Wake up + Check API en Railway
         run: |
+          # Primer intento — despierta Railway si está hibernando
+          curl -s https://mapa-compliance-production.up.railway.app/health || true
+          sleep 15
+          # Check real
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             https://mapa-compliance-production.up.railway.app/health || echo "000")
           echo "HTTP Status: $STATUS"

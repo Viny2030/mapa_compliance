@@ -212,7 +212,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
       </div>
     </div>
   </div>
-  <div class="nav-tabs" id="nav-tabs">
+    <div class="nav-tabs" id="nav-tabs">
     <button class="tab-btn active" data-panel="dashboard">📊 Dashboard</button>
     <button class="tab-btn" data-panel="ley27401">⚖️ Ley 27.401</button>
     <button class="tab-btn" data-panel="riesgo">🗺️ Riesgo</button>
@@ -225,6 +225,13 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <button class="tab-btn" data-panel="legislacion">📋 Legislación</button>
     <button class="tab-btn" data-panel="reporte">📄 Reporte</button>
     <button class="tab-btn" data-panel="denuncias">🔒 Canal de Denuncias</button>
+    <button class="tab-btn" onclick="window.location='benchmark.html'">📊 Benchmark</button>
+    <button class="tab-btn" onclick="window.location='conflicto_interes.html'">⚖️ Conflictos</button>
+    <button class="tab-btn" onclick="window.location='predictor.html'">🤖 Predictor</button>
+    <button class="tab-btn" onclick="window.location='incidentes.html'">🚨 Incidentes</button>
+    <button class="tab-btn" onclick="window.location='controles.html'">🛡️ Controles</button>
+    <button class="tab-btn" onclick="window.location='capacitaciones.html'">✍️ Firmas</button>
+    <button class="tab-btn" onclick="window.location='documentos.html'">📁 Documentos</button>
   </div>
 </nav>
 
@@ -1231,6 +1238,60 @@ document.addEventListener('DOMContentLoaded',async()=>{
   await sincronizarDueDiligenceConMeaci();
   renderAll();
 });
+
+// ── PARCHE: Alertas cruzadas + Score con penalización ─────────────────────
+function leerIncidentesLS(){
+  try{ return JSON.parse(localStorage.getItem('inc_data')||'[]'); }catch(e){ return []; }
+}
+function leerControlesLS(){
+  try{ return JSON.parse(localStorage.getItem('ctrl_data')||'[]'); }catch(e){ return []; }
+}
+
+const _calcScoreBase = calcScore.bind({});
+
+calcScore = function(){
+  const base = _calcScoreBase();
+  const incs = leerIncidentesLS();
+  const criticos = incs.filter(i=>i.severidad==='critico'&&(i.estado==='abierto'||i.estado==='investigando')).length;
+  const altos    = incs.filter(i=>i.severidad==='alto'&&(i.estado==='abierto'||i.estado==='investigando')).length;
+  const penalizacion = Math.min(15, criticos*3 + altos*1);
+  return { ...base, total: Math.max(0, base.total - penalizacion), penalizacion };
+};
+
+const _renderDashBase = renderDashboard.bind({});
+
+renderDashboard = function(){
+  _renderDashBase();
+  const incs  = leerIncidentesLS();
+  const ctrls = leerControlesLS();
+  const sc    = calcScore();
+  const cont  = document.getElementById('alertas-cont');
+  if(!cont) return;
+
+  const incsActivos  = incs.filter(i=>i.estado==='abierto'||i.estado==='investigando');
+  const incsCriticos = incs.filter(i=>i.severidad==='critico'&&(i.estado==='abierto'||i.estado==='investigando'));
+  const ctrlsPend    = ctrls.filter(c=>c.estado==='pendiente');
+  const ctrlsParc    = ctrls.filter(c=>c.estado==='parcial');
+
+  let extras = '';
+  if(incsCriticos.length)
+    extras += `<div class="alerta roja"><span class="alerta-ico">🚨</span><span><strong>${incsCriticos.length} incidente(s) CRÍTICO(S) sin cerrar</strong> — <a href="incidentes.html" style="color:inherit;font-weight:700">Ver Incidentes →</a></span></div>`;
+  else if(incsActivos.length)
+    extras += `<div class="alerta naranja"><span class="alerta-ico">⚠️</span><span>${incsActivos.length} incidente(s) activo(s) — <a href="incidentes.html" style="color:inherit;font-weight:700">Ver →</a></span></div>`;
+  if(ctrlsPend.length)
+    extras += `<div class="alerta naranja"><span class="alerta-ico">🛡️</span><span>${ctrlsPend.length} control(es) pendiente(s) de implementar — <a href="controles.html" style="color:inherit;font-weight:700">Ver Controles →</a></span></div>`;
+  if(ctrlsParc.length)
+    extras += `<div class="alerta naranja"><span class="alerta-ico">⚙️</span><span>${ctrlsParc.length} control(es) con implementación parcial — <a href="controles.html" style="color:inherit;font-weight:700">Ver →</a></span></div>`;
+  if(sc.penalizacion > 0)
+    extras += `<div class="alerta roja"><span class="alerta-ico">📉</span><span>Score reducido <strong>-${sc.penalizacion} pts</strong> por incidentes críticos/altos activos</span></div>`;
+
+  if(extras){
+    const sinAlertas = cont.querySelector('.alerta.verde');
+    if(sinAlertas) sinAlertas.remove();
+    cont.insertAdjacentHTML('afterbegin', extras);
+  }
+};
+
 </script>
 </body>
 </html>

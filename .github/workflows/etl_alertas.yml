@@ -1,9 +1,12 @@
-name: ETL — Alertas regulatorias
+name: ETL Alertas Reguladoras
 
 on:
   schedule:
-    - cron: "0 6 * * 1"   # Lunes 6 AM UTC (= 3 AM Argentina)
-  workflow_dispatch:       # Permitir ejecución manual
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   etl:
@@ -11,26 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Instalar dependencias
+        run: pip install requests beautifulsoup4 lxml
 
-      - name: Correr ETL Alertas
-        env:
-          DATA_DIR: data
-        run: python -m scripts.etl_alertas
+      - name: Ejecutar ETL alertas y normativa
+        run: python scripts/etl_alertas.py
 
-      - name: Correr ETL Normativa
-        env:
-          DATA_DIR: data
-        run: python -m scripts.etl_normativa
-
-      - name: Commit datos actualizados
+      - name: Commit y push si hay cambios
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: actualización automática alertas y normativa [skip ci]"
           file_pattern: "data/*.json"
+          commit_author: "Viny2030 <59251479+Viny2030@users.noreply.github.com>"
