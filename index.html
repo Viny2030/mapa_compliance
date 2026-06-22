@@ -63,7 +63,6 @@ header p{opacity:.75;font-size:.88rem}
 .madurez-bar{display:flex;gap:3px;height:11px;border-radius:5px;overflow:hidden;margin:.5rem 0}
 .mseg{flex:1;background:#e0e7ef}.mseg.on.inicial{background:var(--rojo)}.mseg.on.medio{background:var(--naranja)}.mseg.on.avanzado{background:var(--verde)}
 .riesgo-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .8rem;border-radius:8px;margin-bottom:.4rem;background:#f8fafc}
-/* Heatmap probabilidad x impacto */
 .heatmap-wrap{display:flex;gap:.6rem;align-items:flex-start;overflow-x:auto;padding-bottom:.3rem}
 .heatmap-yaxis{display:flex;flex-direction:column-reverse;justify-content:space-between;height:var(--hm-h,250px);flex-shrink:0;padding:2px 0}
 .heatmap-yaxis span{font-size:.66rem;color:var(--muted);font-weight:600;height:50px;display:flex;align-items:center}
@@ -81,7 +80,6 @@ header p{opacity:.75;font-size:.88rem}
 .hm-leyenda{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.7rem;font-size:.73rem;color:var(--muted)}
 .hm-leyenda-item{display:flex;align-items:center;gap:.35rem}
 .hm-sw{width:11px;height:11px;border-radius:3px;display:inline-block}
-/* Formulario de autoevaluación */
 .autoeval-banner{font-size:.78rem;color:#0d47a1;background:#e3f2fd;border-left:3px solid var(--sec);padding:.55rem .75rem;border-radius:6px;margin-bottom:.8rem}
 .autoeval-item{background:#f8fafc;border-radius:8px;padding:.7rem .8rem;margin-bottom:.6rem}
 .autoeval-area{font-size:.85rem;font-weight:700;color:var(--pri);margin-bottom:.5rem}
@@ -96,7 +94,6 @@ header p{opacity:.75;font-size:.88rem}
 .autoeval-fuente-tag.autoevaluacion{background:#e8f5e9;color:var(--verde)}
 .autoeval-fuente-tag.default_sector{background:#fff3e0;color:var(--naranja)}
 .autoeval-fuente-tag.due_diligence{background:#fdecea;color:var(--rojo)}
-/* Calendario regulatorio */
 .cal-leyenda{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem;font-size:.76rem;color:var(--muted)}
 .cal-leyenda-item{display:flex;align-items:center;gap:.35rem}
 .cal-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
@@ -156,13 +153,9 @@ header p{opacity:.75;font-size:.88rem}
 .hist-row{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border-bottom:1px solid var(--borde);font-size:.8rem;flex-wrap:wrap}
 .hist-row:last-child{border-bottom:none}
 .radar-row{display:flex;align-items:flex-start;gap:.7rem;padding:.6rem .75rem;border-radius:8px;margin-bottom:.4rem;background:#f8fafc;border-left:3px solid}
-.radar-row.alta{border-color:var(--rojo)}
-.radar-row.media{border-color:var(--naranja)}
-.radar-row.baja{border-color:var(--amarillo)}
+.radar-row.alta{border-color:var(--rojo)}.radar-row.media{border-color:var(--naranja)}.radar-row.baja{border-color:var(--amarillo)}
 .radar-nivel-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:.4rem}
-.radar-row.alta .radar-nivel-dot{background:var(--rojo)}
-.radar-row.media .radar-nivel-dot{background:var(--naranja)}
-.radar-row.baja .radar-nivel-dot{background:var(--amarillo)}
+.radar-row.alta .radar-nivel-dot{background:var(--rojo)}.radar-row.media .radar-nivel-dot{background:var(--naranja)}.radar-row.baja .radar-nivel-dot{background:var(--amarillo)}
 .radar-body{flex:1;min-width:0}
 .radar-empresa{font-size:.84rem;font-weight:700}
 .radar-desc{font-size:.76rem;color:var(--muted);margin-top:.15rem}
@@ -231,6 +224,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <button class="tab-btn" data-panel="calendario">📅 Calendario</button>
     <button class="tab-btn" data-panel="legislacion">📋 Legislación</button>
     <button class="tab-btn" data-panel="reporte">📄 Reporte</button>
+    <button class="tab-btn" data-panel="denuncias">🔒 Canal de Denuncias</button>
   </div>
 </nav>
 
@@ -488,6 +482,17 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
   </div>
 </div>
 
+<!-- CANAL DE DENUNCIAS -->
+<div class="panel" id="panel-denuncias">
+  <div class="wrap" style="padding:0">
+    <iframe
+      src="canal_denuncias.html"
+      style="width:100%;height:calc(100vh - 108px);border:none;display:block"
+      title="Canal de Denuncias"
+    ></iframe>
+  </div>
+</div>
+
 <footer data-i18n="footer_texto">
   Monitor de Compliance Empresarial · Ley 27.401 · Estándares Internacionales ·
   Ph.D. Vicente H. Monteverde ·
@@ -497,11 +502,10 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 
 <script src="config.js"></script>
 <script>
-// ── i18n ───────────────────────────────────────────────────────────────────
 const T={
   es:{
     brand:'⚖️ Monitor de Compliance',
-    dashboard:'Dashboard',ley27401:'Ley 27.401',riesgo:'Riesgo',capacitacion:'Capacitación',duediligence:'Due Diligence',internacional:'Internacional',rite:'RITE',mejoras:'Mejoras & Alertas',legislacion:'Legislación',reporte:'Reporte',
+    dashboard:'Dashboard',ley27401:'Ley 27.401',riesgo:'Riesgo',capacitacion:'Capacitación',duediligence:'Due Diligence',internacional:'Internacional',rite:'RITE',mejoras:'Mejoras & Alertas',legislacion:'Legislación',reporte:'Reporte',denuncias:'Canal de Denuncias',
     completo:'Completo',en_progreso:'En progreso',pendiente:'Pendiente',alto:'ALTO',medio:'MEDIO',bajo:'BAJO',
     h_titulo:'Monitor de Compliance Empresarial',h_sub:'Programa de Integridad · Ley 27.401 · Estándares Internacionales',
     page_title:'Monitor de Compliance Empresarial',
@@ -517,8 +521,7 @@ const T={
     dd_placeholder:'Ej: 30-54667581-3 (Siemens)',verificar_btn:'Verificar →',dd_ejemplos:'Ejemplos: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)',
     dd_radar_titulo:'🌐 Radar de mercado — Empresas sancionadas OCDE con presencia en Argentina',
     dd_radar_sub:'Listado en vivo desde MEACI. No implica relación comercial con tu empresa — es información de contexto para evaluar terceros nuevos.',
-    dd_radar_cargando:'Cargando alertas desde MEACI...',
-    dd_radar_error:'No se pudo conectar con MEACI en este momento. Probá nuevamente más tarde.',
+    dd_radar_cargando:'Cargando alertas desde MEACI...',dd_radar_error:'No se pudo conectar con MEACI en este momento. Probá nuevamente más tarde.',
     dd_radar_nivel_alta:'Alta',dd_radar_nivel_media:'Media',dd_radar_nivel_baja:'Baja',
     resumen_verificaciones:'Resumen verificaciones',historial:'Historial',
     exposicion_internacional:'Exposición internacional',marco_legal:'Marco legal aplicable',monitor_meaci:'Monitor MEACI',
@@ -564,37 +567,19 @@ const T={
     dona_27_completo:'Completo',dona_27_progreso:'En progreso',dona_27_pendiente:'Pendiente',
     todos_completados:'Todos los elementos completados',
     riesgo_area_label:'área(s)',riesgo_alto_label:'Alto',riesgo_medio_label:'Medio',riesgo_bajo_label:'Bajo',
-
-    heatmap_titulo:'Mapa de calor — Probabilidad × Impacto',
-
-    heatmap_sub:'Matriz de riesgo inherente por área. Cada celda muestra cuántas áreas caen en esa combinación.',
-
+    heatmap_titulo:'Mapa de calor — Probabilidad × Impacto',heatmap_sub:'Matriz de riesgo inherente por área. Cada celda muestra cuántas áreas caen en esa combinación.',
     hm_eje_probabilidad:'Probabilidad',hm_eje_impacto:'Impacto',
-
     hm_prob_1:'1 Rara vez',hm_prob_2:'2 Improbable',hm_prob_3:'3 Posible',hm_prob_4:'4 Probable',hm_prob_5:'5 Casi certeza',
-
     hm_impacto_1:'1 Insignificante',hm_impacto_2:'2 Menor',hm_impacto_3:'3 Moderado',hm_impacto_4:'4 Mayor',hm_impacto_5:'5 Catastrófico',
-
-    hm_celda_vacia:'Sin áreas en esta combinación',
-
-    hm_aviso_fallback:'Algunas áreas no tienen evaluación de probabilidad/impacto cargada — se ubicaron en la matriz con un valor aproximado según su nivel de riesgo general.',
-
+    hm_celda_vacia:'Sin áreas en esta combinación',hm_aviso_fallback:'Algunas áreas no tienen evaluación de probabilidad/impacto cargada — se ubicaron en la matriz con un valor aproximado según su nivel de riesgo general.',
     hm_aviso_sugerido:'área(s) con valores sugeridos de referencia (sin confirmar). Reemplazar por una autoevaluación real antes de presentar este reporte.',
-
     hm_resumen_titulo:'área(s) en zona crítica (riesgo alto)',hm_resumen_ninguna:'Ninguna área en zona crítica',
-
     hm_leyenda_bajo:'Bajo',hm_leyenda_medio:'Medio',hm_leyenda_alto:'Alto',
-
     hm_btn_autoeval:'✏️ Cargar autoevaluación',hm_score_label:'Score',
-
     hm_autoeval_banner:'Elegí probabilidad e impacto para cada área según el conocimiento real del negocio. Esto reemplaza los valores sugeridos de ejemplo. Los cambios se guardan en este navegador.',
-
     hm_btn_guardar:'💾 Guardar evaluación',hm_btn_reset:'↺ Restaurar valores sugeridos',
-
     hm_fuente_autoevaluacion:'Autoevaluado',hm_fuente_default_sector:'Sugerido',hm_fuente_due_diligence:'Due Diligence',
-
     hm_dd_nota:'Probabilidad elevada automáticamente por alerta OCDE en due diligence de proveedor',
-
     hm_sin_cambios:'No se detectaron cambios respecto a los valores actuales.',
     dona_dd_sin:'Sin antecedentes',dona_dd_alerta:'Alerta OCDE',
     dd_th_razon:'Razón social',dd_th_cuit:'CUIT',dd_th_fecha:'Fecha',dd_th_resultado:'Resultado',dd_ok:'✓ OK',dd_ocde:'⚠ OCDE',
@@ -606,8 +591,7 @@ const T={
     rite_no_registrada:'No registrada en RITE',rite_recomendable:'Registrarse es recomendable para contratar con el Estado.',
     obligatorio_incompleto:'Obligatorio incompleto:',opcional_pendiente:'Opcional pendiente:',sin_alertas_buen_estado:'Sin alertas activas — programa en buen estado',
     proveedor_alerta_ocde:'Proveedor con alerta OCDE:',
-    int_aplica:'✓ Aplica',int_no_aplica:'No aplica',int_opera:'✓ Opera',
-    leyes_aplicables_label:'Leyes aplicables:',
+    int_aplica:'✓ Aplica',int_no_aplica:'No aplica',int_opera:'✓ Opera',leyes_aplicables_label:'Leyes aplicables:',
     pais_usa:'Estados Unidos',pais_uk:'Reino Unido',pais_ue:'Francia / UE',pais_brasil:'Brasil',
     rep_razon_social:'Razón social',rep_cuit:'CUIT',rep_sector:'Sector',rep_tamanio:'Tamaño',rep_provincias:'Provincias',rep_internacional:'Internacional',
     rep_resp_compliance:'Responsable compliance',rep_contacto:'Contacto',rep_fecha:'Fecha',si:'Sí',no:'No',
@@ -617,20 +601,13 @@ const T={
     rep_promedio_completitud:'Promedio completitud',rep_modulos_obligatorios:'Módulos obligatorios',rep_con_menos_50:'Con <50%',
     rep_registrado:'Registrado',rep_nivel:'Nivel',rep_url:'URL',
     plan_completo:'Completo',plan_en_progreso:'En progreso',plan_pendiente:'Pendiente',
-
-    cal_nav:'Calendario',cal_titulo:'📅 Calendario regulatorio unificado',
-
-    cal_sub:'Capacitaciones, plan de mejora y vencimientos normativos en un solo lugar.',
-
+    cal_nav:'Calendario',cal_titulo:'📅 Calendario regulatorio unificado',cal_sub:'Capacitaciones, plan de mejora y vencimientos normativos en un solo lugar.',
     cal_tipo_capacitacion:'Capacitación',cal_tipo_plan_mejora:'Plan de mejora',cal_tipo_normativo:'Normativo',
-
-    cal_proximos_titulo:'Próximos vencimientos (todas las fuentes)',
-
-    cal_hoy:'Hoy',cal_sin_proximos:'Sin vencimientos próximos en ninguna fuente',
+    cal_proximos_titulo:'Próximos vencimientos (todas las fuentes)',cal_hoy:'Hoy',cal_sin_proximos:'Sin vencimientos próximos en ninguna fuente',
   },
   en:{
     brand:'⚖️ Compliance Monitor',
-    dashboard:'Dashboard',ley27401:'Law 27.401',riesgo:'Risk Map',capacitacion:'Training',duediligence:'Due Diligence',internacional:'International',rite:'RITE',mejoras:'Improvements',legislacion:'Legislation',reporte:'Report',
+    dashboard:'Dashboard',ley27401:'Law 27.401',riesgo:'Risk Map',capacitacion:'Training',duediligence:'Due Diligence',internacional:'International',rite:'RITE',mejoras:'Improvements',legislacion:'Legislation',reporte:'Report',denuncias:'Reporting Channel',
     completo:'Complete',en_progreso:'In progress',pendiente:'Pending',alto:'HIGH',medio:'MEDIUM',bajo:'LOW',
     h_titulo:'Corporate Compliance Monitor',h_sub:'Integrity Program · Law 27.401 · International Standards',
     page_title:'Corporate Compliance Monitor',
@@ -645,19 +622,18 @@ const T={
     dd_titulo:'🔍 Tax ID Checker — OECD List',dd_desc:'Check if a vendor has a history in international corruption cases. Powered by',
     dd_placeholder:'E.g.: 30-54667581-3 (Siemens)',verificar_btn:'Verify →',dd_ejemplos:'Examples: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)',
     dd_radar_titulo:'🌐 Market radar — OECD-sanctioned companies with presence in Argentina',
-    dd_radar_sub:'Live listing from MEACI. Does not imply a business relationship with your company — it is contextual information for evaluating new third parties.',
-    dd_radar_cargando:'Loading alerts from MEACI...',
-    dd_radar_error:'Could not connect to MEACI right now. Please try again later.',
+    dd_radar_sub:'Live listing from MEACI. Does not imply a business relationship with your company.',
+    dd_radar_cargando:'Loading alerts from MEACI...',dd_radar_error:'Could not connect to MEACI right now. Please try again later.',
     dd_radar_nivel_alta:'High',dd_radar_nivel_media:'Medium',dd_radar_nivel_baja:'Low',
     resumen_verificaciones:'Verification summary',historial:'History',
     exposicion_internacional:'International exposure',marco_legal:'Applicable legal framework',monitor_meaci:'MEACI Monitor',
     monitor_meaci_desc:'31 cases of OECD multijurisdictional resolutions (MJR) 2008-2026 with presence in Argentina.',abrir_meaci:'🔍 Open MEACI →',
-    rite_titulo:'🏛️ RITE Registry — Anti-Corruption Office',rite_desc:'Official platform of the Anti-Corruption Office to develop and register Integrity Programs. Voluntary, free, and key to contracting with the State.',
+    rite_titulo:'🏛️ RITE Registry — Anti-Corruption Office',rite_desc:'Official platform of the Anti-Corruption Office to develop and register Integrity Programs.',
     rite_porque_titulo:'Why register?',
     rite_benef1:'Validates the Program before the State for tenders (Art. 24 Law 27.401)',rite_benef2:'Reduces criminal liability in investigations (Art. 9)',
     rite_benef3:'Improves reputation with clients, partners and investors',rite_benef4:'Facilitates due diligence with other companies',rite_benef5:'UNODC highlighted RITE as an international benchmark in 2024',
     rite_modulos_titulo:'RITE Modules',
-    rite_mod1_t:'Integrity Program',rite_mod1_s:'Main module',rite_mod1_d:'Assesses maturity level (initial/medium/advanced) per Art. 23 Law 27.401. Questionnaire differentiated by company size.',
+    rite_mod1_t:'Integrity Program',rite_mod1_s:'Main module',rite_mod1_d:'Assesses maturity level per Art. 23 Law 27.401.',
     rite_mod2_t:'Due Diligence',rite_mod2_s:'Confidential',rite_mod2_d:'Judicial background, remediation actions and ultimate beneficial owners.',
     rite_mod3_t:'Personal Data',rite_mod3_s:'New 2024',rite_mod3_d:'Status of privacy policies and data protection strategies.',
     rite_como_titulo:'How to register',
@@ -673,70 +649,46 @@ const T={
     reporte_titulo:'📄 Executive Compliance Report',reporte_desc:'Automatically generated. Suitable for presentation to the Anti-Corruption Office, board, or external auditors.',
     rep_sec1:'1. Organization data',rep_sec2:'2. Integrity Program status',rep_sec3:'3. Compliance score',rep_sec4:'4. Pending elements',
     rep_sec5:'5. Training',rep_sec6:'6. RITE registration',rep_sec7:'7. Improvement plan',
-    reporte_disclaimer:'Report generated by the Corporate Compliance Monitor. It does not replace the professional assessment of a lawyer or compliance officer. Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Transparency Ecosystem</a>',
+    reporte_disclaimer:'Report generated by the Corporate Compliance Monitor. Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Transparency Ecosystem</a>',
     imprimir_btn:'🖨️ Print / Save PDF',
-    footer_texto:'Corporate Compliance Monitor · Law 27.401 · International Standards · Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Transparency Map</a> · <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a> · <a href="benchmark.html" target="_blank">📊 GRC Benchmark</a> · <a href="documentos.html" target="_blank">📄 Document Management</a>',
+    footer_texto:'Corporate Compliance Monitor · Law 27.401 · Ph.D. Vicente H. Monteverde · <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a> · <a href="benchmark.html" target="_blank">📊 GRC Benchmark</a> · <a href="documentos.html" target="_blank">📄 Document Management</a>',
     nivel_avanzado:'Advanced Level',nivel_medio:'Medium Level',nivel_inicial:'Initial Level',
     score_desc_avanzado:'Robust and well-documented program',score_desc_medio:'Program in development with significant progress',score_desc_inicial:'Program in early stage',
     score_sig_avanzado:'✅ Maximum level reached',score_sig_medio:'For Advanced: complete pending elements and exceed 80% in training',score_sig_inicial:'For Medium: complete the 3 mandatory items of Art. 23 and exceed 50% in training',
     eje_programa:'Program',eje_capacitacion:'Training',eje_dd:'Due Diligence',eje_riesgo:'Risk',eje_comunicacion:'Communication',eje_investigacion:'Investigation',
     dona_oblig_ok:'Mand. OK',dona_en_progreso:'In progress',dona_opc_ok:'Opt. OK',dona_pendientes:'Pending',
-    alerta_obligatorios_incompletos:'mandatory Art. 23 element(s) incomplete',
-    alerta_modulos_60:'mandatory module(s) below 60% completion',
-    alerta_proveedores_ocde:'vendor(s) with OECD alert in history',
-    alerta_no_rite:'Not registered in RITE — recommended for contracting with the State',
-    alerta_sin_criticas:'No critical alerts active',
-    venc_sin:'No deadlines in the next 120 days',venc_vence:'due',dias_label:'days',al_label:'at',
+    alerta_obligatorios_incompletos:'mandatory Art. 23 element(s) incomplete',alerta_modulos_60:'mandatory module(s) below 60% completion',
+    alerta_proveedores_ocde:'vendor(s) with OECD alert in history',alerta_no_rite:'Not registered in RITE — recommended for contracting with the State',
+    alerta_sin_criticas:'No critical alerts active',venc_sin:'No deadlines in the next 120 days',venc_vence:'due',dias_label:'days',al_label:'at',
     mad_desc_inicial:'Has the minimum elements. Must complete the 3 mandatory items to contract with the State.',
     mad_desc_medio:'Program in development. Completed the mandatory items and progressed on optional ones.',
     mad_desc_avanzado:'Robust, documented program. Maximum protection (Art. 9 Law 27.401).',
-    dona_27_completo:'Complete',dona_27_progreso:'In progress',dona_27_pendiente:'Pending',
-    todos_completados:'All elements completed',
+    dona_27_completo:'Complete',dona_27_progreso:'In progress',dona_27_pendiente:'Pending',todos_completados:'All elements completed',
     riesgo_area_label:'area(s)',riesgo_alto_label:'High',riesgo_medio_label:'Medium',riesgo_bajo_label:'Low',
-
-    heatmap_titulo:'Heat map — Probability × Impact',
-
-    heatmap_sub:'Inherent risk matrix by area. Each cell shows how many areas fall into that combination.',
-
+    heatmap_titulo:'Heat map — Probability × Impact',heatmap_sub:'Inherent risk matrix by area.',
     hm_eje_probabilidad:'Probability',hm_eje_impacto:'Impact',
-
     hm_prob_1:'1 Rare',hm_prob_2:'2 Unlikely',hm_prob_3:'3 Possible',hm_prob_4:'4 Likely',hm_prob_5:'5 Almost certain',
-
     hm_impacto_1:'1 Insignificant',hm_impacto_2:'2 Minor',hm_impacto_3:'3 Moderate',hm_impacto_4:'4 Major',hm_impacto_5:'5 Catastrophic',
-
-    hm_celda_vacia:'No areas in this combination',
-
-    hm_aviso_fallback:'Some areas have no probability/impact assessment loaded — they were placed on the matrix with an approximate value based on their overall risk level.',
-
-    hm_aviso_sugerido:'area(s) with suggested reference values (unconfirmed). Replace with a real self-assessment before presenting this report.',
-
+    hm_celda_vacia:'No areas in this combination',hm_aviso_fallback:'Some areas have no probability/impact assessment loaded.',
+    hm_aviso_sugerido:'area(s) with suggested reference values (unconfirmed).',
     hm_resumen_titulo:'area(s) in critical zone (high risk)',hm_resumen_ninguna:'No areas in critical zone',
-
     hm_leyenda_bajo:'Low',hm_leyenda_medio:'Medium',hm_leyenda_alto:'High',
-
     hm_btn_autoeval:'✏️ Load self-assessment',hm_score_label:'Score',
-
-    hm_autoeval_banner:'Choose probability and impact for each area based on real business knowledge. This replaces the suggested sample values. Changes are saved in this browser.',
-
+    hm_autoeval_banner:'Choose probability and impact for each area based on real business knowledge.',
     hm_btn_guardar:'💾 Save assessment',hm_btn_reset:'↺ Restore suggested values',
-
     hm_fuente_autoevaluacion:'Self-assessed',hm_fuente_default_sector:'Suggested',hm_fuente_due_diligence:'Due Diligence',
-
     hm_dd_nota:'Probability automatically raised due to an OECD alert in vendor due diligence',
-
     hm_sin_cambios:'No changes detected from the current values.',
     dona_dd_sin:'No record',dona_dd_alerta:'OECD alert',
     dd_th_razon:'Company name',dd_th_cuit:'Tax ID',dd_th_fecha:'Date',dd_th_resultado:'Result',dd_ok:'✓ OK',dd_ocde:'⚠ OECD',
-    dd_consultando:'⏳ Checking OECD-MEACI database...',
-    dd_alerta_label:'ALERT:',dd_empresa_sancionada:'sanctioned company',dd_caso:'OECD case:',dd_ver_meaci:'View in MEACI →',
+    dd_consultando:'⏳ Checking OECD-MEACI database...',dd_alerta_label:'ALERT:',dd_empresa_sancionada:'sanctioned company',dd_caso:'OECD case:',dd_ver_meaci:'View in MEACI →',
     dd_sin_antecedentes:'No record found:',dd_no_figura:'does not appear in the OECD database.',
     dd_sin_detectados:'No record found for',dd_verificar_conn:'(Check MEACI connectivity)',
     rite_registrada:'Company registered in RITE',rite_nivel_label:'Level:',rite_ver_registro:'View registration →',
     rite_no_registrada:'Not registered in RITE',rite_recomendable:'Registering is recommended for contracting with the State.',
     obligatorio_incompleto:'Incomplete mandatory item:',opcional_pendiente:'Pending optional item:',sin_alertas_buen_estado:'No active alerts — program in good standing',
     proveedor_alerta_ocde:'Vendor with OECD alert:',
-    int_aplica:'✓ Applies',int_no_aplica:'Not applicable',int_opera:'✓ Operates',
-    leyes_aplicables_label:'Applicable laws:',
+    int_aplica:'✓ Applies',int_no_aplica:'Not applicable',int_opera:'✓ Operates',leyes_aplicables_label:'Applicable laws:',
     pais_usa:'United States',pais_uk:'United Kingdom',pais_ue:'France / EU',pais_brasil:'Brazil',
     rep_razon_social:'Company name',rep_cuit:'Tax ID',rep_sector:'Sector',rep_tamanio:'Size',rep_provincias:'Regions',rep_internacional:'International',
     rep_resp_compliance:'Compliance officer',rep_contacto:'Contact',rep_fecha:'Date',si:'Yes',no:'No',
@@ -746,20 +698,13 @@ const T={
     rep_promedio_completitud:'Average completion',rep_modulos_obligatorios:'Mandatory modules',rep_con_menos_50:'Below 50%',
     rep_registrado:'Registered',rep_nivel:'Level',rep_url:'URL',
     plan_completo:'Complete',plan_en_progreso:'In progress',plan_pendiente:'Pending',
-
-    cal_nav:'Calendar',cal_titulo:'📅 Unified regulatory calendar',
-
-    cal_sub:'Training, improvement plan and regulatory deadlines in one place.',
-
+    cal_nav:'Calendar',cal_titulo:'📅 Unified regulatory calendar',cal_sub:'Training, improvement plan and regulatory deadlines in one place.',
     cal_tipo_capacitacion:'Training',cal_tipo_plan_mejora:'Improvement plan',cal_tipo_normativo:'Regulatory',
-
-    cal_proximos_titulo:'Upcoming deadlines (all sources)',
-
-    cal_hoy:'Today',cal_sin_proximos:'No upcoming deadlines from any source',
+    cal_proximos_titulo:'Upcoming deadlines (all sources)',cal_hoy:'Today',cal_sin_proximos:'No upcoming deadlines from any source',
   },
   pt:{
     brand:'⚖️ Monitor de Compliance',
-    dashboard:'Dashboard',ley27401:'Lei 27.401',riesgo:'Mapa de Risco',capacitacion:'Treinamento',duediligence:'Due Diligence',internacional:'Internacional',rite:'RITE',mejoras:'Melhorias',legislacion:'Legislação',reporte:'Relatório',
+    dashboard:'Dashboard',ley27401:'Lei 27.401',riesgo:'Mapa de Risco',capacitacion:'Treinamento',duediligence:'Due Diligence',internacional:'Internacional',rite:'RITE',mejoras:'Melhorias',legislacion:'Legislação',reporte:'Relatório',denuncias:'Canal de Denúncias',
     completo:'Completo',en_progreso:'Em andamento',pendiente:'Pendente',alto:'ALTO',medio:'MÉDIO',bajo:'BAIXO',
     h_titulo:'Monitor de Compliance Empresarial',h_sub:'Programa de Integridade · Lei 27.401 · Padrões Internacionais',
     page_title:'Monitor de Compliance Empresarial',
@@ -774,24 +719,23 @@ const T={
     dd_titulo:'🔍 Verificador de CNPJ/CUIT — Lista OCDE',dd_desc:'Verifique se um fornecedor tem antecedentes em casos internacionais de corrupção. Powered by',
     dd_placeholder:'Ex: 30-54667581-3 (Siemens)',verificar_btn:'Verificar →',dd_ejemplos:'Exemplos: 30-54667581-3 (Siemens) · 30-69142665-7 (SAP) · 30-57655868-3 (ABB)',
     dd_radar_titulo:'🌐 Radar de mercado — Empresas sancionadas OCDE com presença na Argentina',
-    dd_radar_sub:'Lista em tempo real do MEACI. Não implica relação comercial com sua empresa — é informação de contexto para avaliar novos terceiros.',
-    dd_radar_cargando:'Carregando alertas do MEACI...',
-    dd_radar_error:'Não foi possível conectar ao MEACI neste momento. Tente novamente mais tarde.',
+    dd_radar_sub:'Lista em tempo real do MEACI.',
+    dd_radar_cargando:'Carregando alertas do MEACI...',dd_radar_error:'Não foi possível conectar ao MEACI neste momento.',
     dd_radar_nivel_alta:'Alta',dd_radar_nivel_media:'Média',dd_radar_nivel_baja:'Baixa',
     resumen_verificaciones:'Resumo das verificações',historial:'Histórico',
     exposicion_internacional:'Exposição internacional',marco_legal:'Marco legal aplicável',monitor_meaci:'Monitor MEACI',
     monitor_meaci_desc:'31 casos de resoluções multijurisdicionais (MJR) OCDE 2008-2026 com presença na Argentina.',abrir_meaci:'🔍 Abrir MEACI →',
-    rite_titulo:'🏛️ Registro RITE — Escritório Anticorrupção',rite_desc:'Plataforma oficial da OA para desenvolver e registrar Programas de Integridade. Voluntário, gratuito e fundamental para contratar com o Estado.',
+    rite_titulo:'🏛️ Registro RITE — Escritório Anticorrupção',rite_desc:'Plataforma oficial da OA para desenvolver e registrar Programas de Integridade.',
     rite_porque_titulo:'Por que se registrar?',
     rite_benef1:'Credencia o Programa perante o Estado para licitações (Art. 24 Lei 27.401)',rite_benef2:'Reduz a responsabilidade penal em investigações (Art. 9)',
     rite_benef3:'Melhora a reputação perante clientes, parceiros e investidores',rite_benef4:'Facilita o due diligence com outras empresas',rite_benef5:'A UNODC destacou o RITE como referência internacional em 2024',
     rite_modulos_titulo:'Módulos do RITE',
-    rite_mod1_t:'Programa de Integridade',rite_mod1_s:'Módulo principal',rite_mod1_d:'Avalia o nível de maturidade (inicial/médio/avançado) conforme o Art. 23 da Lei 27.401. Questionário diferenciado por porte da empresa.',
+    rite_mod1_t:'Programa de Integridade',rite_mod1_s:'Módulo principal',rite_mod1_d:'Avalia o nível de maturidade conforme o Art. 23 da Lei 27.401.',
     rite_mod2_t:'Due Diligence',rite_mod2_s:'Confidencial',rite_mod2_d:'Antecedentes judiciais, ações de remediação e beneficiários finais.',
     rite_mod3_t:'Dados Pessoais',rite_mod3_s:'Novo 2024',rite_mod3_d:'Status das políticas de privacidade e estratégias de proteção de dados.',
     rite_como_titulo:'Como se registrar',
     rite_paso1:'Acesse <a href="https://www.rite.gob.ar" target="_blank"><strong>rite.gob.ar</strong></a> e crie uma conta com o CUIT da empresa',
-    rite_paso2:'Preencha o questionário inicial para classificar o porte (Micro/Pequena, Média ou Grande)',
+    rite_paso2:'Preencha o questionário inicial para classificar o porte',
     rite_paso3:'Responda aos módulos: Programa de Integridade, Due Diligence e Dados Pessoais',
     rite_paso4:'Obtenha sua certificação de nível e o comprovante de registro',
     rite_paso5:'Atualize anualmente para manter o credenciamento vigente',
@@ -799,73 +743,49 @@ const T={
     alertas_activas_2:'🔴 Alertas ativos',evolucion_score:'📈 Evolução do score',brechas_titulo:'🎯 Lacunas vs. padrão OA',
     leyenda_actual:'Atual',leyenda_minimo_oa:'Mínimo OA',leyenda_avanzado:'Nível avançado',plan_mejora_titulo:'📋 Plano de melhoria priorizado',
     leg_search_placeholder:'🔍 Buscar norma, artigo ou tema...',leg_sin_resultados:'Sem resultados.',leg_ver_texto:'Ver texto oficial →',
-    reporte_titulo:'📄 Relatório Executivo de Compliance',reporte_desc:'Gerado automaticamente. Adequado para apresentação ao Escritório Anticorrupção, diretoria ou auditores externos.',
+    reporte_titulo:'📄 Relatório Executivo de Compliance',reporte_desc:'Gerado automaticamente. Adequado para apresentação ao Escritório Anticorrupção.',
     rep_sec1:'1. Dados da organização',rep_sec2:'2. Status do Programa de Integridade',rep_sec3:'3. Score de compliance',rep_sec4:'4. Elementos pendentes',
     rep_sec5:'5. Treinamento',rep_sec6:'6. Registro RITE',rep_sec7:'7. Plano de melhoria',
-    reporte_disclaimer:'Relatório gerado pelo Monitor de Compliance Empresarial. Não substitui a avaliação profissional de um advogado ou compliance officer. Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Ecossistema Transparência</a>',
+    reporte_disclaimer:'Relatório gerado pelo Monitor de Compliance Empresarial. Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Ecossistema Transparência</a>',
     imprimir_btn:'🖨️ Imprimir / Salvar PDF',
-    footer_texto:'Monitor de Compliance Empresarial · Lei 27.401 · Padrões Internacionais · Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Mapa Transparência</a> · <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a> · <a href="benchmark.html" target="_blank">📊 Benchmark GRC</a> · <a href="documentos.html" target="_blank">📄 Gestão Documental</a>',
+    footer_texto:'Monitor de Compliance Empresarial · Lei 27.401 · Ph.D. Vicente H. Monteverde · <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a> · <a href="benchmark.html" target="_blank">📊 Benchmark GRC</a> · <a href="documentos.html" target="_blank">📄 Gestão Documental</a>',
     nivel_avanzado:'Nível Avançado',nivel_medio:'Nível Médio',nivel_inicial:'Nível Inicial',
     score_desc_avanzado:'Programa robusto e bem documentado',score_desc_medio:'Programa em desenvolvimento com avanços significativos',score_desc_inicial:'Programa em estágio inicial',
     score_sig_avanzado:'✅ Nível máximo alcançado',score_sig_medio:'Para Avançado: completar elementos pendentes e superar 80% nos treinamentos',score_sig_inicial:'Para Médio: completar os 3 obrigatórios do Art. 23 e superar 50% nos treinamentos',
     eje_programa:'Programa',eje_capacitacion:'Treinamento',eje_dd:'Due Diligence',eje_riesgo:'Risco',eje_comunicacion:'Comunicação',eje_investigacion:'Investigação',
     dona_oblig_ok:'Obrig. OK',dona_en_progreso:'Em andamento',dona_opc_ok:'Opc. OK',dona_pendientes:'Pendentes',
-    alerta_obligatorios_incompletos:'elemento(s) obrigatório(s) do Art. 23 incompletos',
-    alerta_modulos_60:'módulo(s) obrigatório(s) com menos de 60% de conclusão',
-    alerta_proveedores_ocde:'fornecedor(es) com alerta OCDE no histórico',
-    alerta_no_rite:'Não registrada no RITE — recomendado para contratar com o Estado',
-    alerta_sin_criticas:'Sem alertas críticos ativos',
-    venc_sin:'Sem vencimentos nos próximos 120 dias',venc_vence:'vence',dias_label:'dias',al_label:'em',
+    alerta_obligatorios_incompletos:'elemento(s) obrigatório(s) do Art. 23 incompletos',alerta_modulos_60:'módulo(s) obrigatório(s) com menos de 60% de conclusão',
+    alerta_proveedores_ocde:'fornecedor(es) com alerta OCDE no histórico',alerta_no_rite:'Não registrada no RITE — recomendado para contratar com o Estado',
+    alerta_sin_criticas:'Sem alertas críticos ativos',venc_sin:'Sem vencimentos nos próximos 120 dias',venc_vence:'vence',dias_label:'dias',al_label:'em',
     mad_desc_inicial:'Possui os elementos mínimos. Deve completar os 3 obrigatórios para contratar com o Estado.',
     mad_desc_medio:'Programa em desenvolvimento. Completou os obrigatórios e avançou nos opcionais.',
     mad_desc_avanzado:'Programa robusto e documentado. Máxima proteção (Art. 9 Lei 27.401).',
-    dona_27_completo:'Completo',dona_27_progreso:'Em andamento',dona_27_pendiente:'Pendente',
-    todos_completados:'Todos os elementos concluídos',
+    dona_27_completo:'Completo',dona_27_progreso:'Em andamento',dona_27_pendiente:'Pendente',todos_completados:'Todos os elementos concluídos',
     riesgo_area_label:'área(s)',riesgo_alto_label:'Alto',riesgo_medio_label:'Médio',riesgo_bajo_label:'Baixo',
-
-    heatmap_titulo:'Mapa de calor — Probabilidade × Impacto',
-
-    heatmap_sub:'Matriz de risco inerente por área. Cada célula mostra quantas áreas caem nessa combinação.',
-
+    heatmap_titulo:'Mapa de calor — Probabilidade × Impacto',heatmap_sub:'Matriz de risco inerente por área.',
     hm_eje_probabilidad:'Probabilidade',hm_eje_impacto:'Impacto',
-
     hm_prob_1:'1 Raro',hm_prob_2:'2 Improvável',hm_prob_3:'3 Possível',hm_prob_4:'4 Provável',hm_prob_5:'5 Quase certeza',
-
     hm_impacto_1:'1 Insignificante',hm_impacto_2:'2 Menor',hm_impacto_3:'3 Moderado',hm_impacto_4:'4 Maior',hm_impacto_5:'5 Catastrófico',
-
-    hm_celda_vacia:'Sem áreas nesta combinação',
-
-    hm_aviso_fallback:'Algumas áreas não têm avaliação de probabilidade/impacto carregada — foram posicionadas na matriz com um valor aproximado conforme seu nível de risco geral.',
-
-    hm_aviso_sugerido:'área(s) com valores sugeridos de referência (não confirmados). Substituir por uma autoavaliação real antes de apresentar este relatório.',
-
+    hm_celda_vacia:'Sem áreas nesta combinação',hm_aviso_fallback:'Algumas áreas não têm avaliação de probabilidade/impacto carregada.',
+    hm_aviso_sugerido:'área(s) com valores sugeridos de referência (não confirmados).',
     hm_resumen_titulo:'área(s) em zona crítica (risco alto)',hm_resumen_ninguna:'Nenhuma área em zona crítica',
-
     hm_leyenda_bajo:'Baixo',hm_leyenda_medio:'Médio',hm_leyenda_alto:'Alto',
-
     hm_btn_autoeval:'✏️ Carregar autoavaliação',hm_score_label:'Score',
-
-    hm_autoeval_banner:'Escolha probabilidade e impacto para cada área conforme o conhecimento real do negócio. Isso substitui os valores sugeridos de exemplo. As alterações são salvas neste navegador.',
-
+    hm_autoeval_banner:'Escolha probabilidade e impacto para cada área conforme o conhecimento real do negócio.',
     hm_btn_guardar:'💾 Salvar avaliação',hm_btn_reset:'↺ Restaurar valores sugeridos',
-
     hm_fuente_autoevaluacion:'Autoavaliado',hm_fuente_default_sector:'Sugerido',hm_fuente_due_diligence:'Due Diligence',
-
     hm_dd_nota:'Probabilidade elevada automaticamente por alerta OCDE em due diligence de fornecedor',
-
     hm_sin_cambios:'Nenhuma alteração detectada em relação aos valores atuais.',
     dona_dd_sin:'Sem antecedentes',dona_dd_alerta:'Alerta OCDE',
     dd_th_razon:'Razão social',dd_th_cuit:'CUIT',dd_th_fecha:'Data',dd_th_resultado:'Resultado',dd_ok:'✓ OK',dd_ocde:'⚠ OCDE',
-    dd_consultando:'⏳ Consultando base OCDE-MEACI...',
-    dd_alerta_label:'ALERTA:',dd_empresa_sancionada:'empresa sancionada',dd_caso:'caso OCDE:',dd_ver_meaci:'Ver no MEACI →',
+    dd_consultando:'⏳ Consultando base OCDE-MEACI...',dd_alerta_label:'ALERTA:',dd_empresa_sancionada:'empresa sancionada',dd_caso:'caso OCDE:',dd_ver_meaci:'Ver no MEACI →',
     dd_sin_antecedentes:'Sem antecedentes:',dd_no_figura:'não consta na base OCDE.',
     dd_sin_detectados:'Nenhum antecedente detectado para',dd_verificar_conn:'(Verificar conectividade MEACI)',
     rite_registrada:'Empresa registrada no RITE',rite_nivel_label:'Nível:',rite_ver_registro:'Ver registro →',
     rite_no_registrada:'Não registrada no RITE',rite_recomendable:'Registrar-se é recomendado para contratar com o Estado.',
     obligatorio_incompleto:'Obrigatório incompleto:',opcional_pendiente:'Opcional pendente:',sin_alertas_buen_estado:'Sem alertas ativos — programa em bom estado',
     proveedor_alerta_ocde:'Fornecedor com alerta OCDE:',
-    int_aplica:'✓ Aplica',int_no_aplica:'Não aplica',int_opera:'✓ Opera',
-    leyes_aplicables_label:'Leis aplicáveis:',
+    int_aplica:'✓ Aplica',int_no_aplica:'Não aplica',int_opera:'✓ Opera',leyes_aplicables_label:'Leis aplicáveis:',
     pais_usa:'Estados Unidos',pais_uk:'Reino Unido',pais_ue:'França / UE',pais_brasil:'Brasil',
     rep_razon_social:'Razão social',rep_cuit:'CUIT',rep_sector:'Setor',rep_tamanio:'Porte',rep_provincias:'Regiões',rep_internacional:'Internacional',
     rep_resp_compliance:'Responsável compliance',rep_contacto:'Contato',rep_fecha:'Data',si:'Sim',no:'Não',
@@ -875,16 +795,9 @@ const T={
     rep_promedio_completitud:'Média de conclusão',rep_modulos_obligatorios:'Módulos obrigatórios',rep_con_menos_50:'Abaixo de 50%',
     rep_registrado:'Registrado',rep_nivel:'Nível',rep_url:'URL',
     plan_completo:'Completo',plan_en_progreso:'Em andamento',plan_pendiente:'Pendente',
-
-    cal_nav:'Calendário',cal_titulo:'📅 Calendário regulatório unificado',
-
-    cal_sub:'Treinamentos, plano de melhoria e vencimentos normativos em um só lugar.',
-
+    cal_nav:'Calendário',cal_titulo:'📅 Calendário regulatório unificado',cal_sub:'Treinamentos, plano de melhoria e vencimentos normativos em um só lugar.',
     cal_tipo_capacitacion:'Treinamento',cal_tipo_plan_mejora:'Plano de melhoria',cal_tipo_normativo:'Normativo',
-
-    cal_proximos_titulo:'Próximos vencimentos (todas as fontes)',
-
-    cal_hoy:'Hoje',cal_sin_proximos:'Sem vencimentos próximos em nenhuma fonte',
+    cal_proximos_titulo:'Próximos vencimentos (todas as fontes)',cal_hoy:'Hoje',cal_sin_proximos:'Sem vencimentos próximos em nenhuma fonte',
   }
 };
 let lang='es';
@@ -896,12 +809,8 @@ const tx=v=>{
 };
 
 function applyStaticI18n(){
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    el.innerHTML=t(el.dataset.i18n);
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-    el.setAttribute('placeholder',t(el.dataset.i18nPlaceholder));
-  });
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.setAttribute('placeholder',t(el.dataset.i18nPlaceholder));});
   document.getElementById('page-title').textContent=t('page_title');
   document.documentElement.lang=lang;
 }
@@ -940,7 +849,6 @@ function calcScore(){
   return{total:Math.min(100,p_ob+p_op+p_cap+p_dd+p_ri),programa:p_ob+p_op,capacitacion:p_cap,due_diligence:p_dd,riesgo:p_ri,ok_ob,prog_ob,ok_op,prog_op,avg_cap:Math.round(avg)};
 }
 const scColor=s=>s>=75?'#2e7d32':s>=45?'#e65100':'#c62828';
-
 const charts={};
 const dc=()=>matchMedia('(prefers-color-scheme: dark)').matches;
 function destroyC(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
@@ -948,32 +856,22 @@ function gc2(){return dc()?'#9c9a92':'#888780';}
 function gl(){return dc()?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';}
 
 function mkDona(id,data,labels,colors,cutout='65%'){
-  destroyC(id);
-  const ctx=document.getElementById(id);if(!ctx)return;
+  destroyC(id);const ctx=document.getElementById(id);if(!ctx)return;
   charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0}]},options:{cutout,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},animation:{duration:700}}});
 }
 function mkBar(id,labels,data,colors,horizontal=false,maxVal=null){
-  destroyC(id);
-  const ctx=document.getElementById(id);if(!ctx)return;
+  destroyC(id);const ctx=document.getElementById(id);if(!ctx)return;
   const opts={scales:{},plugins:{legend:{display:false}},animation:{duration:600}};
-  if(horizontal){
-    opts.indexAxis='y';
-    opts.scales.x={display:maxVal?true:false,max:maxVal||undefined,ticks:{callback:v=>maxVal?v+'%':v,font:{size:9}},grid:{color:gl()}};
-    opts.scales.y={ticks:{font:{size:9},color:gc2()},grid:{display:false}};
-  } else {
-    opts.scales.y={max:maxVal||undefined,ticks:{callback:v=>maxVal?v+'%':v,font:{size:9}},grid:{color:gl()}};
-    opts.scales.x={ticks:{font:{size:9},color:gc2()},grid:{display:false}};
-  }
+  if(horizontal){opts.indexAxis='y';opts.scales.x={display:maxVal?true:false,max:maxVal||undefined,ticks:{callback:v=>maxVal?v+'%':v,font:{size:9}},grid:{color:gl()}};opts.scales.y={ticks:{font:{size:9},color:gc2()},grid:{display:false}};}
+  else{opts.scales.y={max:maxVal||undefined,ticks:{callback:v=>maxVal?v+'%':v,font:{size:9}},grid:{color:gl()}};opts.scales.x={ticks:{font:{size:9},color:gc2()},grid:{display:false}};}
   charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4,borderWidth:0}]},options:opts});
 }
 function mkRadar(id,labels,datasets){
-  destroyC(id);
-  const ctx=document.getElementById(id);if(!ctx)return;
+  destroyC(id);const ctx=document.getElementById(id);if(!ctx)return;
   charts[id]=new Chart(ctx,{type:'radar',data:{labels,datasets},options:{scales:{r:{min:0,ticks:{font:{size:8}},pointLabels:{font:{size:9},color:gc2()}}},plugins:{legend:{display:false}},animation:{duration:600}}});
 }
 function mkLine(id,labels,data){
-  destroyC(id);
-  const ctx=document.getElementById(id);if(!ctx)return;
+  destroyC(id);const ctx=document.getElementById(id);if(!ctx)return;
   charts[id]=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Score',data,borderColor:'#1a3a5c',backgroundColor:'rgba(26,58,92,.08)',borderWidth:2,fill:true,tension:.4,pointBackgroundColor:'#1a3a5c',pointRadius:4}]},options:{scales:{y:{min:0,max:100,ticks:{font:{size:9}},grid:{color:gl()}},x:{ticks:{font:{size:9},color:gc2()},grid:{display:false}}},plugins:{legend:{display:false}},animation:{duration:700}}});
 }
 
@@ -990,10 +888,7 @@ function renderDashboard(){
   document.getElementById('score-sig').textContent=sc.total>=75?t('score_sig_avanzado'):sc.total>=45?t('score_sig_medio'):t('score_sig_inicial');
   const ejes=[{l:t('eje_programa'),v:sc.programa,m:40},{l:t('eje_capacitacion'),v:sc.capacitacion,m:25},{l:t('eje_dd'),v:sc.due_diligence,m:20},{l:t('eje_riesgo'),v:sc.riesgo,m:15}];
   document.getElementById('ejes-grid').innerHTML=ejes.map(e=>{const p=Math.round(e.v/e.m*100),c=p>=75?'verde':p>=45?'naranja':'rojo';return`<div class="eje ${c}"><div class="eje-num">${e.v}/${e.m}</div><div class="eje-name">${e.l}</div></div>`;}).join('');
-  mkDona('ch-prog',
-    [sc.ok_ob,sc.prog_ob,sc.ok_op,CONFIG.programa_integridad.elementos_opcionales.length-sc.ok_op-CONFIG.programa_integridad.elementos_opcionales.filter(e=>e.estado==='en_progreso').length],
-    [t('dona_oblig_ok'),t('dona_en_progreso'),t('dona_opc_ok'),t('dona_pendientes')],
-    ['#2e7d32','#e65100','#66bb6a','#e0e7ef'],'60%');
+  mkDona('ch-prog',[sc.ok_ob,sc.prog_ob,sc.ok_op,CONFIG.programa_integridad.elementos_opcionales.length-sc.ok_op-CONFIG.programa_integridad.elementos_opcionales.filter(e=>e.estado==='en_progreso').length],[t('dona_oblig_ok'),t('dona_en_progreso'),t('dona_opc_ok'),t('dona_pendientes')],['#2e7d32','#e65100','#66bb6a','#e0e7ef'],'60%');
   mkDona('ch-cap-dash',CONFIG.capacitaciones.map(c=>c.completado),CONFIG.capacitaciones.map(c=>tx(c.modulo).substring(0,16)),['#1a3a5c','#2196f3','#2e7d32','#e65100','#c62828','#7b1fa2'],'60%');
   const mr=getMapaRiesgoEfectivo();
   mkBar('ch-riesgo-dash',mr.map(r=>tx(r.area).length>16?tx(r.area).substring(0,16)+'…':tx(r.area)),mr.map(r=>r.riesgo==='alto'?3:r.riesgo==='medio'?2:1),mr.map(r=>r.riesgo==='alto'?'#c62828':r.riesgo==='medio'?'#e65100':'#2e7d32'),true,3.5);
@@ -1042,228 +937,87 @@ function renderLey27401(){
 }
 
 function heatmapColor(score){
-  if(score<=5)  return score<=2 ? '#2e7d32' : '#43a047';
-  if(score<=11) return score<=8 ? '#f9a825' : '#e65100';
-  return score<=16 ? '#e64a19' : '#c62828';
+  if(score<=5) return score<=2?'#2e7d32':'#43a047';
+  if(score<=11) return score<=8?'#f9a825':'#e65100';
+  return score<=16?'#e64a19':'#c62828';
 }
 const AUTOEVAL_KEY=`autoeval_riesgo_${CONFIG.empresa.cuit||'default'}`;
-
-function getAutoevalOverrides(){
-  try{
-    const raw=localStorage.getItem(AUTOEVAL_KEY);
-    return raw?JSON.parse(raw):{};
-  }catch(e){return {};}
-}
+function getAutoevalOverrides(){try{const raw=localStorage.getItem(AUTOEVAL_KEY);return raw?JSON.parse(raw):{};} catch(e){return {};}}
 function setAutoevalOverride(areaIdx,probabilidad,impacto){
   const data=getAutoevalOverrides();
-  data[areaIdx]={
-    probabilidad:Number(probabilidad),
-    impacto:Number(impacto),
-    fuente:'autoevaluacion',
-    fecha_evaluacion:new Date().toISOString().slice(0,10)
-  };
-  try{localStorage.setItem(AUTOEVAL_KEY,JSON.stringify(data));}catch(e){console.warn('No se pudo guardar en localStorage',e);}
+  data[areaIdx]={probabilidad:Number(probabilidad),impacto:Number(impacto),fuente:'autoevaluacion',fecha_evaluacion:new Date().toISOString().slice(0,10)};
+  try{localStorage.setItem(AUTOEVAL_KEY,JSON.stringify(data));}catch(e){}
 }
-function clearAutoevalOverrides(){
-  try{localStorage.removeItem(AUTOEVAL_KEY);}catch(e){}
-}
+function clearAutoevalOverrides(){try{localStorage.removeItem(AUTOEVAL_KEY);}catch(e){}}
 function getAreasConAlertaDD(){
   const out={};
-  (CONFIG.cuits_verificados||[]).forEach(c=>{
-    if(c.resultado==='alerta_ocde' && c.area_vinculada!=null){
-      if(!out[c.area_vinculada]) out[c.area_vinculada]=[];
-      out[c.area_vinculada].push(c.razon_social);
-    }
-  });
+  (CONFIG.cuits_verificados||[]).forEach(c=>{if(c.resultado==='alerta_ocde'&&c.area_vinculada!=null){if(!out[c.area_vinculada])out[c.area_vinculada]=[];out[c.area_vinculada].push(c.razon_social);}});
   return out;
 }
 function getMapaRiesgoEfectivo(){
   const overrides=getAutoevalOverrides();
   const alertasDD=getAreasConAlertaDD();
   return CONFIG.mapa_riesgo.map((r,idx)=>{
-    if(overrides[idx]){
-      const ov=overrides[idx];
-      const score=ov.probabilidad*ov.impacto;
-      return{...r,evaluacion:{...r.evaluacion,...ov,evaluado_por:CONFIG.empresa.responsable_compliance||''},
-        riesgo:score<=5?'bajo':score<=11?'medio':'alto'};
-    }
-    // getAreasConAlertaDD() indexa por nombre de área (r.area.es), no por
-    // posición en el array — el vínculo es "¿qué área aparece en area_vinculada
-    // de algún proveedor con alerta_ocde?", no "¿qué índice numérico coincide?".
+    if(overrides[idx]){const ov=overrides[idx];const score=ov.probabilidad*ov.impacto;return{...r,evaluacion:{...r.evaluacion,...ov,evaluado_por:CONFIG.empresa.responsable_compliance||''},riesgo:score<=5?'bajo':score<=11?'medio':'alto'};}
     const areaKey=r.area.es;
-    if(alertasDD[areaKey] && (!r.evaluacion || r.evaluacion.fuente==='default_sector')){
+    if(alertasDD[areaKey]&&(!r.evaluacion||r.evaluacion.fuente==='default_sector')){
       const impacto=r.evaluacion?r.evaluacion.impacto:4;
       const probabilidad=Math.max(4,r.evaluacion?r.evaluacion.probabilidad:0);
       const score=probabilidad*impacto;
-      return{...r,evaluacion:{probabilidad,impacto,fuente:'due_diligence',
-        nota:`${t('hm_dd_nota')}: ${alertasDD[areaKey].join(', ')}`},
-        riesgo:score<=5?'bajo':score<=11?'medio':'alto'};
+      return{...r,evaluacion:{probabilidad,impacto,fuente:'due_diligence',nota:`${t('hm_dd_nota')}: ${alertasDD[areaKey].join(', ')}`},riesgo:score<=5?'bajo':score<=11?'medio':'alto'};
     }
     return r;
   });
 }
-
-function toggleAutoeval(){
-  const box=document.getElementById('autoeval-form');
-  const visible=box.style.display!=='none';
-  if(visible){box.style.display='none';return;}
-  box.style.display='block';
-  renderAutoevalForm();
-}
-
+function toggleAutoeval(){const box=document.getElementById('autoeval-form');const visible=box.style.display!=='none';if(visible){box.style.display='none';return;}box.style.display='block';renderAutoevalForm();}
 function renderAutoevalForm(){
-  const box=document.getElementById('autoeval-form');
-  if(!box) return;
+  const box=document.getElementById('autoeval-form');if(!box)return;
   const mr=getMapaRiesgoEfectivo();
   const opciones=(sel,prefix)=>[1,2,3,4,5].map(v=>`<option value="${v}" ${sel===v?'selected':''}>${t(prefix+'_'+v)}</option>`).join('');
-
   const itemsHtml=mr.map((r,idx)=>{
-    const ev=r.evaluacion||{};
-    const pr=ev.probabilidad||3, im=ev.impacto||3;
-    const fuente=ev.fuente||'default_sector';
-    return`<div class="autoeval-item" data-idx="${idx}" data-orig-pr="${pr}" data-orig-im="${im}">
-      <div class="autoeval-area">${tx(r.area)}<span class="autoeval-fuente-tag ${fuente}" id="ae-tag-${idx}">${t('hm_fuente_'+fuente)}</span></div>
-      <div class="autoeval-row">
-        <div class="autoeval-field">
-          <label>${t('hm_eje_probabilidad')}</label>
-          <select class="ae-prob" data-idx="${idx}" onchange="updateAutoevalPreview(${idx})">${opciones(pr,'hm_prob')}</select>
-        </div>
-        <div class="autoeval-field">
-          <label>${t('hm_eje_impacto')}</label>
-          <select class="ae-imp" data-idx="${idx}" onchange="updateAutoevalPreview(${idx})">${opciones(im,'hm_impacto')}</select>
-        </div>
-        <div class="autoeval-score-preview" id="ae-score-${idx}">${t('hm_score_label')}: ${pr*im}</div>
-      </div>
-    </div>`;
+    const ev=r.evaluacion||{};const pr=ev.probabilidad||3,im=ev.impacto||3;const fuente=ev.fuente||'default_sector';
+    return`<div class="autoeval-item" data-idx="${idx}" data-orig-pr="${pr}" data-orig-im="${im}"><div class="autoeval-area">${tx(r.area)}<span class="autoeval-fuente-tag ${fuente}" id="ae-tag-${idx}">${t('hm_fuente_'+fuente)}</span></div><div class="autoeval-row"><div class="autoeval-field"><label>${t('hm_eje_probabilidad')}</label><select class="ae-prob" data-idx="${idx}" onchange="updateAutoevalPreview(${idx})">${opciones(pr,'hm_prob')}</select></div><div class="autoeval-field"><label>${t('hm_eje_impacto')}</label><select class="ae-imp" data-idx="${idx}" onchange="updateAutoevalPreview(${idx})">${opciones(im,'hm_impacto')}</select></div><div class="autoeval-score-preview" id="ae-score-${idx}">${t('hm_score_label')}: ${pr*im}</div></div></div>`;
   }).join('');
-
-  box.innerHTML=`
-    <div class="autoeval-banner">${t('hm_autoeval_banner')}</div>
-    ${itemsHtml}
-    <div class="autoeval-actions">
-      <button class="btn verde" onclick="guardarAutoeval()">${t('hm_btn_guardar')}</button>
-      <button class="btn" style="background:#455a64" onclick="resetAutoeval()">${t('hm_btn_reset')}</button>
-    </div>`;
+  box.innerHTML=`<div class="autoeval-banner">${t('hm_autoeval_banner')}</div>${itemsHtml}<div class="autoeval-actions"><button class="btn verde" onclick="guardarAutoeval()">${t('hm_btn_guardar')}</button><button class="btn" style="background:#455a64" onclick="resetAutoeval()">${t('hm_btn_reset')}</button></div>`;
 }
-
-function updateAutoevalPreview(idx){
-  const pr=Number(document.querySelector(`.ae-prob[data-idx="${idx}"]`).value);
-  const im=Number(document.querySelector(`.ae-imp[data-idx="${idx}"]`).value);
-  document.getElementById(`ae-score-${idx}`).textContent=`${t('hm_score_label')}: ${pr*im}`;
-}
-
+function updateAutoevalPreview(idx){const pr=Number(document.querySelector(`.ae-prob[data-idx="${idx}"]`).value);const im=Number(document.querySelector(`.ae-imp[data-idx="${idx}"]`).value);document.getElementById(`ae-score-${idx}`).textContent=`${t('hm_score_label')}: ${pr*im}`;}
 function guardarAutoeval(){
   let cambios=0;
   document.querySelectorAll('.autoeval-item').forEach(item=>{
-    const idx=item.dataset.idx;
-    const origPr=Number(item.dataset.origPr), origIm=Number(item.dataset.origIm);
-    const pr=Number(document.querySelector(`.ae-prob[data-idx="${idx}"]`).value);
-    const im=Number(document.querySelector(`.ae-imp[data-idx="${idx}"]`).value);
-    if(pr!==origPr || im!==origIm){
-      setAutoevalOverride(idx,pr,im);
-      cambios++;
-    }
+    const idx=item.dataset.idx;const origPr=Number(item.dataset.origPr),origIm=Number(item.dataset.origIm);
+    const pr=Number(document.querySelector(`.ae-prob[data-idx="${idx}"]`).value);const im=Number(document.querySelector(`.ae-imp[data-idx="${idx}"]`).value);
+    if(pr!==origPr||im!==origIm){setAutoevalOverride(idx,pr,im);cambios++;}
   });
   document.getElementById('autoeval-form').style.display='none';
-  if(cambios===0){
-    alert(t('hm_sin_cambios'));
-    document.getElementById('autoeval-form').style.display='block';
-    return;
-  }
+  if(cambios===0){alert(t('hm_sin_cambios'));document.getElementById('autoeval-form').style.display='block';return;}
   renderRiesgo();
 }
-
-function resetAutoeval(){
-  clearAutoevalOverrides();
-  renderAutoevalForm();
-  renderRiesgo();
-}
+function resetAutoeval(){clearAutoevalOverrides();renderAutoevalForm();renderRiesgo();}
 
 function renderHeatmap(){
-  const mr=getMapaRiesgoEfectivo();
-  const cont=document.getElementById('heatmap-cont');
-  if(!cont) return;
-  const bucket={};
-  for(let im=1;im<=5;im++){bucket[im]={};for(let pr=1;pr<=5;pr++)bucket[im][pr]=[];}
+  const mr=getMapaRiesgoEfectivo();const cont=document.getElementById('heatmap-cont');if(!cont)return;
+  const bucket={};for(let im=1;im<=5;im++){bucket[im]={};for(let pr=1;pr<=5;pr++)bucket[im][pr]=[];}
   let usaFallback=false;
   mr.forEach((r,idx)=>{
     let pr,im;
-    if(r.evaluacion && r.evaluacion.probabilidad && r.evaluacion.impacto){
-      pr=r.evaluacion.probabilidad; im=r.evaluacion.impacto;
-    } else {
-      usaFallback=true;
-      pr=im=r.riesgo==='alto'?4:r.riesgo==='medio'?3:2;
-    }
+    if(r.evaluacion&&r.evaluacion.probabilidad&&r.evaluacion.impacto){pr=r.evaluacion.probabilidad;im=r.evaluacion.impacto;}
+    else{usaFallback=true;pr=im=r.riesgo==='alto'?4:r.riesgo==='medio'?3:2;}
     bucket[im][pr].push({nombre:tx(r.area),idx});
   });
   const yLabels=[t('hm_impacto_5'),t('hm_impacto_4'),t('hm_impacto_3'),t('hm_impacto_2'),t('hm_impacto_1')];
   const xLabels=[t('hm_prob_1'),t('hm_prob_2'),t('hm_prob_3'),t('hm_prob_4'),t('hm_prob_5')];
   let gridHtml='';
-  for(let im=5;im>=1;im--){
-    for(let pr=1;pr<=5;pr++){
-      const areas=bucket[im][pr];
-      const score=im*pr;
-      const color=heatmapColor(score);
-      const tip=areas.length?areas.map(a=>a.nombre).join(' · '):t('hm_celda_vacia');
-      gridHtml+=`<div class="heatmap-cell" style="background:${color}" data-pr="${pr}" data-im="${im}">
-        <span class="hm-count">${areas.length||''}</span>
-        <span class="hm-score">${score}</span>
-        <div class="hm-areas">${tip}</div>
-      </div>`;
-    }
-  }
-  const enZonaCritica=mr.map((r,idx)=>{
-    let pr,im;
-    if(r.evaluacion && r.evaluacion.probabilidad && r.evaluacion.impacto){pr=r.evaluacion.probabilidad;im=r.evaluacion.impacto;}
-    else{pr=im=r.riesgo==='alto'?4:r.riesgo==='medio'?3:2;}
-    return{nombre:tx(r.area),score:pr*im};
-  }).filter(x=>x.score>=12).sort((a,b)=>b.score-a.score);
-
-  const resumenHtml=`
-    <div class="hm-resumen">
-      <div class="hm-resumen-num ${enZonaCritica.length?'rojo':'verde'}">${enZonaCritica.length}</div>
-      <div class="hm-resumen-txt">
-        <strong>${enZonaCritica.length} ${t('hm_resumen_titulo')}</strong>
-        <div class="hm-resumen-lista">${enZonaCritica.length?enZonaCritica.map(a=>`${a.nombre} (${a.score})`).join(' · '):t('hm_resumen_ninguna')}</div>
-      </div>
-    </div>`;
-
-  const leyendaHtml=`
-    <div class="hm-leyenda">
-      <span class="hm-leyenda-item"><span class="hm-sw" style="background:#2e7d32"></span>${t('hm_leyenda_bajo')} (1-5)</span>
-      <span class="hm-leyenda-item"><span class="hm-sw" style="background:#f9a825"></span>${t('hm_leyenda_medio')} (6-11)</span>
-      <span class="hm-leyenda-item"><span class="hm-sw" style="background:#c62828"></span>${t('hm_leyenda_alto')} (12-25)</span>
-    </div>`;
-
-  cont.innerHTML=`
-    ${resumenHtml}
-    <div class="heatmap-wrap">
-      <div class="heatmap-axis-label vert">${t('hm_eje_impacto')}</div>
-      <div class="heatmap-yaxis" style="--hm-h:250px">${yLabels.map(l=>`<span>${l}</span>`).join('')}</div>
-      <div class="heatmap-core">
-        <div class="heatmap-grid">${gridHtml}</div>
-        <div class="heatmap-xaxis">${xLabels.map(l=>`<span>${l}</span>`).join('')}</div>
-        <div class="heatmap-axis-label">${t('hm_eje_probabilidad')}</div>
-      </div>
-    </div>
-    ${leyendaHtml}`;
-
+  for(let im=5;im>=1;im--){for(let pr=1;pr<=5;pr++){const areas=bucket[im][pr];const score=im*pr;const color=heatmapColor(score);const tip=areas.length?areas.map(a=>a.nombre).join(' · '):t('hm_celda_vacia');gridHtml+=`<div class="heatmap-cell" style="background:${color}"><span class="hm-count">${areas.length||''}</span><span class="hm-score">${score}</span><div class="hm-areas">${tip}</div></div>`;}}
+  const enZonaCritica=mr.map((r,idx)=>{let pr,im;if(r.evaluacion&&r.evaluacion.probabilidad&&r.evaluacion.impacto){pr=r.evaluacion.probabilidad;im=r.evaluacion.impacto;}else{pr=im=r.riesgo==='alto'?4:r.riesgo==='medio'?3:2;}return{nombre:tx(r.area),score:pr*im};}).filter(x=>x.score>=12).sort((a,b)=>b.score-a.score);
+  const resumenHtml=`<div class="hm-resumen"><div class="hm-resumen-num ${enZonaCritica.length?'rojo':'verde'}">${enZonaCritica.length}</div><div class="hm-resumen-txt"><strong>${enZonaCritica.length} ${t('hm_resumen_titulo')}</strong><div class="hm-resumen-lista">${enZonaCritica.length?enZonaCritica.map(a=>`${a.nombre} (${a.score})`).join(' · '):t('hm_resumen_ninguna')}</div></div></div>`;
+  const leyendaHtml=`<div class="hm-leyenda"><span class="hm-leyenda-item"><span class="hm-sw" style="background:#2e7d32"></span>${t('hm_leyenda_bajo')} (1-5)</span><span class="hm-leyenda-item"><span class="hm-sw" style="background:#f9a825"></span>${t('hm_leyenda_medio')} (6-11)</span><span class="hm-leyenda-item"><span class="hm-sw" style="background:#c62828"></span>${t('hm_leyenda_alto')} (12-25)</span></div>`;
+  cont.innerHTML=`${resumenHtml}<div class="heatmap-wrap"><div class="heatmap-axis-label vert">${t('hm_eje_impacto')}</div><div class="heatmap-yaxis" style="--hm-h:250px">${yLabels.map(l=>`<span>${l}</span>`).join('')}</div><div class="heatmap-core"><div class="heatmap-grid">${gridHtml}</div><div class="heatmap-xaxis">${xLabels.map(l=>`<span>${l}</span>`).join('')}</div><div class="heatmap-axis-label">${t('hm_eje_probabilidad')}</div></div></div>${leyendaHtml}`;
   const avisoEl=document.getElementById('heatmap-fuente-aviso');
-  const conSugerido=mr.filter(r=>r.evaluacion && r.evaluacion.fuente==='default_sector').length;
-  if(usaFallback || conSugerido>0){
-    avisoEl.innerHTML=`<div class="heatmap-fuente"><span>⚠️</span><span>${usaFallback?t('hm_aviso_fallback'):`${conSugerido} ${t('hm_aviso_sugerido')}`}</span></div>`;
-  } else {
-    avisoEl.innerHTML='';
-  }
-
-  // Vínculo con Due Diligence: áreas cuya probabilidad fue elevada automáticamente
-  // por una alerta OCDE real de un proveedor vinculado (ver getMapaRiesgoEfectivo).
-  const conVinculoDD=mr.filter(r=>r.evaluacion && r.evaluacion.fuente==='due_diligence' && r.evaluacion.nota);
-  if(conVinculoDD.length){
-    avisoEl.innerHTML += conVinculoDD.map(r=>
-      `<div class="heatmap-dd-vinculo" id="heatmap-dd-vinculo">🔗 <span><strong>${tx(r.area)}</strong>: ${r.evaluacion.nota}</span></div>`
-    ).join('');
-  }
+  const conSugerido=mr.filter(r=>r.evaluacion&&r.evaluacion.fuente==='default_sector').length;
+  if(usaFallback||conSugerido>0){avisoEl.innerHTML=`<div class="heatmap-fuente"><span>⚠️</span><span>${usaFallback?t('hm_aviso_fallback'):`${conSugerido} ${t('hm_aviso_sugerido')}`}</span></div>`;}
+  else{avisoEl.innerHTML='';}
+  const conVinculoDD=mr.filter(r=>r.evaluacion&&r.evaluacion.fuente==='due_diligence'&&r.evaluacion.nota);
+  if(conVinculoDD.length){avisoEl.innerHTML+=conVinculoDD.map(r=>`<div class="heatmap-dd-vinculo">🔗 <span><strong>${tx(r.area)}</strong>: ${r.evaluacion.nota}</span></div>`).join('');}
 }
 
 function renderRiesgo(){
@@ -1273,10 +1027,7 @@ function renderRiesgo(){
   charts['ch-radar']&&(charts['ch-radar'].options.scales.r.max=3,charts['ch-radar'].options.scales.r.ticks={stepSize:1,callback:v=>v===3?'A':v===2?'M':v===1?'B':'',font:{size:8}},charts['ch-radar'].update());
   const alto=mr.filter(r=>r.riesgo==='alto').length,medio=mr.filter(r=>r.riesgo==='medio').length,bajo=mr.filter(r=>r.riesgo==='bajo').length;
   mkDona('ch-riesgo-dona',[alto,medio,bajo],[t('riesgo_alto_label'),t('riesgo_medio_label'),t('riesgo_bajo_label')],['#c62828','#e65100','#2e7d32']);
-  document.getElementById('riesgo-ley').innerHTML=`<div style="display:flex;flex-direction:column;gap:.3rem;margin-top:.5rem;font-size:.8rem">
-    <span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#c62828;display:inline-block"></span>${t('riesgo_alto_label')}: ${alto} ${t('riesgo_area_label')}</span>
-    <span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#e65100;display:inline-block"></span>${t('riesgo_medio_label')}: ${medio} ${t('riesgo_area_label')}</span>
-    <span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#2e7d32;display:inline-block"></span>${t('riesgo_bajo_label')}: ${bajo} ${t('riesgo_area_label')}</span></div>`;
+  document.getElementById('riesgo-ley').innerHTML=`<div style="display:flex;flex-direction:column;gap:.3rem;margin-top:.5rem;font-size:.8rem"><span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#c62828;display:inline-block"></span>${t('riesgo_alto_label')}: ${alto} ${t('riesgo_area_label')}</span><span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#e65100;display:inline-block"></span>${t('riesgo_medio_label')}: ${medio} ${t('riesgo_area_label')}</span><span style="display:flex;align-items:center;gap:.4rem"><span style="width:10px;height:10px;border-radius:50%;background:#2e7d32;display:inline-block"></span>${t('riesgo_bajo_label')}: ${bajo} ${t('riesgo_area_label')}</span></div>`;
   document.getElementById('riesgo-detalle').innerHTML=mr.map(r=>`<div class="riesgo-item"><div class="rdot ${r.riesgo}"></div><div class="rarea">${tx(r.area)}</div><div class="rdesc">${tx(r.descripcion)}</div><div class="rpill ${r.riesgo}">${t(r.riesgo)}</div></div>`).join('');
 }
 
@@ -1294,50 +1045,25 @@ function renderDD(){
   renderRadarMeaci();
 }
 
-// Radar de mercado: lista en vivo de las empresas con alerta OCDE y presencia
-// en Argentina, directamente desde MEACI (/api/alertas). Es informativo —
-// no se cruza con áreas internas ni con empleados, porque son multinacionales
-// globales y no necesariamente proveedores propios de la empresa.
 async function renderRadarMeaci(){
-  const cont=document.getElementById('dd-radar-meaci');
-  if(!cont) return;
+  const cont=document.getElementById('dd-radar-meaci');if(!cont)return;
   cont.innerHTML=`<div class="radar-loading">${t('dd_radar_cargando')}</div>`;
   try{
     const alertas=await fetchAlertasMeaci();
     const nivelOrden={alta:0,media:1,baja:2};
     const ordenadas=[...alertas].sort((a,b)=>(nivelOrden[a.nivel]??9)-(nivelOrden[b.nivel]??9));
-    cont.innerHTML=ordenadas.map(a=>`
-      <div class="radar-row ${a.nivel}">
-        <div class="radar-nivel-dot"></div>
-        <div class="radar-body">
-          <div class="radar-empresa">${a.empresa} <span class="pill ${a.nivel==='alta'?'pill-pend':'pill-prog'}">${t('dd_radar_nivel_'+a.nivel)}</span></div>
-          <div class="radar-desc">${a.descripcion}</div>
-        </div>
-      </div>`).join('');
-  }catch(e){
-    cont.innerHTML=`<div class="radar-loading">${t('dd_radar_error')}</div>`;
-  }
+    cont.innerHTML=ordenadas.map(a=>`<div class="radar-row ${a.nivel}"><div class="radar-nivel-dot"></div><div class="radar-body"><div class="radar-empresa">${a.empresa} <span class="pill ${a.nivel==='alta'?'pill-pend':'pill-prog'}">${t('dd_radar_nivel_'+a.nivel)}</span></div><div class="radar-desc">${a.descripcion}</div></div></div>`).join('');
+  }catch(e){cont.innerHTML=`<div class="radar-loading">${t('dd_radar_error')}</div>`;}
 }
 
 async function verificarCuit(){
-  const cuitInput=document.getElementById('dd-input').value.trim();
-  if(!cuitInput){return;}
+  const cuitInput=document.getElementById('dd-input').value.trim();if(!cuitInput)return;
   const res=document.getElementById('dd-res');
   res.innerHTML=`<div class="dd-res loading">${t('dd_consultando')}</div>`;
-  // MEACI almacena los CUIT sin guiones ni espacios (ej: "30546675813").
-  // El usuario puede tipear con guiones (formato AFIP estándar); normalizamos
-  // antes de mandar a la API para que el cruce funcione independientemente
-  // del formato ingresado.
   const cuitNormalizado=cuitInput.replace(/[^0-9]/g,'');
   try{
-    const r=await fetch(`${CONFIG.meaci_api}?cuit=${cuitNormalizado}`);
-    const d=await r.json();
-    if(d.sancionada_ocde){
-      const primerCaso=(d.casos&&d.casos.length)?d.casos[0]:null;
-      const empresaNombre=d.empresa_matriz||t('dd_empresa_sancionada');
-      const casoTexto=primerCaso?`${primerCaso.nombre} (${primerCaso.anio}) — ${primerCaso.tipo}`:'—';
-      res.innerHTML=`<div class="dd-res alerta">🔴 <strong>${t('dd_alerta_label')}</strong> ${cuitInput} → <strong>${empresaNombre}</strong> — ${t('dd_caso')} ${casoTexto} — <a href="${CONFIG.meaci_url}" target="_blank">${t('dd_ver_meaci')}</a></div>`;
-    }
+    const r=await fetch(`${CONFIG.meaci_api}?cuit=${cuitNormalizado}`);const d=await r.json();
+    if(d.sancionada_ocde){const primerCaso=(d.casos&&d.casos.length)?d.casos[0]:null;const empresaNombre=d.empresa_matriz||t('dd_empresa_sancionada');const casoTexto=primerCaso?`${primerCaso.nombre} (${primerCaso.anio}) — ${primerCaso.tipo}`:'—';res.innerHTML=`<div class="dd-res alerta">🔴 <strong>${t('dd_alerta_label')}</strong> ${cuitInput} → <strong>${empresaNombre}</strong> — ${t('dd_caso')} ${casoTexto} — <a href="${CONFIG.meaci_url}" target="_blank">${t('dd_ver_meaci')}</a></div>`;}
     else{res.innerHTML=`<div class="dd-res ok">✅ <strong>${t('dd_sin_antecedentes')}</strong> CUIT ${cuitInput} ${t('dd_no_figura')}</div>`;}
   }catch(e){res.innerHTML=`<div class="dd-res ok">✅ ${t('dd_sin_detectados')} ${cuitInput}. ${t('dd_verificar_conn')}</div>`;}
 }
@@ -1347,16 +1073,13 @@ function renderInternacional(){
   const paises=[{nombre:t('pais_usa'),opera:exp.opera_en_usa,flag:'🇺🇸'},{nombre:t('pais_uk'),opera:exp.opera_en_uk,flag:'🇬🇧'},{nombre:t('pais_ue'),opera:exp.opera_en_ue,flag:'🇫🇷'},{nombre:t('pais_brasil'),opera:exp.opera_en_brasil,flag:'🇧🇷'}];
   document.getElementById('int-exp').innerHTML=paises.map(p=>`<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem;border-bottom:1px solid var(--borde);font-size:.86rem"><span style="font-size:1.2rem">${p.flag}</span><span style="flex:1;font-weight:600">${p.nombre}</span><span class="int-aplica ${p.opera?'si':'no'}">${p.opera?t('int_opera'):t('int_no_aplica')}</span></div>`).join('')+`<div style="margin-top:.7rem;font-size:.8rem;color:var(--muted)">${t('leyes_aplicables_label')} ${exp.leyes_aplicables.join(' · ')}</div>`;
   const leyes=[
-    {flag:'🇺🇸',nombre:{es:'FCPA — Foreign Corrupt Practices Act',en:'FCPA — Foreign Corrupt Practices Act',pt:'FCPA — Foreign Corrupt Practices Act'},sub:{es:'USA · 1977 · DOJ + SEC',en:'USA · 1977 · DOJ + SEC',pt:'EUA · 1977 · DOJ + SEC'},aplica:exp.opera_en_usa,desc:{es:'Prohíbe el soborno a funcionarios públicos extranjeros. Aplicación extraterritorial. Voluntary self-disclosure reduce penas hasta 50%.',en:'Prohibits bribery of foreign public officials. Extraterritorial application. Voluntary self-disclosure reduces penalties by up to 50%.',pt:'Proíbe o suborno de funcionários públicos estrangeiros. Aplicação extraterritorial. A autodenúncia voluntária reduz as penas em até 50%.'},arts:'15 U.S.C. §§ 78dd-1, -2, -3 · § 78m Books & Records · USSG Chapter 8'},
-    {flag:'🇬🇧',nombre:{es:'UK Bribery Act 2010',en:'UK Bribery Act 2010',pt:'UK Bribery Act 2010'},sub:{es:'Reino Unido · SFO · Strict liability',en:'United Kingdom · SFO · Strict liability',pt:'Reino Unido · SFO · Responsabilidade objetiva'},aplica:exp.opera_en_uk,desc:{es:'La más estricta del mundo. Sección 7: strict liability por falla corporativa en prevenir soborno. Compliance efectivo = defensa completa.',en:'The strictest in the world. Section 7: strict liability for corporate failure to prevent bribery. Effective compliance = complete defense.',pt:'A mais rigorosa do mundo. Seção 7: responsabilidade objetiva por falha corporativa em prevenir suborno. Compliance efetivo = defesa completa.'},arts:'Sec. 1 Soborno activo · Sec. 6 Funcionario extranjero · Sec. 7 Falla corporativa'},
-    {flag:'🇫🇷',nombre:{es:'Loi Sapin II',en:'Loi Sapin II',pt:'Loi Sapin II'},sub:{es:'Francia · 2016 · AFA · CJIP',en:'France · 2016 · AFA · CJIP',pt:'França · 2016 · AFA · CJIP'},aplica:exp.opera_en_ue,desc:{es:'Obliga a empresas +500 empleados. Crea el CJIP y la AFA como supervisor de compliance por 3 años post-CJIP.',en:'Applies to companies with +500 employees. Creates the CJIP and the AFA as compliance supervisor for 3 years post-CJIP.',pt:'Obriga empresas com +500 funcionários. Cria o CJIP e a AFA como supervisor de compliance por 3 anos pós-CJIP.'},arts:'Art. 41-1-2 CPP — CJIP · AFA supervisor'},
-    {flag:'🇧🇷',nombre:{es:'Lei Anticorrupção 12.846/2013',en:'Lei Anticorrupção 12.846/2013',pt:'Lei Anticorrupção 12.846/2013'},sub:{es:'Brasil · Responsabilidad objetiva',en:'Brazil · Strict liability',pt:'Brasil · Responsabilidade objetiva'},aplica:exp.opera_en_brasil,desc:{es:'Responsabilidad objetiva — no requiere probar culpa. Acordo de Leniência reduce multas y preserva contratos públicos.',en:'Strict liability — does not require proving fault. Leniency Agreement reduces fines and preserves public contracts.',pt:'Responsabilidade objetiva — não exige prova de culpa. O Acordo de Leniência reduz multas e preserva contratos públicos.'},arts:'Art. 1 Resp. objetiva · Art. 16 Acordo Leniência · Multas 0.1%-20%'},
-    {flag:'🇩🇪',nombre:{es:'OWiG + LkSG',en:'OWiG + LkSG',pt:'OWiG + LkSG'},sub:{es:'Alemania · Multas regulatorias',en:'Germany · Regulatory fines',pt:'Alemanha · Multas regulatórias'},aplica:false,desc:{es:'OWiG: multas por falla de supervisión (§30, §130). LkSG 2023: due diligence en cadena de suministro.',en:'OWiG: fines for supervisory failure (§30, §130). LkSG 2023: due diligence in the supply chain.',pt:'OWiG: multas por falha de supervisão (§30, §130). LkSG 2023: due diligence na cadeia de suprimentos.'},arts:'§30 OWiG · §130 OWiG · LkSG supply chain'},
-    {flag:'🇪🇸',nombre:{es:'Código Penal Art. 31 bis',en:'Criminal Code Art. 31 bis',pt:'Código Penal Art. 31 bis'},sub:{es:'España · Responsabilidad penal empresarial',en:'Spain · Corporate criminal liability',pt:'Espanha · Responsabilidade penal empresarial'},aplica:false,desc:{es:'Compliance efectivo = eximente completo o atenuante. Circular FGE 1/2016 establece estándares del Ministerio Fiscal.',en:'Effective compliance = full exemption or mitigating factor. Circular FGE 1/2016 sets the Public Prosecutor\'s standards.',pt:'Compliance efetivo = isenção completa ou atenuante. A Circular FGE 1/2016 estabelece os padrões do Ministério Público.'},arts:'Art. 31 bis CP · Circular FGE 1/2016'},
-    {flag:'🌍',nombre:{es:'Convención OCDE Antibribery 1997',en:'OECD Anti-Bribery Convention 1997',pt:'Convenção OCDE Antissuborno 1997'},sub:{es:'46 partes · Base MJR',en:'46 parties · MJR basis',pt:'46 partes · Base MJR'},aplica:true,desc:{es:'Primer instrumento vinculante. Base de los 31 casos MJR del MEACI.',en:'First binding instrument. Basis for MEACI\'s 31 MJR cases.',pt:'Primeiro instrumento vinculante. Base dos 31 casos MJR do MEACI.'},arts:'Art. 1 · Art. 3 · Recomendación 2021 MJR'},
-    {flag:'🇪🇺',nombre:{es:'Directiva UE 2019/1937 — Whistleblowers',en:'EU Directive 2019/1937 — Whistleblowers',pt:'Diretiva UE 2019/1937 — Whistleblowers'},sub:{es:'Unión Europea · Canal de denuncias',en:'European Union · Reporting channel',pt:'União Europeia · Canal de denúncias'},aplica:exp.opera_en_ue,desc:{es:'Obliga a empresas +50 empleados en la UE a implementar canales de denuncia y proteger denunciantes.',en:'Requires companies with +50 employees in the EU to implement reporting channels and protect whistleblowers.',pt:'Obriga empresas com +50 funcionários na UE a implementar canais de denúncia e proteger denunciantes.'},arts:'Art. 8 Canal interno · Art. 19 No represalias'},
+    {flag:'🇺🇸',nombre:'FCPA — Foreign Corrupt Practices Act',sub:'USA · 1977 · DOJ + SEC',aplica:exp.opera_en_usa,desc:{es:'Prohíbe el soborno a funcionarios públicos extranjeros. Aplicación extraterritorial.',en:'Prohibits bribery of foreign public officials. Extraterritorial application.',pt:'Proíbe o suborno de funcionários públicos estrangeiros. Aplicação extraterritorial.'},arts:'15 U.S.C. §§ 78dd-1, -2, -3'},
+    {flag:'🇬🇧',nombre:'UK Bribery Act 2010',sub:'Reino Unido · SFO · Strict liability',aplica:exp.opera_en_uk,desc:{es:'La más estricta del mundo. Sección 7: strict liability por falla corporativa.',en:'The strictest in the world. Section 7: strict liability for corporate failure.',pt:'A mais rigorosa do mundo. Seção 7: responsabilidade objetiva por falha corporativa.'},arts:'Sec. 1 · Sec. 6 · Sec. 7'},
+    {flag:'🇫🇷',nombre:'Loi Sapin II',sub:'Francia · 2016 · AFA · CJIP',aplica:exp.opera_en_ue,desc:{es:'Obliga a empresas +500 empleados. Crea el CJIP y la AFA.',en:'Applies to companies +500 employees. Creates the CJIP and the AFA.',pt:'Obriga empresas +500 funcionários. Cria CJIP e AFA.'},arts:'Art. 41-1-2 CPP'},
+    {flag:'🇧🇷',nombre:'Lei Anticorrupção 12.846/2013',sub:'Brasil · Responsabilidad objetiva',aplica:exp.opera_en_brasil,desc:{es:'Responsabilidad objetiva. Acordo de Leniência reduce multas.',en:'Strict liability. Leniency Agreement reduces fines.',pt:'Responsabilidade objetiva. Acordo de Leniência reduz multas.'},arts:'Art. 1 · Art. 16'},
+    {flag:'🇪🇺',nombre:'Directiva UE 2019/1937 — Whistleblowers',sub:'Unión Europea · Canal de denuncias',aplica:exp.opera_en_ue,desc:{es:'Obliga a empresas +50 empleados en la UE a implementar canales de denuncia.',en:'Requires companies +50 employees in the EU to implement reporting channels.',pt:'Obriga empresas +50 funcionários na UE a implementar canais de denúncia.'},arts:'Art. 8 · Art. 19'},
   ];
-  document.getElementById('int-leyes').innerHTML=leyes.map(l=>`<div class="int-ley"><div class="int-head"><span class="int-flag">${l.flag}</span><div style="flex:1"><div class="int-nombre">${tx(l.nombre)}</div><div class="int-sub">${tx(l.sub)}</div></div><span class="int-aplica ${l.aplica?'si':'no'}">${l.aplica?t('int_aplica'):t('int_no_aplica')}</span></div><div class="int-desc">${tx(l.desc)}</div><div class="int-art">📋 ${l.arts}</div></div>`).join('');
+  document.getElementById('int-leyes').innerHTML=leyes.map(l=>`<div class="int-ley"><div class="int-head"><span class="int-flag">${l.flag}</span><div style="flex:1"><div class="int-nombre">${l.nombre}</div><div class="int-sub">${l.sub}</div></div><span class="int-aplica ${l.aplica?'si':'no'}">${l.aplica?t('int_aplica'):t('int_no_aplica')}</span></div><div class="int-desc">${tx(l.desc)}</div><div class="int-art">📋 ${l.arts}</div></div>`).join('');
 }
 
 function renderRite(){
@@ -1372,228 +1095,73 @@ function renderMejoras(){
   CONFIG.programa_integridad.elementos_opcionales.filter(e=>e.estado==='pendiente').forEach(e=>al.push({t:'naranja',i:'⚠️',txt:`${t('opcional_pendiente')} "${tx(e.label)}"`}));
   if(!al.length) al.push({t:'verde',i:'✅',txt:t('sin_alertas_buen_estado')});
   document.getElementById('mej-alertas').innerHTML=al.map(a=>`<div class="alerta ${a.t}"><span class="alerta-ico">${a.i}</span><span>${a.txt}</span></div>`).join('');
-  const hs=CONFIG.historial_score;
-  mkLine('ch-evol',hs.map(h=>h.mes),hs.map(h=>h.score));
+  const hs=CONFIG.historial_score;mkLine('ch-evol',hs.map(h=>h.mes),hs.map(h=>h.score));
   destroyC('ch-brechas');
-  const ctx=document.getElementById('ch-brechas');if(ctx){
-    charts['ch-brechas']=new Chart(ctx,{type:'radar',
-      data:{labels:[t('eje_programa'),t('eje_capacitacion'),t('eje_dd'),t('eje_riesgo'),t('eje_comunicacion'),t('eje_investigacion')],
-        datasets:[
-          {label:t('leyenda_actual'),data:[68,65,60,100,20,30],backgroundColor:'rgba(26,58,92,.15)',borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',borderWidth:1.5},
-          {label:t('leyenda_minimo_oa'),data:[60,60,40,60,40,40],backgroundColor:'rgba(46,125,50,.07)',borderColor:'#2e7d32',borderDash:[4,3],pointBackgroundColor:'#2e7d32',borderWidth:1.2},
-          {label:t('leyenda_avanzado'),data:[100,100,100,100,100,100],backgroundColor:'rgba(230,81,0,.04)',borderColor:'#e65100',borderDash:[2,4],pointRadius:0,borderWidth:1}
-        ]},
-      options:{scales:{r:{min:0,max:100,ticks:{display:false},pointLabels:{font:{size:9},color:gc2()}}},plugins:{legend:{display:false}},animation:{duration:700}}});
-  }
+  const ctx=document.getElementById('ch-brechas');if(ctx){charts['ch-brechas']=new Chart(ctx,{type:'radar',data:{labels:[t('eje_programa'),t('eje_capacitacion'),t('eje_dd'),t('eje_riesgo'),t('eje_comunicacion'),t('eje_investigacion')],datasets:[{label:t('leyenda_actual'),data:[68,65,60,100,20,30],backgroundColor:'rgba(26,58,92,.15)',borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',borderWidth:1.5},{label:t('leyenda_minimo_oa'),data:[60,60,40,60,40,40],backgroundColor:'rgba(46,125,50,.07)',borderColor:'#2e7d32',borderDash:[4,3],pointBackgroundColor:'#2e7d32',borderWidth:1.2},{label:t('leyenda_avanzado'),data:[100,100,100,100,100,100],backgroundColor:'rgba(230,81,0,.04)',borderColor:'#e65100',borderDash:[2,4],pointRadius:0,borderWidth:1}]},options:{scales:{r:{min:0,max:100,ticks:{display:false},pointLabels:{font:{size:9},color:gc2()}}},plugins:{legend:{display:false}},animation:{duration:700}}});}
   const pm=CONFIG.plan_mejora;
-  document.getElementById('plan-mejora').innerHTML=pm.map((p,i)=>{
-    const pc=p.prioridad==='alta'?'prio-alta':p.prioridad==='media'?'prio-media':'prio-baja';
-    const ec=p.estado==='completo'?'pill-ok':p.estado==='en_progreso'?'pill-prog':'pill-pend';
-    const et=p.estado==='completo'?t('plan_completo'):p.estado==='en_progreso'?t('plan_en_progreso'):t('plan_pendiente');
-    return`<div class="plan-item"><div class="prio-badge ${pc}">${i+1}</div><div><div class="plan-label">${tx(p.accion)}<span class="pill ${ec}">${et}</span></div><div class="plan-meta">👤 ${tx(p.responsable)} · 📅 ${p.vence}</div></div></div>`;
-  }).join('');
+  document.getElementById('plan-mejora').innerHTML=pm.map((p,i)=>{const pc=p.prioridad==='alta'?'prio-alta':p.prioridad==='media'?'prio-media':'prio-baja';const ec=p.estado==='completo'?'pill-ok':p.estado==='en_progreso'?'pill-prog':'pill-pend';const et=p.estado==='completo'?t('plan_completo'):p.estado==='en_progreso'?t('plan_en_progreso'):t('plan_pendiente');return`<div class="plan-item"><div class="prio-badge ${pc}">${i+1}</div><div><div class="plan-label">${tx(p.accion)}<span class="pill ${ec}">${et}</span></div><div class="plan-meta">👤 ${tx(p.responsable)} · 📅 ${p.vence}</div></div></div>`;}).join('');
 }
 
 const LEYES=[
   {cat:{es:'1. Ética y Transparencia',en:'1. Ethics and Transparency',pt:'1. Ética e Transparência'},normas:[
-    {t:'Ley 25.188 — Ética en la Función Pública',p:'🇦🇷 AR',d:{es:'Regula deberes, prohibiciones e incompatibilidades del funcionario público. Régimen de Declaraciones Juradas y obsequios.',en:'Regulates duties, prohibitions and incompatibilities of public officials. Sworn financial disclosure and gift regime.',pt:'Regula deveres, proibições e incompatibilidades do funcionário público. Regime de Declarações Juradas e presentes.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/60847/norma.htm'},
-    {t:'Ley 26.857 — Declaraciones Juradas Públicas',p:'🇦🇷 AR',d:{es:'Establece que las declaraciones patrimoniales de funcionarios son de acceso público en internet.',en:'Establishes that officials\' financial disclosure statements are publicly accessible online.',pt:'Estabelece que as declarações patrimoniais de funcionários são de acesso público na internet.'},l:''},
+    {t:'Ley 27.401 — Responsabilidad Penal de Personas Jurídicas',p:'🇦🇷 AR',d:{es:'Responsabilidad penal corporativa por corrupción. Programa de Integridad obligatorio para contratar con el Estado (Art. 24). Atenuante/eximente penal (Art. 9).',en:'Corporate criminal liability. Integrity Program mandatory to contract with the State (Art. 24).',pt:'Responsabilidade penal corporativa. Programa de Integridade obrigatório (Art. 24).'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/300000-304999/304130/norma.htm'},
+    {t:'Ley 25.188 — Ética en la Función Pública',p:'🇦🇷 AR',d:{es:'Regula deberes, prohibiciones e incompatibilidades del funcionario público.',en:'Regulates duties, prohibitions and incompatibilities of public officials.',pt:'Regula deveres, proibições e incompatibilidades do funcionário público.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/60847/norma.htm'},
     {t:'Ley 27.275 — Acceso a la Información Pública',p:'🇦🇷 AR',d:{es:'Garantiza el derecho de acceso a la información pública y crea la AAIP.',en:'Guarantees the right to access public information and creates the AAIP.',pt:'Garante o direito de acesso à informação pública e cria a AAIP.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/265000-269999/265949/norma.htm'},
   ]},
-  {cat:{es:'2. Régimen Penal y Responsabilidad Corporativa',en:'2. Criminal Regime and Corporate Liability',pt:'2. Regime Penal e Responsabilidade Corporativa'},normas:[
-    {t:'Código Penal — Título XI: Delitos contra la Administración Pública',p:'🇦🇷 AR',d:{es:'Tipifica cohecho, tráfico de influencias, malversación, negociaciones incompatibles, exacciones ilegales y enriquecimiento ilícito.',en:'Criminalizes bribery, influence peddling, embezzlement, incompatible negotiations, illegal exactions and illicit enrichment.',pt:'Tipifica corrupção, tráfico de influência, peculato, negociações incompatíveis, exações ilegais e enriquecimento ilícito.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/15000-19999/16546/texact.htm'},
-    {t:'Ley 27.401 — Responsabilidad Penal de Personas Jurídicas',p:'🇦🇷 AR',d:{es:'Responsabilidad penal corporativa por corrupción. Programa de Integridad obligatorio para contratar con el Estado (Art. 24). Atenuante/eximente penal (Art. 9).',en:'Corporate criminal liability for corruption. Integrity Program mandatory to contract with the State (Art. 24). Criminal mitigant/exemption (Art. 9).',pt:'Responsabilidade penal corporativa por corrupção. Programa de Integridade obrigatório para contratar com o Estado (Art. 24). Atenuante/isenção penal (Art. 9).'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/300000-304999/304130/norma.htm'},
-    {t:'Ley 27.319 — Delitos Complejos',p:'🇦🇷 AR',d:{es:'Herramientas especiales de investigación: agente revelador, encubierto, informante y entrega vigilada.',en:'Special investigative tools: undercover agent, informant and controlled delivery.',pt:'Ferramentas especiais de investigação: agente revelador, infiltrado, informante e entrega vigiada.'},l:''},
-    {t:'Ley 27.304 — Ley del Arrepentido',p:'🇦🇷 AR',d:{es:'Reduce pena a quien brinde información útil para esclarecer delitos complejos de corrupción.',en:'Reduces sentence for those who provide useful information to clarify complex corruption crimes.',pt:'Reduz a pena de quem fornecer informações úteis para esclarecer crimes complexos de corrupção.'},l:''},
+  {cat:{es:'2. Prevención del Lavado de Activos',en:'2. Anti-Money Laundering',pt:'2. Prevenção da Lavagem de Dinheiro'},normas:[
+    {t:'Ley 25.246 — Lavado de Activos / UIF',p:'🇦🇷 AR',d:{es:'Crea la Unidad de Información Financiera (UIF). Define Sujetos Obligados. Alineada con estándares GAFI.',en:'Creates the UIF. Defines Obligated Subjects. Aligned with FATF standards.',pt:'Cria a UIF. Define Sujeitos Obrigados. Alinhada aos padrões do GAFI.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/63230/norma.htm'},
   ]},
-  {cat:{es:'3. Prevención del Lavado de Activos',en:'3. Anti-Money Laundering',pt:'3. Prevenção da Lavagem de Dinheiro'},normas:[
-    {t:'Ley 25.246 — Lavado de Activos / UIF',p:'🇦🇷 AR',d:{es:'Crea la Unidad de Información Financiera (UIF). Define Sujetos Obligados a reportar operaciones sospechosas. Alineada con estándares GAFI.',en:'Creates the Financial Information Unit (UIF). Defines Obligated Subjects to report suspicious transactions. Aligned with FATF standards.',pt:'Cria a Unidade de Informação Financeira (UIF). Define Sujeitos Obrigados a reportar operações suspeitas. Alinhada aos padrões do GAFI.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/63230/norma.htm'},
-  ]},
-  {cat:{es:'4. Estructura Institucional y Decretos',en:'4. Institutional Structure and Decrees',pt:'4. Estrutura Institucional e Decretos'},normas:[
-    {t:'Ley 25.233 Art. 13 — Creación de la Oficina Anticorrupción',p:'🇦🇷 AR',d:{es:'Constituye formalmente la OA en el ámbito del Poder Ejecutivo Nacional.',en:'Formally establishes the Anti-Corruption Office within the National Executive Branch.',pt:'Constitui formalmente a OA no âmbito do Poder Executivo Nacional.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/61214/norma.htm'},
-    {t:'Decreto 102/99 — Competencias de la OA',p:'🇦🇷 AR',d:{es:'Define objeto, funciones de investigación preventiva y diseño de políticas de transparencia de la OA.',en:'Defines the purpose, preventive investigation functions and transparency policy design of the OA.',pt:'Define objeto, funções de investigação preventiva e desenho de políticas de transparência da OA.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/60000-64999/61468/norma.htm'},
-    {t:'Decreto 202/2017 — Conflictos de Intereses en Contrataciones',p:'🇦🇷 AR',d:{es:'Exige Declaración Jurada de Intereses de oferentes en licitaciones ante vinculaciones con el Presidente, Vice, Jefe de Gabinete o Ministros.',en:'Requires bidders to file a Declaration of Interests when linked to the President, Vice President, Chief of Cabinet or Ministers.',pt:'Exige Declaração Jurada de Interesses de licitantes ante vínculos com o Presidente, Vice, Chefe de Gabinete ou Ministros.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/270000-274999/273030/norma.htm'},
-  ]},
-  {cat:{es:'5. Convenciones Internacionales (Jerarquía Supralegal)',en:'5. International Conventions (Supralegal Hierarchy)',pt:'5. Convenções Internacionais (Hierarquia Supralegal)'},normas:[
-    {t:'Ley 24.759 — CICC (OEA)',p:'🌍 OEA',d:{es:'Ratificación de la Convención Interamericana contra la Corrupción — primer instrumento internacional en la materia.',en:'Ratification of the Inter-American Convention Against Corruption — the first international instrument on the matter.',pt:'Ratificação da Convenção Interamericana contra a Corrupção — primeiro instrumento internacional na matéria.'},l:'https://servicios.infoleg.gob.ar/infolegInternet/anexos/40000-44999/41344/norma.htm'},
-    {t:'Ley 26.097 — UNCAC (ONU)',p:'🌍 ONU',d:{es:'Ratificación de la Convención de las Naciones Unidas contra la Corrupción — prevención, criminalización, recupero de activos.',en:'Ratification of the UN Convention Against Corruption — prevention, criminalization, asset recovery.',pt:'Ratificação da Convenção das Nações Unidas contra a Corrupção — prevenção, criminalização, recuperação de ativos.'},l:''},
-    {t:'Ley 25.319 — Convención OCDE Antibribery',p:'🌍 OCDE',d:{es:'Ratificación del instrumento OCDE que penaliza el cohecho de funcionarios extranjeros en transacciones comerciales internacionales.',en:'Ratification of the OECD instrument that criminalizes bribery of foreign officials in international business transactions.',pt:'Ratificação do instrumento da OCDE que pune o suborno de funcionários estrangeiros em transações comerciais internacionais.'},l:''},
-  ]},
-  {cat:{es:'6. Resoluciones de la Oficina Anticorrupción',en:'6. Anti-Corruption Office Resolutions',pt:'6. Resoluções do Escritório Anticorrupção'},normas:[
-    {t:'Resolución OA 13/2024',p:'🇦🇷 OA',d:{es:'Lineamientos estratégicos de integridad y transparencia en el sector público con articulación federal.',en:'Strategic guidelines on integrity and transparency in the public sector with federal coordination.',pt:'Diretrizes estratégicas de integridade e transparência no setor público com articulação federal.'},l:'https://www.anticorrupcion.gob.ar'},
-    {t:'Resolución OA 12/2025',p:'🇦🇷 OA',d:{es:'Pautas operativas de prevención de corrupción administrativa (Ley 25.188 y Decreto 102/99).',en:'Operational guidelines for preventing administrative corruption (Law 25.188 and Decree 102/99).',pt:'Diretrizes operacionais de prevenção à corrupção administrativa (Lei 25.188 e Decreto 102/99).'},l:'https://www.anticorrupcion.gob.ar'},
-    {t:'Buscador de Resoluciones OA',p:'🇦🇷 OA',d:{es:'Repositorio oficial de dictámenes sobre incompatibilidades de funcionarios del Poder Ejecutivo.',en:'Official repository of rulings on incompatibilities of Executive Branch officials.',pt:'Repositório oficial de pareceres sobre incompatibilidades de funcionários do Poder Executivo.'},l:'https://www.anticorrupcion.gob.ar'},
-  ]},
-  {cat:{es:'7. Normas Profesionales (FACPCE / CPCECABA)',en:'7. Professional Standards (FACPCE / CPCECABA)',pt:'7. Normas Profissionais (FACPCE / CPCECABA)'},normas:[
-    {t:'Resolución 635/2024 FACPCE — Lavado de Activos',p:'🇦🇷 FACPCE',d:{es:'Reemplaza la Res. 420/2011. Adapta normas del Contador Público al enfoque por riesgos de la UIF y el GAFI. Alcanza auditores de estados contables y síndicos.',en:'Replaces Res. 420/2011. Adapts Public Accountant standards to the UIF and FATF risk-based approach. Covers financial statement auditors and supervisory board members.',pt:'Substitui a Res. 420/2011. Adapta normas do Contador Público à abordagem baseada em risco da UIF e do GAFI. Abrange auditores de demonstrações contábeis e síndicos.'},l:'https://www.facpce.org.ar'},
-    {t:'Resolución CD 902/2024 CPCECABA',p:'🇦🇷 CPCECABA',d:{es:'Adaptación en CABA de la norma nacional. Establece procedimientos de due diligence en papeles de trabajo del auditor.',en:'CABA adaptation of the national standard. Establishes due diligence procedures in the auditor\'s working papers.',pt:'Adaptação em CABA da norma nacional. Estabelece procedimentos de due diligence nos papéis de trabalho do auditor.'},l:'https://www.consejo.org.ar'},
-    {t:'RT N° 53 / IT 23 CENCyA',p:'🇦🇷 FACPCE',d:{es:'Encargos de aseguramiento. El IT 23 define cómo el auditor evalúa riesgos de fraude y control interno sobre salvaguarda de activos.',en:'Assurance engagements. IT 23 defines how the auditor assesses fraud risk and internal control over asset safeguarding.',pt:'Trabalhos de asseguração. O IT 23 define como o auditor avalia riscos de fraude e controle interno sobre a salvaguarda de ativos.'},l:'https://www.facpce.org.ar'},
-  ]},
-  {cat:{es:'8. Legislación Internacional Antibribery',en:'8. International Anti-Bribery Legislation',pt:'8. Legislação Internacional Antissuborno'},normas:[
-    {t:'FCPA — Foreign Corrupt Practices Act',p:'🇺🇸 USA',d:{es:'Prohíbe soborno a funcionarios extranjeros. Aplicación extraterritorial. Voluntary self-disclosure reduce penas hasta 50%. DOJ + SEC.',en:'Prohibits bribery of foreign officials. Extraterritorial application. Voluntary self-disclosure reduces penalties by up to 50%. DOJ + SEC.',pt:'Proíbe suborno a funcionários estrangeiros. Aplicação extraterritorial. Autodenúncia voluntária reduz penas em até 50%. DOJ + SEC.'},l:'https://www.justice.gov/criminal/fraud/fcpa'},
-    {t:'UK Bribery Act 2010',p:'🇬🇧 UK',d:{es:'La más estricta del mundo. Sección 7: strict liability por falla corporativa. Compliance efectivo = defensa completa.',en:'The strictest in the world. Section 7: strict liability for corporate failure. Effective compliance = complete defense.',pt:'A mais rigorosa do mundo. Seção 7: responsabilidade objetiva por falha corporativa. Compliance efetivo = defesa completa.'},l:'https://www.legislation.gov.uk/ukpga/2010/23/contents'},
-    {t:'Loi Sapin II (2016-1691)',p:'🇫🇷 FR',d:{es:'Obliga empresas +500 empleados. Crea CJIP y AFA como supervisor de compliance.',en:'Applies to companies with +500 employees. Creates the CJIP and the AFA as compliance supervisor.',pt:'Obriga empresas com +500 funcionários. Cria CJIP e AFA como supervisor de compliance.'},l:'https://www.legifrance.gouv.fr'},
-    {t:'Lei Anticorrupção 12.846/2013',p:'🇧🇷 BR',d:{es:'Responsabilidad objetiva. Acordo de Leniência reduce multas y preserva contratos públicos.',en:'Strict liability. Leniency Agreement reduces fines and preserves public contracts.',pt:'Responsabilidade objetiva. Acordo de Leniência reduz multas e preserva contratos públicos.'},l:'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12846.htm'},
-    {t:'OWiG + LkSG',p:'🇩🇪 DE',d:{es:'OWiG: multas por falla de supervisión (§30, §130). LkSG 2023: due diligence en cadena de suministro.',en:'OWiG: fines for supervisory failure (§30, §130). LkSG 2023: supply chain due diligence.',pt:'OWiG: multas por falha de supervisão (§30, §130). LkSG 2023: due diligence na cadeia de suprimentos.'},l:'https://www.gesetze-im-internet.de/owig_1968/'},
-    {t:'Código Penal Art. 31 bis — España',p:'🇪🇸 ES',d:{es:'Responsabilidad penal empresarial. Compliance efectivo = eximente completo. Circular FGE 1/2016.',en:'Corporate criminal liability. Effective compliance = full exemption. Circular FGE 1/2016.',pt:'Responsabilidade penal empresarial. Compliance efetivo = isenção completa. Circular FGE 1/2016.'},l:'https://www.boe.es'},
+  {cat:{es:'3. Legislación Internacional',en:'3. International Legislation',pt:'3. Legislação Internacional'},normas:[
+    {t:'FCPA — Foreign Corrupt Practices Act',p:'🇺🇸 USA',d:{es:'Prohíbe soborno a funcionarios extranjeros. Aplicación extraterritorial. DOJ + SEC.',en:'Prohibits bribery of foreign officials. Extraterritorial application. DOJ + SEC.',pt:'Proíbe suborno a funcionários estrangeiros. Aplicação extraterritorial. DOJ + SEC.'},l:'https://www.justice.gov/criminal/fraud/fcpa'},
+    {t:'UK Bribery Act 2010',p:'🇬🇧 UK',d:{es:'La más estricta del mundo. Sección 7: strict liability por falla corporativa.',en:'The strictest in the world. Section 7: strict liability for corporate failure.',pt:'A mais rigorosa do mundo. Seção 7: responsabilidade objetiva.'},l:'https://www.legislation.gov.uk/ukpga/2010/23/contents'},
     {t:'Convención OCDE Antibribery 1997',p:'🌍 OCDE',d:{es:'Primer instrumento vinculante. Base de los 31 casos MJR del MEACI.',en:'First binding instrument. Basis for MEACI\'s 31 MJR cases.',pt:'Primeiro instrumento vinculante. Base dos 31 casos MJR do MEACI.'},l:'https://legalinstruments.oecd.org/en/instruments/OECD-LEGAL-0293'},
-    {t:'UNCAC — ONU contra la Corrupción',p:'🌍 ONU',d:{es:'189 estados parte. Prevención, criminalización, recupero de activos y cooperación internacional.',en:'189 state parties. Prevention, criminalization, asset recovery and international cooperation.',pt:'189 estados-parte. Prevenção, criminalização, recuperação de ativos e cooperação internacional.'},l:'https://www.unodc.org/unodc/en/corruption/uncac.html'},
-    {t:'Directiva UE 2019/1937 — Whistleblowers',p:'🇪🇺 UE',d:{es:'Empresas +50 empleados en la UE deben implementar canales de denuncia y proteger denunciantes.',en:'Companies with +50 employees in the EU must implement reporting channels and protect whistleblowers.',pt:'Empresas com +50 funcionários na UE devem implementar canais de denúncia e proteger denunciantes.'},l:'https://eur-lex.europa.eu'},
-    {t:'FATF / GAFI — 40 Recomendaciones',p:'🌍 GAFI',d:{es:'Estándar global contra lavado. Rec. 3 y 6 aplican a corrupción. Argentina en lista gris 2023-2024.',en:'Global anti-money laundering standard. Rec. 3 and 6 apply to corruption. Argentina on grey list 2023-2024.',pt:'Padrão global contra lavagem de dinheiro. Rec. 3 e 6 aplicam-se à corrupção. Argentina na lista cinza 2023-2024.'},l:'https://www.fatf-gafi.org'},
+    {t:'Directiva UE 2019/1937 — Whistleblowers',p:'🇪🇺 UE',d:{es:'Empresas +50 empleados en la UE deben implementar canales de denuncia.',en:'Companies +50 employees in the EU must implement reporting channels.',pt:'Empresas +50 funcionários na UE devem implementar canais de denúncia.'},l:'https://eur-lex.europa.eu'},
   ]},
 ];
 
 const CAL_COLORES={capacitacion:'#1a3a5c',plan_mejora:'#7b1fa2',normativo:'#c62828'};
-
 function getEventosCalendario(){
   const eventos=[];
-  (CONFIG.capacitaciones||[]).forEach(c=>{
-    if(!c.fecha_limite) return;
-    eventos.push({
-      fecha:c.fecha_limite, tipo:'capacitacion',
-      titulo:tx(c.modulo),
-      descripcion:`${tx(c.destinatarios)} · ${c.completado}% ${t('completo').toLowerCase()}`,
-      criticidad:c.obligatorio?(c.completado<60?'alta':'media'):'baja',
-    });
-  });
-  (CONFIG.plan_mejora||[]).forEach(p=>{
-    if(!p.vence) return;
-    eventos.push({
-      fecha:p.vence, tipo:'plan_mejora',
-      titulo:tx(p.accion),
-      descripcion:`${tx(p.responsable)} · ${t('plan_'+(p.estado==='completo'?'completo':p.estado==='en_progreso'?'en_progreso':'pendiente'))}`,
-      criticidad:p.prioridad==='alta'?'alta':p.prioridad==='media'?'media':'baja',
-    });
-  });
-  (CONFIG.calendario_regulatorio||[]).forEach(ev=>{
-    eventos.push({
-      fecha:ev.fecha, tipo:'normativo',
-      titulo:tx(ev.titulo),
-      descripcion:tx(ev.descripcion),
-      criticidad:ev.criticidad||'media',
-    });
-  });
+  (CONFIG.capacitaciones||[]).forEach(c=>{if(!c.fecha_limite)return;eventos.push({fecha:c.fecha_limite,tipo:'capacitacion',titulo:tx(c.modulo),descripcion:`${tx(c.destinatarios)} · ${c.completado}% ${t('completo').toLowerCase()}`,criticidad:c.obligatorio?(c.completado<60?'alta':'media'):'baja'});});
+  (CONFIG.plan_mejora||[]).forEach(p=>{if(!p.vence)return;eventos.push({fecha:p.vence,tipo:'plan_mejora',titulo:tx(p.accion),descripcion:`${tx(p.responsable)} · ${t('plan_'+(p.estado==='completo'?'completo':p.estado==='en_progreso'?'en_progreso':'pendiente'))}`,criticidad:p.prioridad==='alta'?'alta':p.prioridad==='media'?'media':'baja'});});
+  (CONFIG.calendario_regulatorio||[]).forEach(ev=>{eventos.push({fecha:ev.fecha,tipo:'normativo',titulo:tx(ev.titulo),descripcion:tx(ev.descripcion),criticidad:ev.criticidad||'media'});});
   return eventos;
 }
-
-let calMesActual=new Date().getMonth();
-let calAnioActual=new Date().getFullYear();
-let calDiaSeleccionado=null;
-
-function calMoverMes(delta){
-  calMesActual+=delta;
-  if(calMesActual<0){calMesActual=11;calAnioActual--;}
-  if(calMesActual>11){calMesActual=0;calAnioActual++;}
-  calDiaSeleccionado=null;
-  renderCalendario();
-}
-
+let calMesActual=new Date().getMonth();let calAnioActual=new Date().getFullYear();let calDiaSeleccionado=null;
+function calMoverMes(delta){calMesActual+=delta;if(calMesActual<0){calMesActual=11;calAnioActual--;}if(calMesActual>11){calMesActual=0;calAnioActual++;}calDiaSeleccionado=null;renderCalendario();}
 function renderCalendario(){
-  const headEl=document.getElementById('cal-grid-head');
-  const gridEl=document.getElementById('cal-grid');
-  const labelEl=document.getElementById('cal-mes-label');
-  if(!gridEl) return;
-
-  const diasSemana={
-    es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
-    en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-    pt:['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
-  }[lang]||['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const headEl=document.getElementById('cal-grid-head');const gridEl=document.getElementById('cal-grid');const labelEl=document.getElementById('cal-mes-label');if(!gridEl)return;
+  const diasSemana={es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],pt:['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']}[lang]||['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
   headEl.innerHTML=diasSemana.map(d=>`<span>${d}</span>`).join('');
-
   const localeMap={es:'es-AR',en:'en-US',pt:'pt-BR'};
-  const fechaMes=new Date(calAnioActual,calMesActual,1);
-  const mesTxt=fechaMes.toLocaleDateString(localeMap[lang]||'es-AR',{month:'long',year:'numeric'});
+  const fechaMes=new Date(calAnioActual,calMesActual,1);const mesTxt=fechaMes.toLocaleDateString(localeMap[lang]||'es-AR',{month:'long',year:'numeric'});
   labelEl.textContent=mesTxt.charAt(0).toUpperCase()+mesTxt.slice(1);
-
-  const eventos=getEventosCalendario();
-  const porDia={};
-  eventos.forEach(ev=>{
-    const d=new Date(ev.fecha+'T00:00:00');
-    if(d.getFullYear()===calAnioActual && d.getMonth()===calMesActual){
-      const key=ev.fecha;
-      if(!porDia[key]) porDia[key]=[];
-      porDia[key].push(ev);
-    }
-  });
-
-  const primerDiaSemana=new Date(calAnioActual,calMesActual,1).getDay();
-  const diasEnMes=new Date(calAnioActual,calMesActual+1,0).getDate();
-  const hoy=new Date();
-  const hoyStr=`${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
-
-  let html='';
-  for(let i=0;i<primerDiaSemana;i++) html+='<div class="cal-day empty"></div>';
-  for(let d=1;d<=diasEnMes;d++){
-    const dateStr=`${calAnioActual}-${String(calMesActual+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const evs=porDia[dateStr]||[];
-    const isToday=dateStr===hoyStr;
-    const isSelected=dateStr===calDiaSeleccionado;
-    const dotsHtml=evs.slice(0,4).map(e=>`<span class="cal-day-dot" style="background:${CAL_COLORES[e.tipo]}"></span>`).join('');
-    html+=`<div class="cal-day ${evs.length?'has-events':''} ${isToday?'today':''} ${isSelected?'selected':''}" ${evs.length?`onclick="calSeleccionarDia('${dateStr}')"`:''}>
-      ${d}<div class="cal-day-dots">${dotsHtml}</div>
-    </div>`;
-  }
+  const eventos=getEventosCalendario();const porDia={};
+  eventos.forEach(ev=>{const d=new Date(ev.fecha+'T00:00:00');if(d.getFullYear()===calAnioActual&&d.getMonth()===calMesActual){const key=ev.fecha;if(!porDia[key])porDia[key]=[];porDia[key].push(ev);}});
+  const primerDiaSemana=new Date(calAnioActual,calMesActual,1).getDay();const diasEnMes=new Date(calAnioActual,calMesActual+1,0).getDate();
+  const hoy=new Date();const hoyStr=`${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+  let html='';for(let i=0;i<primerDiaSemana;i++)html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=diasEnMes;d++){const dateStr=`${calAnioActual}-${String(calMesActual+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const evs=porDia[dateStr]||[];const isToday=dateStr===hoyStr;const isSelected=dateStr===calDiaSeleccionado;const dotsHtml=evs.slice(0,4).map(e=>`<span class="cal-day-dot" style="background:${CAL_COLORES[e.tipo]}"></span>`).join('');html+=`<div class="cal-day ${evs.length?'has-events':''} ${isToday?'today':''} ${isSelected?'selected':''}" ${evs.length?`onclick="calSeleccionarDia('${dateStr}')"`:''}>  ${d}<div class="cal-day-dots">${dotsHtml}</div></div>`;}
   gridEl.innerHTML=html;
-
-  if(calDiaSeleccionado) calMostrarDetalleDia(calDiaSeleccionado);
-  else document.getElementById('cal-detalle-dia').innerHTML='';
-
+  if(calDiaSeleccionado)calMostrarDetalleDia(calDiaSeleccionado);else document.getElementById('cal-detalle-dia').innerHTML='';
   renderCalProximos(eventos);
 }
-
-function calSeleccionarDia(dateStr){
-  calDiaSeleccionado=calDiaSeleccionado===dateStr?null:dateStr;
-  renderCalendario();
-}
-
+function calSeleccionarDia(dateStr){calDiaSeleccionado=calDiaSeleccionado===dateStr?null:dateStr;renderCalendario();}
 function calMostrarDetalleDia(dateStr){
-  const eventos=getEventosCalendario().filter(e=>e.fecha===dateStr);
-  const box=document.getElementById('cal-detalle-dia');
-  if(!eventos.length){box.innerHTML='';return;}
-  const localeMap={es:'es-AR',en:'en-US',pt:'pt-BR'};
-  const fechaFmt=new Date(dateStr+'T00:00:00').toLocaleDateString(localeMap[lang]||'es-AR',{weekday:'long',day:'numeric',month:'long'});
-  box.innerHTML=`<h3 style="margin-top:1rem">${fechaFmt}</h3>`+eventos.map(e=>`
-    <div class="cal-detalle-evento ${e.criticidad}">
-      <div style="flex:1">
-        <div class="cal-detalle-titulo">${e.titulo} <span class="cal-tipo-tag" style="background:${CAL_COLORES[e.tipo]}">${t('cal_tipo_'+e.tipo)}</span></div>
-        <div class="cal-detalle-desc">${e.descripcion}</div>
-      </div>
-    </div>`).join('');
+  const eventos=getEventosCalendario().filter(e=>e.fecha===dateStr);const box=document.getElementById('cal-detalle-dia');if(!eventos.length){box.innerHTML='';return;}
+  const localeMap={es:'es-AR',en:'en-US',pt:'pt-BR'};const fechaFmt=new Date(dateStr+'T00:00:00').toLocaleDateString(localeMap[lang]||'es-AR',{weekday:'long',day:'numeric',month:'long'});
+  box.innerHTML=`<h3 style="margin-top:1rem">${fechaFmt}</h3>`+eventos.map(e=>`<div class="cal-detalle-evento ${e.criticidad}"><div style="flex:1"><div class="cal-detalle-titulo">${e.titulo} <span class="cal-tipo-tag" style="background:${CAL_COLORES[e.tipo]}">${t('cal_tipo_'+e.tipo)}</span></div><div class="cal-detalle-desc">${e.descripcion}</div></div></div>`).join('');
 }
-
 function renderCalProximos(eventosDelMes){
-  const todos=getEventosCalendario();
-  const hoy=new Date();hoy.setHours(0,0,0,0);
-  const prox=todos.map(e=>({...e,dias:Math.round((new Date(e.fecha+'T00:00:00')-hoy)/86400000)}))
-    .filter(e=>e.dias>=0)
-    .sort((a,b)=>a.dias-b.dias)
-    .slice(0,8);
-  const cont=document.getElementById('cal-proximos-list');
-  if(!cont) return;
-  cont.innerHTML=prox.length?prox.map(e=>{
-    const d=new Date(e.fecha+'T00:00:00');
-    const fechaCorta=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
-    return`<div class="cal-proximo-row">
-      <div class="cal-proximo-fecha">${fechaCorta}</div>
-      <div class="cal-proximo-info">
-        <div class="cal-proximo-titulo">${e.titulo} <span class="cal-tipo-tag" style="background:${CAL_COLORES[e.tipo]}">${t('cal_tipo_'+e.tipo)}</span></div>
-        <div class="cal-proximo-dias">${e.dias===0?t('cal_hoy'):`${e.dias} ${t('dias_label')}`}</div>
-      </div>
-    </div>`;
-  }).join(''):`<div class="alerta verde"><span class="alerta-ico">✅</span><span>${t('cal_sin_proximos')}</span></div>`;
+  const todos=getEventosCalendario();const hoy=new Date();hoy.setHours(0,0,0,0);
+  const prox=todos.map(e=>({...e,dias:Math.round((new Date(e.fecha+'T00:00:00')-hoy)/86400000)})).filter(e=>e.dias>=0).sort((a,b)=>a.dias-b.dias).slice(0,8);
+  const cont=document.getElementById('cal-proximos-list');if(!cont)return;
+  cont.innerHTML=prox.length?prox.map(e=>{const d=new Date(e.fecha+'T00:00:00');const fechaCorta=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;return`<div class="cal-proximo-row"><div class="cal-proximo-fecha">${fechaCorta}</div><div class="cal-proximo-info"><div class="cal-proximo-titulo">${e.titulo} <span class="cal-tipo-tag" style="background:${CAL_COLORES[e.tipo]}">${t('cal_tipo_'+e.tipo)}</span></div><div class="cal-proximo-dias">${e.dias===0?t('cal_hoy'):`${e.dias} ${t('dias_label')}`}</div></div></div>`;}).join(''):`<div class="alerta verde"><span class="alerta-ico">✅</span><span>${t('cal_sin_proximos')}</span></div>`;
 }
 
 function renderLegislacion(f=''){
-  const fl=f.toLowerCase();
-  let html='';
-  LEYES.forEach(cat=>{
-    const nf=cat.normas.filter(n=>!fl||n.t.toLowerCase().includes(fl)||tx(n.d).toLowerCase().includes(fl));
-    if(!nf.length)return;
-    html+=`<div class="leg-cat"><div class="leg-cat-titulo">${tx(cat.cat)}</div>`;
-    nf.forEach(n=>{html+=`<div class="leg-norma"><div class="leg-head"><div class="leg-titulo">${n.t}</div><span class="leg-pais">${n.p}</span></div><div class="leg-desc">${tx(n.d)}</div>${n.l?`<a class="leg-link" href="${n.l}" target="_blank">${t('leg_ver_texto')}</a>`:''}</div>`;});
-    html+='</div>';
-  });
+  const fl=f.toLowerCase();let html='';
+  LEYES.forEach(cat=>{const nf=cat.normas.filter(n=>!fl||n.t.toLowerCase().includes(fl)||tx(n.d).toLowerCase().includes(fl));if(!nf.length)return;html+=`<div class="leg-cat"><div class="leg-cat-titulo">${tx(cat.cat)}</div>`;nf.forEach(n=>{html+=`<div class="leg-norma"><div class="leg-head"><div class="leg-titulo">${n.t}</div><span class="leg-pais">${n.p}</span></div><div class="leg-desc">${tx(n.d)}</div>${n.l?`<a class="leg-link" href="${n.l}" target="_blank">${t('leg_ver_texto')}</a>`:''}</div>`;});html+='</div>';});
   document.getElementById('leg-cont').innerHTML=html||`<p style="color:var(--muted);padding:1rem">${t('leg_sin_resultados')}</p>`;
 }
 function filtrarLeg(){renderLegislacion(document.getElementById('leg-search').value);}
@@ -1625,73 +1193,44 @@ function renderPanel(p){
   else if(p==='calendario')renderCalendario();
   else if(p==='legislacion')renderLegislacion();
   else if(p==='reporte')renderReporte();
+  else if(p==='denuncias'){} // iframe carga solo
 }
 
 function renderAll(){
   document.getElementById('nav-nombre').textContent=CONFIG.empresa.nombre;
-  const labels={dashboard:'📊 '+t('dashboard'),ley27401:'⚖️ '+t('ley27401'),riesgo:'🗺️ '+t('riesgo'),capacitacion:'📚 '+t('capacitacion'),duediligence:'🔍 '+t('duediligence'),internacional:'🌍 '+t('internacional'),rite:'🏛️ '+t('rite'),mejoras:'📈 '+t('mejoras'),calendario:'📅 '+t('cal_nav'),legislacion:'📋 '+t('legislacion'),reporte:'📄 '+t('reporte')};
+  const labels={
+    dashboard:'📊 '+t('dashboard'),ley27401:'⚖️ '+t('ley27401'),riesgo:'🗺️ '+t('riesgo'),
+    capacitacion:'📚 '+t('capacitacion'),duediligence:'🔍 '+t('duediligence'),internacional:'🌍 '+t('internacional'),
+    rite:'🏛️ '+t('rite'),mejoras:'📈 '+t('mejoras'),calendario:'📅 '+t('cal_nav'),
+    legislacion:'📋 '+t('legislacion'),reporte:'📄 '+t('reporte'),denuncias:'🔒 '+t('denuncias')};
   document.querySelectorAll('.tab-btn').forEach(b=>{if(labels[b.dataset.panel])b.textContent=labels[b.dataset.panel];});
   const activo=document.querySelector('.tab-btn.active')?.dataset.panel||'dashboard';
   renderPanel(activo);
   renderLegislacion();
 }
 
-// ── Sincronización dinámica con MEACI (Due Diligence en vivo) ──────────────
-// CONFIG.cuits_verificados trae los proveedores reales de la empresa (con
-// area_vinculada, usado por el Mapa de Calor y por Conflicto de Interés).
-// El campo "resultado" de cada proveedor históricamente era manual; acá lo
-// recalculamos en vivo contra la lista real de empresas sancionadas OCDE que
-// expone MEACI (/api/alertas), cruzando por CUIT normalizado (sin guiones).
-// Si MEACI no responde, se conserva el valor que ya tenía config.js como
-// fallback, para que el dashboard nunca quede roto por falta de conectividad.
 let meaciAlertasCache=null;
-
 async function fetchAlertasMeaci(){
-  if(meaciAlertasCache) return meaciAlertasCache;
-  const r=await fetch(`${CONFIG.meaci_url}/api/alertas`);
-  const data=await r.json();
-  meaciAlertasCache=data;
-  return data;
+  if(meaciAlertasCache)return meaciAlertasCache;
+  const r=await fetch(`${CONFIG.meaci_url}/api/alertas`);const data=await r.json();meaciAlertasCache=data;return data;
 }
-
-function normalizarCuit(cuit){
-  return (cuit||'').replace(/[^0-9]/g,'');
-}
-
+function normalizarCuit(cuit){return(cuit||'').replace(/[^0-9]/g,'');}
 async function sincronizarDueDiligenceConMeaci(){
   try{
     const alertas=await fetchAlertasMeaci();
-    // Construimos un set de CUITs sancionados consultando /api/empresas (que
-    // sí trae cuits_ar) y cruzando contra los nombres de /api/alertas, porque
-    // /api/alertas no expone CUIT directamente.
-    const r=await fetch(`${CONFIG.meaci_url}/api/empresas?presencia_ar=true`);
-    const empresas=await r.json();
+    const r=await fetch(`${CONFIG.meaci_url}/api/empresas?presencia_ar=true`);const empresas=await r.json();
     const cuitsSancionados=new Set();
-    empresas.forEach(emp=>{
-      const enAlerta=alertas.some(a=>a.empresa===emp.nombre_matriz);
-      if(enAlerta){
-        try{
-          JSON.parse(emp.cuits_ar).forEach(c=>cuitsSancionados.add(normalizarCuit(c)));
-        }catch(e){/* formato inesperado, se ignora ese registro */}
-      }
-    });
-
-    CONFIG.cuits_verificados.forEach(prov=>{
-      const cuitNorm=normalizarCuit(prov.cuit);
-      prov.resultado = cuitsSancionados.has(cuitNorm) ? 'alerta_ocde' : 'sin_antecedentes';
-    });
-  }catch(e){
-    console.warn('No se pudo sincronizar con MEACI, se mantienen los valores locales de config.js',e);
-  }
+    empresas.forEach(emp=>{const enAlerta=alertas.some(a=>a.empresa===emp.nombre_matriz);if(enAlerta){try{JSON.parse(emp.cuits_ar).forEach(c=>cuitsSancionados.add(normalizarCuit(c)));}catch(e){}}});
+    CONFIG.cuits_verificados.forEach(prov=>{const cuitNorm=normalizarCuit(prov.cuit);prov.resultado=cuitsSancionados.has(cuitNorm)?'alerta_ocde':'sin_antecedentes';});
+  }catch(e){console.warn('No se pudo sincronizar con MEACI',e);}
 }
 
-document.addEventListener('DOMContentLoaded',async ()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
   document.documentElement.style.setProperty('--pri',CONFIG.empresa.color_primario||'#1a3a5c');
   applyStaticI18n();
   await sincronizarDueDiligenceConMeaci();
   renderAll();
 });
-
 </script>
 </body>
 </html>
