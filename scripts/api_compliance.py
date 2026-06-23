@@ -16,6 +16,7 @@ from scripts.motor_score import score_desde_dict, calcular_score, DatosPrograma,
 from scripts.etl_alertas import cargar_alertas
 from scripts.etl_normativa import cargar_normativa
 from scripts.generador_pdf import generar_reporte
+from scripts.ia_alertas import resumir_alerta_async
 
 router = APIRouter()
 
@@ -124,6 +125,43 @@ async def get_alertas(
         "total": len(alertas),
         "alertas": alertas,
     }
+
+
+@router.get("/alertas/{alerta_id}/resumen")
+async def resumen_ia_alerta(alerta_id: str):
+    """
+    Genera (o devuelve cacheado) el resumen IA de una alerta específica.
+    Si el resumen ya existe en el JSON lo devuelve directo.
+    Si no, llama a Claude API on-demand y lo persiste.
+    """
+    data = cargar_alertas()
+    alertas = data.get("alertas", [])
+    alerta = next((a for a in alertas if a.get("id") == alerta_id), None)
+
+    if not alerta:
+        raise HTTPException(status_code=404, detail=f"Alerta '{alerta_id}' no encontrada")
+
+    # Devolver caché si ya existe
+    if alerta.get("resumen_ia"):
+        return {"id": alerta_id, "resumen_ia": alerta["resumen_ia"], "cached": True}
+
+    # Generar on-demand
+    resumen = await resumir_alerta_async(alerta)
+    if not resumen:
+        raise HTTPException(
+            status_code=503,
+            detail="Resumen IA no disponible. Verificar ANTHROPIC_API_KEY en variables de entorno."
+        )
+
+    # Persistir en el JSON para no volver a llamar
+    alerta["resumen_ia"] = resumen
+    import json
+    from pathlib import Path
+    alertas_path = Path("data/alertas.json")
+    if alertas_path.exists():
+        alertas_path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+
+    return {"id": alerta_id, "resumen_ia": resumen, "cached": False}
 
 
 @router.get("/normativa")
