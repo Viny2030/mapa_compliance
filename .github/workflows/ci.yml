@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+# Permisos mínimos para CI.
+# Para que etl_alertas.yml pueda hacer push de data/*.json necesitás
+# activar "Read and write permissions" en:
+#   Settings → Actions → General → Workflow permissions
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
