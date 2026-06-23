@@ -57,6 +57,10 @@ async def index_html():
 async def config_js():
     return FileResponse(os.path.join(ROOT, "config.js"))
 
+@app.get("/config.demo.js", include_in_schema=False)
+async def config_demo_js():
+    return FileResponse(os.path.join(ROOT, "config.demo.js"))
+
 @app.get("/canal_denuncias.html", include_in_schema=False)
 async def canal_denuncias_html():
     return FileResponse(os.path.join(os.path.dirname(__file__), "canal_denuncias.html"))

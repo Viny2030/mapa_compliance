@@ -232,6 +232,9 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <body>
 
 <nav>
+  <div id="demo-banner" style="display:none;background:#f59e0b;color:#1a1a00;text-align:center;font-size:.76rem;font-weight:700;padding:.28rem 1rem;letter-spacing:.02em">
+    🧪 MODO DEMO — Datos ficticios. <a href="?demo=false" style="color:#1a1a00;text-decoration:underline" onclick="window.location.href=window.location.pathname">Salir del modo demo</a>
+  </div>
   <div class="nav-top">
     <div class="nav-brand"><span data-i18n="brand">⚖️ Monitor de Compliance</span> <span id="nav-v">v1.0</span></div>
     <div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap">
@@ -608,7 +611,16 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
   <a href="https://meaci-production.up.railway.app" target="_blank">MEACI</a>
 </footer>
 
-<script src="config.js"></script>
+<script>
+/* ── Modo demo: carga config.demo.js si la URL contiene ?demo=true ── */
+(function(){
+  const isDemo = new URLSearchParams(window.location.search).get('demo') === 'true';
+  const script = document.createElement('script');
+  script.src = isDemo ? 'config.demo.js' : 'config.js';
+  document.currentScript.parentNode.insertBefore(script, document.currentScript.nextSibling);
+  window.__IS_DEMO__ = isDemo;
+})();
+</script>
 <script>
 const T={
   es:{
@@ -1306,7 +1318,11 @@ function renderPanel(p){
 }
 
 function renderAll(){
-  document.getElementById('nav-nombre').textContent=CONFIG.empresa.nombre;
+  if(window.__IS_DEMO__){
+    document.getElementById('demo-banner').style.display='block';
+    document.body.style.paddingTop=(parseInt(getComputedStyle(document.body).paddingTop)||108)+28+'px';
+  }
+  document.getElementById('nav-nombre').textContent=CONFIG.empresa.nombre+(window.__IS_DEMO__?' [DEMO]':'');
   const labels={
     dashboard:'📊 '+t('dashboard'),ley27401:'⚖️ '+t('ley27401'),riesgo:'🗺️ '+t('riesgo'),
     capacitacion:'📚 '+t('capacitacion'),duediligence:'🔍 '+t('duediligence'),internacional:'🌍 '+t('internacional'),
