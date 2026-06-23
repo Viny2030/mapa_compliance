@@ -126,6 +126,37 @@ header p{opacity:.75;font-size:.88rem}
 .cal-proximo-dias{font-size:.7rem;color:var(--muted)}
 .heatmap-cell .hm-areas{display:none}
 .heatmap-cell:hover .hm-areas{display:block;position:absolute;bottom:105%;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;font-size:.7rem;font-weight:500;padding:.45rem .6rem;border-radius:6px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);text-shadow:none;z-index:10}
+/* Heatmap clickeable */
+.hm-clickable{cursor:pointer}
+.hm-clickable:hover{transform:scale(1.1)!important;box-shadow:0 0 0 3px #fff,0 4px 16px rgba(0,0,0,.35)!important}
+.hm-clickable.selected{outline:3px solid #fff;outline-offset:1px;transform:scale(1.08);z-index:6}
+.hm-detalle{background:#1a1a2e;color:#fff;border-radius:10px;padding:1rem 1.2rem;animation:fadeInUp .2s ease}
+.hm-detalle-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:.4rem}
+.hm-detalle-titulo{font-size:.88rem;font-weight:700;flex:1}
+.hm-detalle-score-badge{font-size:1.5rem;font-weight:900;background:rgba(255,255,255,.15);padding:.2rem .7rem;border-radius:8px}
+.hm-detalle-areas{display:flex;flex-direction:column;gap:.45rem}
+.hm-detalle-area{display:flex;align-items:flex-start;gap:.7rem;padding:.6rem .8rem;border-radius:7px;background:rgba(255,255,255,.07)}
+.hm-detalle-area-ico{font-size:1rem;flex-shrink:0;margin-top:.1rem}
+.hm-detalle-area-nombre{font-size:.85rem;font-weight:700}
+.hm-detalle-area-desc{font-size:.75rem;opacity:.72;margin-top:.12rem;line-height:1.4}
+.hm-close{background:rgba(255,255,255,.15);border:none;color:#fff;padding:.25rem .6rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-family:inherit}
+.hm-close:hover{background:rgba(255,255,255,.25)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* Board Dashboard */
+.board-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem}
+@media(max-width:580px){.board-kpi-grid{grid-template-columns:1fr 1fr}}
+.board-kpi{background:var(--card);border-radius:10px;padding:1.1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);border-top:4px solid var(--pri)}
+.board-kpi-num{font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:.1rem}
+.board-kpi-label{font-size:.7rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.board-kpi-sub{font-size:.73rem;color:var(--muted);margin-top:.25rem}
+.board-semaforo{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border-radius:8px;margin-bottom:.4rem;font-size:.86rem;font-weight:600}
+.board-semaforo.verde{background:#e8f5e9;color:#1b5e20;border-left:4px solid var(--verde)}
+.board-semaforo.naranja{background:#fff3e0;color:#7c3a00;border-left:4px solid var(--naranja)}
+.board-semaforo.rojo{background:#fdecea;color:#7f1d1d;border-left:4px solid var(--rojo)}
+.board-semaforo-ico{font-size:1.1rem;flex-shrink:0}
+.board-firma{font-size:.72rem;color:var(--muted);background:#f0f4f8;border-radius:7px;padding:.65rem .9rem;text-align:center;margin-top:.8rem;line-height:1.6}
+.board-printbtn{background:var(--pri);color:#fff;border:none;padding:.5rem 1.1rem;border-radius:6px;font-size:.84rem;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:.4rem}
+.board-printbtn:hover{background:#0d2137}
 .heatmap-xaxis{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:.3rem}
 .heatmap-xaxis span{text-align:center;font-size:.66rem;color:var(--muted);font-weight:600}
 .heatmap-axis-label{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-align:center;margin-top:.4rem}
@@ -214,6 +245,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
   </div>
     <div class="nav-tabs" id="nav-tabs">
     <button class="tab-btn active" data-panel="dashboard">📊 Dashboard</button>
+    <button class="tab-btn" data-panel="board">🏛️ Board View</button>
     <button class="tab-btn" data-panel="ley27401">⚖️ Ley 27.401</button>
     <button class="tab-btn" data-panel="riesgo">🗺️ Riesgo</button>
     <button class="tab-btn" data-panel="capacitacion">📚 Capacitación</button>
@@ -268,6 +300,56 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
   </div>
 </div>
 
+<!-- BOARD DASHBOARD -->
+<div class="panel" id="panel-board">
+  <div class="wrap">
+    <!-- Cabecera ejecutiva -->
+    <div class="card" style="border-top:4px solid var(--pri);margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.6rem">
+        <div>
+          <h2 style="font-size:1.15rem" id="board-titulo">Vista Ejecutiva — Programa de Integridad</h2>
+          <div style="font-size:.8rem;color:var(--muted)" id="board-subtitulo"></div>
+        </div>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <span id="board-fecha" style="font-size:.76rem;color:var(--muted)"></span>
+          <button class="board-printbtn" onclick="window.print()">🖨️ Imprimir</button>
+        </div>
+      </div>
+    </div>
+    <!-- KPIs principales -->
+    <div class="board-kpi-grid" id="board-kpis"></div>
+    <!-- Semáforo de ejes -->
+    <div class="grid2" style="margin-bottom:1rem">
+      <div class="card" style="margin-bottom:0">
+        <h2 style="margin-bottom:.7rem">🚦 Estado por eje</h2>
+        <div id="board-semaforos"></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h2 style="margin-bottom:.7rem">📊 Evolución del score</h2>
+        <div style="position:relative;height:180px"><canvas id="ch-board-evol"></canvas></div>
+      </div>
+    </div>
+    <!-- Riesgos críticos + alertas -->
+    <div class="grid2" style="margin-bottom:1rem">
+      <div class="card" style="margin-bottom:0">
+        <h2 style="margin-bottom:.7rem">🔴 Riesgos críticos</h2>
+        <div id="board-riesgos"></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h2 style="margin-bottom:.7rem">⚠️ Alertas para el directorio</h2>
+        <div id="board-alertas"></div>
+      </div>
+    </div>
+    <!-- Próximas acciones -->
+    <div class="card" style="margin-bottom:1rem">
+      <h2 style="margin-bottom:.7rem">📋 Próximas acciones prioritarias</h2>
+      <div id="board-acciones"></div>
+    </div>
+    <!-- Firma -->
+    <div class="board-firma" id="board-firma"></div>
+  </div>
+</div>
+
 <!-- LEY 27401 -->
 <div class="panel" id="panel-ley27401">
   <div class="wrap">
@@ -305,6 +387,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
       </div>
       <div id="autoeval-form" style="display:none;margin-top:.9rem"></div>
       <div id="heatmap-cont" style="margin-top:.9rem"></div>
+      <div id="heatmap-celda-detalle" style="display:none;margin-top:.9rem"></div>
       <div id="heatmap-fuente-aviso"></div>
     </div>
     <div class="card"><h2 data-i18n="radar_riesgo">Radar de riesgo</h2><div class="chart-wrap" style="height:260px"><canvas id="ch-radar"></canvas></div></div>
@@ -1032,7 +1115,7 @@ function renderHeatmap(){
   const yLabels=[t('hm_impacto_5'),t('hm_impacto_4'),t('hm_impacto_3'),t('hm_impacto_2'),t('hm_impacto_1')];
   const xLabels=[t('hm_prob_1'),t('hm_prob_2'),t('hm_prob_3'),t('hm_prob_4'),t('hm_prob_5')];
   let gridHtml='';
-  for(let im=5;im>=1;im--){for(let pr=1;pr<=5;pr++){const areas=bucket[im][pr];const score=im*pr;const color=heatmapColor(score);const tip=areas.length?areas.map(a=>a.nombre).join(' · '):t('hm_celda_vacia');gridHtml+=`<div class="heatmap-cell" style="background:${color}"><span class="hm-count">${areas.length||''}</span><span class="hm-score">${score}</span><div class="hm-areas">${tip}</div></div>`;}}
+  for(let im=5;im>=1;im--){for(let pr=1;pr<=5;pr++){const areas=bucket[im][pr];const score=im*pr;const color=heatmapColor(score);const tip=areas.length?areas.map(a=>a.nombre).join(' · '):t('hm_celda_vacia');const hasAreas=areas.length>0;gridHtml+=`<div class="heatmap-cell${hasAreas?' hm-clickable':''}" style="background:${color}" ${hasAreas?`onclick="heatmapCeldaClick(${pr},${im})"`:''} data-pr="${pr}" data-im="${im}"><span class="hm-count">${areas.length||''}</span><span class="hm-score">${score}</span><div class="hm-areas">${tip}</div></div>`;}}
   const enZonaCritica=mr.map((r,idx)=>{let pr,im;if(r.evaluacion&&r.evaluacion.probabilidad&&r.evaluacion.impacto){pr=r.evaluacion.probabilidad;im=r.evaluacion.impacto;}else{pr=im=r.riesgo==='alto'?4:r.riesgo==='medio'?3:2;}return{nombre:tx(r.area),score:pr*im};}).filter(x=>x.score>=12).sort((a,b)=>b.score-a.score);
   const resumenHtml=`<div class="hm-resumen"><div class="hm-resumen-num ${enZonaCritica.length?'rojo':'verde'}">${enZonaCritica.length}</div><div class="hm-resumen-txt"><strong>${enZonaCritica.length} ${t('hm_resumen_titulo')}</strong><div class="hm-resumen-lista">${enZonaCritica.length?enZonaCritica.map(a=>`${a.nombre} (${a.score})`).join(' · '):t('hm_resumen_ninguna')}</div></div></div>`;
   const leyendaHtml=`<div class="hm-leyenda"><span class="hm-leyenda-item"><span class="hm-sw" style="background:#2e7d32"></span>${t('hm_leyenda_bajo')} (1-5)</span><span class="hm-leyenda-item"><span class="hm-sw" style="background:#f9a825"></span>${t('hm_leyenda_medio')} (6-11)</span><span class="hm-leyenda-item"><span class="hm-sw" style="background:#c62828"></span>${t('hm_leyenda_alto')} (12-25)</span></div>`;
@@ -1208,6 +1291,7 @@ function renderReporte(){
 
 function renderPanel(p){
   if(p==='dashboard')renderDashboard();
+  else if(p==='board')renderBoard();
   else if(p==='ley27401')renderLey27401();
   else if(p==='riesgo')renderRiesgo();
   else if(p==='capacitacion')renderCapacitacion();
@@ -1275,6 +1359,161 @@ calcScore = function(){
   const penalizacion = Math.min(15, criticos*3 + altos*1);
   return { ...base, total: Math.max(0, base.total - penalizacion), penalizacion };
 };
+
+// ── Heatmap celda clickeable ───────────────────────────────────────────────
+function heatmapCeldaClick(pr, im) {
+  const mr = getMapaRiesgoEfectivo();
+  const score = pr * im;
+  const color = heatmapColor(score);
+  const nivel = score <= 5 ? t('riesgo_bajo_label') : score <= 11 ? t('riesgo_medio_label') : t('riesgo_alto_label');
+
+  // Marcar celda seleccionada
+  document.querySelectorAll('.heatmap-cell').forEach(c => c.classList.remove('selected'));
+  const sel = document.querySelector(`.heatmap-cell[data-pr="${pr}"][data-im="${im}"]`);
+  if (sel) sel.classList.add('selected');
+
+  // Filtrar áreas en esta celda
+  const areas = mr.filter(r => {
+    const p = r.evaluacion?.probabilidad || (r.riesgo === 'alto' ? 4 : r.riesgo === 'medio' ? 3 : 2);
+    const i = r.evaluacion?.impacto    || (r.riesgo === 'alto' ? 4 : r.riesgo === 'medio' ? 3 : 2);
+    return p === pr && i === im;
+  });
+
+  const detalle = document.getElementById('heatmap-celda-detalle');
+  if (!areas.length) { detalle.style.display = 'none'; return; }
+
+  const areasHtml = areas.map(r => {
+    const ico = r.riesgo === 'alto' ? '🔴' : r.riesgo === 'medio' ? '🟡' : '🟢';
+    const ev = r.evaluacion || {};
+    const fuente = ev.fuente ? `<span style="font-size:.68rem;opacity:.6;margin-left:.4rem">(${ev.fuente})</span>` : '';
+    return `<div class="hm-detalle-area">
+      <div class="hm-detalle-area-ico">${ico}</div>
+      <div><div class="hm-detalle-area-nombre">${tx(r.area)}${fuente}</div>
+      <div class="hm-detalle-area-desc">${tx(r.descripcion)}</div>
+      ${ev.nota ? `<div style="font-size:.72rem;color:#f9a825;margin-top:.2rem">🔗 ${ev.nota}</div>` : ''}</div>
+    </div>`;
+  }).join('');
+
+  detalle.style.display = 'block';
+  detalle.innerHTML = `<div class="hm-detalle">
+    <div class="hm-detalle-head">
+      <div class="hm-detalle-titulo">Probabilidad ${pr} × Impacto ${im} — ${nivel}</div>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <div class="hm-detalle-score-badge" style="background:${color}">${score}</div>
+        <button class="hm-close" onclick="document.getElementById('heatmap-celda-detalle').style.display='none';document.querySelectorAll('.heatmap-cell').forEach(c=>c.classList.remove('selected'))">✕ Cerrar</button>
+      </div>
+    </div>
+    <div class="hm-detalle-areas">${areasHtml}</div>
+  </div>`;
+  detalle.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── Board Dashboard ────────────────────────────────────────────────────────
+function renderBoard() {
+  const sc  = calcScore();
+  const mr  = getMapaRiesgoEfectivo();
+  const pi  = CONFIG.programa_integridad;
+  const cap = CONFIG.capacitaciones;
+  const emp = CONFIG.empresa;
+  const pm  = CONFIG.plan_mejora;
+  const hs  = CONFIG.historial_score;
+
+  // Fecha
+  const hoy = new Date();
+  document.getElementById('board-fecha').textContent =
+    hoy.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('board-subtitulo').textContent =
+    `${emp.nombre} · ${tx(emp.sector)} · Responsable: ${emp.responsable_compliance}`;
+
+  // ── KPIs ──
+  const obOk  = pi.elementos_obligatorios.filter(e => e.estado === 'completo').length;
+  const obTot = pi.elementos_obligatorios.length;
+  const avgCap = Math.round(cap.reduce((a, c) => a + c.completado, 0) / cap.length);
+  const ddOk  = CONFIG.cuits_verificados.filter(c => c.resultado === 'sin_antecedentes').length;
+  const ddTot = CONFIG.cuits_verificados.length;
+  const criticos = mr.filter(r => r.riesgo === 'alto').length;
+
+  const scColor = sc.total >= 75 ? 'var(--verde)' : sc.total >= 45 ? 'var(--naranja)' : 'var(--rojo)';
+  const nivelLabel = sc.total >= 75 ? (lang === 'en' ? 'Advanced' : 'Avanzado') :
+                     sc.total >= 45 ? (lang === 'en' ? 'Intermediate' : 'Intermedio') :
+                                      (lang === 'en' ? 'Initial' : 'Inicial');
+
+  document.getElementById('board-kpis').innerHTML = [
+    { num: sc.total, label: lang === 'en' ? 'Compliance Score' : 'Score de Compliance', sub: nivelLabel, color: scColor },
+    { num: `${obOk}/${obTot}`, label: lang === 'en' ? 'Mandatory Art.23' : 'Obligatorios Art.23', sub: lang === 'en' ? 'completed' : 'completados', color: obOk === obTot ? 'var(--verde)' : 'var(--naranja)' },
+    { num: `${avgCap}%`, label: lang === 'en' ? 'Training Coverage' : 'Cobertura Capacitación', sub: lang === 'en' ? 'avg. all modules' : 'prom. todos los módulos', color: avgCap >= 70 ? 'var(--verde)' : avgCap >= 50 ? 'var(--naranja)' : 'var(--rojo)' },
+    { num: criticos, label: lang === 'en' ? 'Critical Risks' : 'Riesgos Críticos', sub: lang === 'en' ? 'high inherent risk' : 'riesgo inherente alto', color: criticos === 0 ? 'var(--verde)' : criticos <= 2 ? 'var(--naranja)' : 'var(--rojo)' },
+    { num: `${ddOk}/${ddTot}`, label: lang === 'en' ? 'Due Diligence' : 'Due Diligence', sub: lang === 'en' ? 'vendors cleared' : 'proveedores sin alerta', color: ddOk === ddTot ? 'var(--verde)' : 'var(--naranja)' },
+    { num: pi.registrado_rite ? '✓' : '✗', label: 'RITE', sub: pi.registrado_rite ? (lang === 'en' ? 'Registered' : 'Registrada') : (lang === 'en' ? 'Not registered' : 'No registrada'), color: pi.registrado_rite ? 'var(--verde)' : 'var(--rojo)' },
+  ].map(k => `<div class="board-kpi" style="border-top-color:${k.color}">
+    <div class="board-kpi-num" style="color:${k.color}">${k.num}</div>
+    <div class="board-kpi-label">${k.label}</div>
+    <div class="board-kpi-sub">${k.sub}</div>
+  </div>`).join('');
+
+  // ── Semáforos por eje ──
+  const ejes = [
+    { label: lang === 'en' ? 'Integrity Program' : 'Programa de Integridad', v: sc.programa,      max: 40 },
+    { label: lang === 'en' ? 'Training'           : 'Capacitación',          v: sc.capacitacion,  max: 25 },
+    { label: 'Due Diligence',                                                 v: sc.due_diligence, max: 20 },
+    { label: lang === 'en' ? 'Risk Map'            : 'Mapa de Riesgos',      v: sc.riesgo,        max: 15 },
+  ].map(e => {
+    const pct = Math.round(e.v / e.max * 100);
+    const cls = pct >= 75 ? 'verde' : pct >= 45 ? 'naranja' : 'rojo';
+    const ico = pct >= 75 ? '🟢' : pct >= 45 ? '🟡' : '🔴';
+    return `<div class="board-semaforo ${cls}">
+      <span class="board-semaforo-ico">${ico}</span>
+      <span style="flex:1">${e.label}</span>
+      <span style="font-size:.8rem">${e.v}/${e.max} pts (${pct}%)</span>
+    </div>`;
+  }).join('');
+  document.getElementById('board-semaforos').innerHTML = ejes;
+
+  // ── Gráfico evolución ──
+  mkLine('ch-board-evol', hs.map(h => h.mes), hs.map(h => h.score));
+
+  // ── Riesgos críticos ──
+  const altos = mr.filter(r => r.riesgo === 'alto');
+  document.getElementById('board-riesgos').innerHTML = altos.length
+    ? altos.map(r => `<div class="board-semaforo rojo">
+        <span class="board-semaforo-ico">🔴</span>
+        <div><div>${tx(r.area)}</div><div style="font-size:.75rem;opacity:.8;font-weight:400">${tx(r.descripcion)}</div></div>
+      </div>`).join('')
+    : `<div class="board-semaforo verde"><span class="board-semaforo-ico">✅</span><span>${lang === 'en' ? 'No critical risks identified' : 'Sin riesgos críticos identificados'}</span></div>`;
+
+  // ── Alertas directorio ──
+  const alertasBoard = [];
+  const obInc = pi.elementos_obligatorios.filter(e => e.estado !== 'completo');
+  if (obInc.length) alertasBoard.push({ cls: 'rojo',   ico: '⚖️', txt: `${obInc.length} ${lang === 'en' ? 'mandatory element(s) Art.23 incomplete' : 'elemento(s) obligatorio(s) Art.23 incompleto(s)'}` });
+  const capBaja = cap.filter(c => c.obligatorio && c.completado < 60);
+  if (capBaja.length) alertasBoard.push({ cls: 'naranja', ico: '📚', txt: `${capBaja.length} ${lang === 'en' ? 'mandatory module(s) below 60%' : 'módulo(s) obligatorio(s) con menos del 60%'}` });
+  const ddAlerta = CONFIG.cuits_verificados.filter(c => c.resultado === 'alerta_ocde');
+  if (ddAlerta.length) alertasBoard.push({ cls: 'rojo', ico: '🔍', txt: `${ddAlerta.map(c => c.razon_social).join(', ')} — ${lang === 'en' ? 'OECD alert' : 'alerta OCDE'}` });
+  if (!pi.registrado_rite) alertasBoard.push({ cls: 'naranja', ico: '🏛️', txt: lang === 'en' ? 'Not registered in RITE (recommended for public contracts)' : 'No registrada en RITE (recomendado para contratar con el Estado)' });
+  if (!alertasBoard.length) alertasBoard.push({ cls: 'verde', ico: '✅', txt: lang === 'en' ? 'No alerts for the board' : 'Sin alertas para el directorio' });
+  document.getElementById('board-alertas').innerHTML = alertasBoard
+    .map(a => `<div class="board-semaforo ${a.cls}"><span class="board-semaforo-ico">${a.ico}</span><span>${a.txt}</span></div>`).join('');
+
+  // ── Próximas acciones ──
+  const top3 = pm.filter(p => p.estado !== 'completo')
+    .sort((a, b) => (a.prioridad === 'alta' ? 0 : a.prioridad === 'media' ? 1 : 2) - (b.prioridad === 'alta' ? 0 : b.prioridad === 'media' ? 1 : 2))
+    .slice(0, 4);
+  document.getElementById('board-acciones').innerHTML = top3.map((p, i) => {
+    const cls = p.prioridad === 'alta' ? 'rojo' : p.prioridad === 'media' ? 'naranja' : 'verde';
+    const ico = p.prioridad === 'alta' ? '🔴' : p.prioridad === 'media' ? '🟡' : '🟢';
+    return `<div class="board-semaforo ${cls}">
+      <span class="board-semaforo-ico">${ico}</span>
+      <span style="flex:1">${tx(p.accion)}</span>
+      <span style="font-size:.76rem;opacity:.8">👤 ${tx(p.responsable)} · 📅 ${p.vence}</span>
+    </div>`;
+  }).join('');
+
+  // ── Firma ──
+  document.getElementById('board-firma').innerHTML =
+    `${lang === 'en' ? 'Report generated by' : 'Reporte generado por'} <strong>Monitor de Compliance Empresarial</strong> · Ph.D. Vicente H. Monteverde ·
+    <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Ecosistema Transparencia</a> ·
+    ${lang === 'en' ? 'For board use only' : 'Uso exclusivo del Directorio'}`;
+}
 
 const _renderDashBase = renderDashboard.bind({});
 
