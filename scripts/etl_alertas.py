@@ -16,6 +16,15 @@ import requests
 from bs4 import BeautifulSoup
 
 log = logging.getLogger(__name__)
+
+
+def _resumir(alerta: dict):
+    """Llama al resumidor IA. Falla silenciosamente si no hay API key."""
+    try:
+        from scripts.ia_alertas import resumir_alerta
+        return resumir_alerta(alerta)
+    except Exception:
+        return None
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 DATA_DIR = Path(os.getenv("DATA_DIR", "data"))
@@ -159,6 +168,15 @@ def correr_etl() -> list[dict]:
             todas.extend(nuevas)
         else:
             log.warning(f"  → Sin resultados para {clave}")
+
+    # ── Enriquecer con resumen IA ──────────────────────────────────────────
+    log.info("Generando resúmenes IA ...")
+    for alerta in todas:
+        if not alerta.get("resumen_ia"):
+            resumen = _resumir(alerta)
+            if resumen:
+                alerta["resumen_ia"] = resumen
+                log.info(f"  ✓ Resumen generado para {alerta['id']}")
 
     # Persistir resultado
     resultado = {
