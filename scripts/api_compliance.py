@@ -13,7 +13,7 @@ from fastapi.responses import Response
 from pathlib import Path
 from pydantic import BaseModel
 
-from scripts.motor_score import score_desde_dict, calcular_score, DatosPrograma, PESOS
+from scripts.motor_score import score_desde_dict, calcular_score, DatosPrograma, PESOS, score_lei_12846_desde_dict, calcular_score_lei_12846, DadosLei12846, ELEMENTOS_LEI_12846
 from scripts.etl_alertas import cargar_alertas
 from scripts.etl_normativa import cargar_normativa
 from scripts.generador_pdf import generar_reporte
@@ -355,3 +355,48 @@ async def delete_documento(tipo: str, nombre_archivo: str):
     """Elimina un documento del registro y del disco."""
     eliminar_documento(nombre_archivo, tipo)
     return {"ok": True, "mensaje": f"'{nombre_archivo}' eliminado"}
+
+
+# ── Lei Anticorrupção 12.846/2013 — Brasil ───────────────────────────────────
+
+class Lei12846Request(BaseModel):
+    programa_integridade:    float = 0
+    codigo_conduta:          float = 0
+    responsavel_compliance:  float = 0
+    treinamentos:            float = 0
+    canal_denuncia:          float = 0
+    due_diligence_terceiros: float = 0
+    acordo_leniencia:        float = 0
+    auditoria_interna:       float = 0
+    controles_contabeis:     float = 0
+    politica_doacoes:        float = 0
+    monitoramento:           float = 0
+
+
+@router.get("/brasil/score/demo")
+async def score_brasil_demo():
+    """Score demo para Lei Anticorrupção 12.846/2013."""
+    d = DadosLei12846(
+        programa_integridade=70, codigo_conduta=85,
+        responsavel_compliance=100, treinamentos=60,
+        canal_denuncia=80, due_diligence_terceiros=45,
+        acordo_leniencia=30, auditoria_interna=50,
+        controles_contabeis=75, politica_doacoes=20,
+        monitoramento=40,
+    )
+    return calcular_score_lei_12846(d)
+
+
+@router.post("/brasil/score")
+async def score_brasil(req: Lei12846Request):
+    """Calcula el score de la Lei Anticorrupção 12.846/2013."""
+    try:
+        return score_lei_12846_desde_dict(req.dict())
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+
+@router.get("/brasil/elementos")
+async def elementos_brasil():
+    """Lista los elementos del programa de integridad según Lei 12.846."""
+    return {"elementos": ELEMENTOS_LEI_12846}
