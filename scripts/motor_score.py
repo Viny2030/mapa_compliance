@@ -152,3 +152,121 @@ def score_desde_dict(data: dict) -> dict:
     """Wrapper para llamar desde la API con un dict JSON."""
     d = DatosPrograma(**{k: v for k, v in data.items() if k in DatosPrograma.__dataclass_fields__})
     return calcular_score(d)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# LEI ANTICORRUPÇÃO 12.846/2013 — BRASIL
+# ══════════════════════════════════════════════════════════════════════════════
+
+ELEMENTOS_LEI_12846 = [
+    # Obligatorios (peso 1.5)
+    {"id": "programa_integridade",    "label": "Programa de Integridade formal",                       "tipo": "obrigatorio", "art": "Art. 41-D.1"},
+    {"id": "codigo_conduta",          "label": "Código de Conduta e Ética",                            "tipo": "obrigatorio", "art": "Art. 41-D.2"},
+    {"id": "responsavel_compliance",  "label": "Responsável pelo Compliance designado",                "tipo": "obrigatorio", "art": "Art. 41-D.3"},
+    {"id": "treinamentos",            "label": "Treinamentos periódicos (dir. e funcionários)",        "tipo": "obrigatorio", "art": "Art. 41-D.4"},
+    {"id": "canal_denuncia",          "label": "Canal de denúncia com proteção ao denunciante",        "tipo": "obrigatorio", "art": "Art. 41-D.5"},
+    {"id": "due_diligence_terceiros", "label": "Due diligence de terceiros e fornecedores",            "tipo": "obrigatorio", "art": "Art. 41-D.6"},
+    # Opcionales / Atenuantes (peso 1.0)
+    {"id": "acordo_leniencia",        "label": "Acordo de Leniência — mecanismo documentado",         "tipo": "atenuante",   "art": "Art. 16"},
+    {"id": "auditoria_interna",       "label": "Auditoria interna independente",                       "tipo": "atenuante",   "art": "Art. 41-D.8"},
+    {"id": "controles_contabeis",     "label": "Controles contábeis e registros financeiros precisos", "tipo": "atenuante",   "art": "Art. 41-D.9"},
+    {"id": "politica_doacoes",        "label": "Política de doações e patrocínios",                   "tipo": "atenuante",   "art": "Art. 41-D.10"},
+    {"id": "monitoramento",           "label": "Monitoramento contínuo e avaliação periódica",         "tipo": "atenuante",   "art": "Art. 41-D.11"},
+]
+
+PESOS_LEI_12846 = {"obrigatorio": 1.5, "atenuante": 1.0}
+
+NIVELES_LEI_12846 = [
+    (0,   40,  "Incipiente",    "#dc2626"),
+    (40,  65,  "Em Adequação",  "#f59e0b"),
+    (65,  80,  "Adequado",      "#3b82f6"),
+    (80,  101, "Exemplar",      "#16a34a"),
+]
+
+
+@dataclass
+class DadosLei12846:
+    """Datos de entrada para el score de la Lei Anticorrupção 12.846."""
+    # Obligatorios (0-100)
+    programa_integridade:    float = 0.0
+    codigo_conduta:          float = 0.0
+    responsavel_compliance:  float = 0.0
+    treinamentos:            float = 0.0
+    canal_denuncia:          float = 0.0
+    due_diligence_terceiros: float = 0.0
+    # Atenuantes (0-100)
+    acordo_leniencia:        float = 0.0
+    auditoria_interna:       float = 0.0
+    controles_contabeis:     float = 0.0
+    politica_doacoes:        float = 0.0
+    monitoramento:           float = 0.0
+
+    extra: dict[str, Any] = field(default_factory=dict)
+
+
+def calcular_score_lei_12846(d: DadosLei12846) -> dict:
+    """
+    Calcula el score para la Lei Anticorrupção 12.846/2013 (Brasil).
+    Pesos diferenciados: obligatorios x1.5, atenuantes x1.0.
+    Retorna score 0-100, nivel, color y detalle por elemento.
+    """
+    valores = {
+        "programa_integridade":    d.programa_integridade,
+        "codigo_conduta":          d.codigo_conduta,
+        "responsavel_compliance":  d.responsavel_compliance,
+        "treinamentos":            d.treinamentos,
+        "canal_denuncia":          d.canal_denuncia,
+        "due_diligence_terceiros": d.due_diligence_terceiros,
+        "acordo_leniencia":        d.acordo_leniencia,
+        "auditoria_interna":       d.auditoria_interna,
+        "controles_contabeis":     d.controles_contabeis,
+        "politica_doacoes":        d.politica_doacoes,
+        "monitoramento":           d.monitoramento,
+    }
+
+    suma_ponderada = 0.0
+    suma_pesos = 0.0
+    detalle = []
+
+    for elem in ELEMENTOS_LEI_12846:
+        peso = PESOS_LEI_12846[elem["tipo"]]
+        valor = valores.get(elem["id"], 0.0)
+        suma_ponderada += valor * peso
+        suma_pesos += 100 * peso
+        detalle.append({
+            "id":     elem["id"],
+            "label":  elem["label"],
+            "tipo":   elem["tipo"],
+            "art":    elem["art"],
+            "valor":  round(valor, 1),
+            "estado": "completo" if valor >= 80 else "en_progreso" if valor >= 40 else "pendiente",
+        })
+
+    score = round((suma_ponderada / suma_pesos) * 100, 1) if suma_pesos > 0 else 0.0
+
+    nivel, color = "Incipiente", "#dc2626"
+    for minimo, maximo, nombre, clr in NIVELES_LEI_12846:
+        if minimo <= score < maximo:
+            nivel, color = nombre, clr
+            break
+
+    obrigatorios_ok  = sum(1 for e in detalle if e["tipo"] == "obrigatorio" and e["estado"] == "completo")
+    obrigatorios_tot = sum(1 for e in detalle if e["tipo"] == "obrigatorio")
+
+    return {
+        "score":             score,
+        "nivel":             nivel,
+        "color":             color,
+        "obrigatorios_ok":   obrigatorios_ok,
+        "obrigatorios_total": obrigatorios_tot,
+        "atenuantes_ok":     sum(1 for e in detalle if e["tipo"] == "atenuante" and e["estado"] == "completo"),
+        "detalle":           detalle,
+        "elegivel_reducao_multa": obrigatorios_ok >= 4,  # Art. 7 — criterio CGU
+    }
+
+
+def score_lei_12846_desde_dict(data: dict) -> dict:
+    """Wrapper para llamar desde la API con un dict JSON."""
+    campos = DadosLei12846.__dataclass_fields__
+    d = DadosLei12846(**{k: v for k, v in data.items() if k in campos})
+    return calcular_score_lei_12846(d)
