@@ -97,5 +97,9 @@ async def predictor_html():
 async def capacitaciones_html():
     return FileResponse(os.path.join(ROOT, "capacitaciones.html"))
 
+@app.get("/upload_clientes.html", include_in_schema=False)
+async def upload_clientes_html():
+    return FileResponse(os.path.join(ROOT, "upload_clientes.html"))
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
