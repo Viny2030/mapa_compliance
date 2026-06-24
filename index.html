@@ -267,6 +267,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <button class="tab-btn" data-panel="board">🏛️ Board View</button>
     <button class="tab-btn" data-panel="ley27401">⚖️ Ley 27.401</button>
     <button class="tab-btn" data-panel="brasil">🇧🇷 Lei 12.846</button>
+    <button class="tab-btn" data-panel="fcpa">🇺🇸🇬🇧 FCPA & Bribery</button>
     <button class="tab-btn" data-panel="riesgo">🗺️ Riesgo</button>
     <button class="tab-btn" data-panel="capacitacion">📚 Capacitación</button>
     <button class="tab-btn" data-panel="duediligence">🔍 Due Diligence</button>
@@ -438,6 +439,107 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
         <div>🔹 <strong>Portaria CGU 909/2015</strong> — Avaliação do programa para fins de redução de sanções</div>
       </div>
     </div>
+  </div>
+</div>
+
+
+<!-- FCPA + UK BRIBERY ACT -->
+<div class="panel" id="panel-fcpa">
+  <div class="wrap">
+
+    <!-- FCPA -->
+    <div class="card" style="border-top-color:#1a3a5c">
+      <h2>🇺🇸 FCPA — Foreign Corrupt Practices Act (1977)</h2>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:.9rem">
+        USA · DOJ + SEC · Aplicación extraterritorial · 15 U.S.C. §§ 78dd-1, -2, -3
+      </p>
+      <div class="score-wrap">
+        <div class="score-ring">
+          <canvas id="ch-fcpa-score" width="130" height="130"></canvas>
+          <div class="score-center">
+            <div class="score-num" id="fcpa-score-num">—</div>
+            <div style="font-size:.72rem;color:var(--muted)">/100</div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:180px">
+          <div id="fcpa-nivel" style="font-size:1rem;font-weight:700;margin-bottom:.35rem"></div>
+          <div id="fcpa-aplica-badge" style="margin-bottom:.5rem"></div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.5">
+            El FCPA aplica a empresas con nexo con EE.UU.: cotización en bolsa americana, pagos en USD, filiales o empleados en territorio americano.
+          </div>
+        </div>
+      </div>
+      <div id="fcpa-checklist"></div>
+    </div>
+
+    <!-- UK BRIBERY ACT -->
+    <div class="card" style="border-top-color:#c62828;margin-top:.5rem">
+      <h2>🇬🇧 UK Bribery Act 2010</h2>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:.9rem">
+        Reino Unido · SFO · Strict liability · La más estricta del mundo
+      </p>
+      <div class="score-wrap">
+        <div class="score-ring">
+          <canvas id="ch-uk-score" width="130" height="130"></canvas>
+          <div class="score-center">
+            <div class="score-num" id="uk-score-num">—</div>
+            <div style="font-size:.72rem;color:var(--muted)">/100</div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:180px">
+          <div id="uk-nivel" style="font-size:1rem;font-weight:700;margin-bottom:.35rem"></div>
+          <div id="uk-aplica-badge" style="margin-bottom:.5rem"></div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.5">
+            La Sección 7 impone strict liability a empresas con presencia en UK o que hagan negocios allí, por soborno cometido por "personas asociadas".
+          </div>
+        </div>
+      </div>
+      <div id="uk-checklist"></div>
+    </div>
+
+    <!-- Comparativa -->
+    <div class="card">
+      <h2>⚖️ Comparativa FCPA vs UK Bribery Act</h2>
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:.82rem;border-collapse:collapse">
+          <thead>
+            <tr style="background:#f0f4f8">
+              <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Dimensión</th>
+              <th style="padding:.5rem .7rem;text-align:center">🇺🇸 FCPA</th>
+              <th style="padding:.5rem .7rem;text-align:center">🇬🇧 UK Bribery Act</th>
+            </tr>
+          </thead>
+          <tbody id="fcpa-comparativa"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Referencia normativa -->
+    <div class="card">
+      <h2>📋 Artículos clave</h2>
+      <div class="grid2">
+        <div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">🇺🇸 FCPA</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.7">
+            <div>📌 <strong>§ 78dd-1/2/3</strong> — Prohibición de soborno a funcionarios extranjeros</div>
+            <div>📌 <strong>§ 78m(b)</strong> — Books & Records: registros contables precisos</div>
+            <div>📌 <strong>§ 78m(b)(2)(B)</strong> — Internal Controls: controles internos adecuados</div>
+            <div>📌 <strong>DOJ/SEC Guidance 2012</strong> — Programa efectivo de compliance</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">🇬🇧 UK Bribery Act</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.7">
+            <div>📌 <strong>Sec. 1</strong> — Delito de soborno activo</div>
+            <div>📌 <strong>Sec. 2</strong> — Delito de soborno pasivo</div>
+            <div>📌 <strong>Sec. 6</strong> — Soborno a funcionario público extranjero</div>
+            <div>📌 <strong>Sec. 7</strong> — Falla corporativa en prevención (strict liability)</div>
+            <div>📌 <strong>MoJ Guidance</strong> — 6 principios de "Adequate Procedures"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1271,6 +1373,119 @@ function renderInternacional(){
 }
 
 
+
+function renderFCPA(){
+  const exp = CONFIG.exposicion_internacional || {};
+  const aplicaUSA = exp.opera_en_usa || false;
+  const aplicaUK  = exp.opera_en_uk  || false;
+
+  // ── Datos de checklist FCPA ──
+  const FCPA_ITEMS = [
+    {id:'politica_antibribery',  label:'Política anti-soborno explícita (FCPA)',        peso:20, cumple: aplicaUSA ? 60 : 0},
+    {id:'due_diligence_agentes', label:'Due diligence de agentes y intermediarios',      peso:20, cumple: 45},
+    {id:'books_records',         label:'Books & Records — registros contables precisos', peso:15, cumple: 70},
+    {id:'internal_controls',     label:'Internal Controls — controles internos SOX',     peso:15, cumple: 50},
+    {id:'training_fcpa',         label:'Capacitación específica en FCPA',                peso:15, cumple: 30},
+    {id:'gifts_policy',          label:'Política de regalos y hospitality documentada',  peso:10, cumple: 80},
+    {id:'monitorizacion_fcpa',   label:'Monitoreo y auditoría periódica',                peso:5,  cumple: 40},
+  ];
+
+  const UK_ITEMS = [
+    {id:'adequate_procedures',   label:'Adequate Procedures — 6 principios MoJ',        peso:25, cumple: aplicaUK ? 50 : 0},
+    {id:'risk_assessment_uk',    label:'Evaluación de riesgo de soborno (UK)',            peso:20, cumple: 40},
+    {id:'top_level_commitment',  label:'Top-level commitment documentado',               peso:15, cumple: 70},
+    {id:'dd_asociados',          label:'Due diligence de "personas asociadas"',          peso:15, cumple: 45},
+    {id:'comunicacion_uk',       label:'Comunicación interna y externa del programa',    peso:15, cumple: 60},
+    {id:'monitoreo_uk',          label:'Monitoreo y revisión periódica',                 peso:10, cumple: 35},
+  ];
+
+  function calcScore(items) {
+    const total = items.reduce((s,i) => s + i.peso, 0);
+    const obtenido = items.reduce((s,i) => s + (i.cumple/100)*i.peso, 0);
+    return Math.round(obtenido/total*100);
+  }
+
+  function nivelFCPA(s) {
+    return s>=75?{label:'Compliant',color:'#2e7d32'}
+          :s>=50?{label:'Parcialmente compliant',color:'#e65100'}
+          :{label:'No compliant',color:'#c62828'};
+  }
+
+  function renderRing(canvasId, score, color) {
+    destroyC(canvasId);
+    const ctx = document.getElementById(canvasId);
+    if(!ctx) return;
+    charts[canvasId] = new Chart(ctx, {
+      type:'doughnut',
+      data:{datasets:[{data:[score,100-score],backgroundColor:[color,'#e0e7ef'],borderWidth:0}]},
+      options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:800}}
+    });
+  }
+
+  function renderCheckFCPA(items, contId) {
+    document.getElementById(contId).innerHTML = items.map(item => {
+      const estado = item.cumple>=80?'completo':item.cumple>=40?'en_progreso':'pendiente';
+      const badge  = estado==='completo'?'badge-ok':estado==='en_progreso'?'badge-prog':'badge-pend';
+      const ico    = estado==='completo'?'✓':estado==='en_progreso'?'◑':'○';
+      return `<div class="check-item">
+        <div class="check-badge ${badge}">${ico}</div>
+        <div>
+          <div class="check-label">${item.label}</div>
+          <div class="check-evidencia" style="color:var(--muted);font-size:.74rem">
+            Peso: ${item.peso}% · Cumplimiento: ${item.cumple}%
+            <div class="prog-track" style="margin-top:.2rem;height:4px">
+              <div class="prog-fill ${estado==='completo'?'verde':estado==='en_progreso'?'naranja':'rojo'}" style="width:${item.cumple}%"></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // FCPA
+  const fcpaScore = calcScore(FCPA_ITEMS);
+  const fcpaNivel = nivelFCPA(fcpaScore);
+  renderRing('ch-fcpa-score', fcpaScore, fcpaNivel.color);
+  document.getElementById('fcpa-score-num').textContent = fcpaScore;
+  document.getElementById('fcpa-score-num').style.color = fcpaNivel.color;
+  document.getElementById('fcpa-nivel').innerHTML = `<span style="color:${fcpaNivel.color}">${fcpaNivel.label}</span>`;
+  document.getElementById('fcpa-aplica-badge').innerHTML = aplicaUSA
+    ? '<span class="pill pill-ok">✓ Aplica — opera en USA</span>'
+    : '<span class="pill pill-pend">No aplica actualmente</span>';
+  renderCheckFCPA(FCPA_ITEMS, 'fcpa-checklist');
+
+  // UK Bribery Act
+  const ukScore = calcScore(UK_ITEMS);
+  const ukNivel = nivelFCPA(ukScore);
+  renderRing('ch-uk-score', ukScore, ukNivel.color);
+  document.getElementById('uk-score-num').textContent = ukScore;
+  document.getElementById('uk-score-num').style.color = ukNivel.color;
+  document.getElementById('uk-nivel').innerHTML = `<span style="color:${ukNivel.color}">${ukNivel.label}</span>`;
+  document.getElementById('uk-aplica-badge').innerHTML = aplicaUK
+    ? '<span class="pill pill-ok">✓ Aplica — opera en UK</span>'
+    : '<span class="pill pill-pend">No aplica actualmente</span>';
+  renderCheckFCPA(UK_ITEMS, 'uk-checklist');
+
+  // Comparativa
+  const rows = [
+    ['Jurisdicción',         '🇺🇸 USA — extraterritorial',          '🇬🇧 UK — extraterritorial'],
+    ['Año',                  '1977',                                  '2010'],
+    ['Autoridad',            'DOJ + SEC',                            'SFO (Serious Fraud Office)'],
+    ['Tipo de liability',    'Intencional (mens rea)',                'Strict liability (Sec. 7)'],
+    ['Cubre soborno pasivo', '❌ No',                                 '✅ Sí (Sec. 2)'],
+    ['Multa máx. empresa',   'Sin límite (+ disgorgement)',          'Sin límite'],
+    ['Defensa disponible',   'Facilitating payments (limitada)',      'Adequate Procedures'],
+    ['Aplica hoy',           aplicaUSA?'✅ Sí':'⚪ No aplica',       aplicaUK?'✅ Sí':'⚪ No aplica'],
+  ];
+  document.getElementById('fcpa-comparativa').innerHTML = rows.map((r,i) => `
+    <tr style="background:${i%2===0?'#fafbfc':'#fff'}">
+      <td style="padding:.5rem .7rem;font-weight:600;color:var(--pri)">${r[0]}</td>
+      <td style="padding:.5rem .7rem;text-align:center">${r[1]}</td>
+      <td style="padding:.5rem .7rem;text-align:center">${r[2]}</td>
+    </tr>
+  `).join('');
+}
+
 function renderBrasil(){
   fetch('/api/v1/brasil/score/demo')
     .then(r=>r.json())
@@ -1425,6 +1640,7 @@ function renderPanel(p){
   else if(p==='duediligence')renderDD();
   else if(p==='internacional')renderInternacional();
   else if(p==='brasil')renderBrasil();
+  else if(p==='fcpa')renderFCPA();
   else if(p==='rite')renderRite();
   else if(p==='mejoras')renderMejoras();
   else if(p==='calendario')renderCalendario();
