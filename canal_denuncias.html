@@ -345,6 +345,8 @@
 
 <script>
 const API = '/api/v1';
+let sessionToken = localStorage.getItem('denuncias_token') || '';
+let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
 let currentDenunciaId = null;
 let currentCodigo = null;
 
@@ -354,7 +356,7 @@ function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelectorAll('.tab')[['denunciar','seguimiento','panel'].indexOf(name)].classList.add('active');
-  if (name === 'panel') cargarPanel();
+  if (name === 'panel') { /* panel cargado por mostrarPanelOLogin */ }
 }
 
 // ── Tab 1: Denunciar ────────────────────────────────────────────────────────
@@ -461,9 +463,6 @@ async function enviarMensaje() {
 }
 
 // ── Auth / Login ────────────────────────────────────────────────────────────
-const API = '/api/v1';
-let sessionToken = localStorage.getItem('denuncias_token') || '';
-let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
 
 async function doLogin() {
   const pin = document.getElementById('pin-input').value.trim();
