@@ -204,3 +204,43 @@ def cargar_alertas() -> dict:
 
 if __name__ == "__main__":
     correr_etl()
+
+
+# ── IGJ (Inspección General de Justicia) ──────────────────────────────────
+FUENTES["igj"] = {
+    "nombre": "IGJ — Inspección General de Justicia",
+    "url": "https://www.argentina.gob.ar/igj/resoluciones-generales",
+    "tipo": "html",
+}
+
+
+def _parsear_igj(soup: BeautifulSoup) -> list[dict]:
+    """Extrae resoluciones IGJ relevantes para compliance corporativo."""
+    alertas = []
+    KW = re.compile(
+        r"resolución|sociedad|directorio|registro|capital|fusión|escisión|"
+        r"disolución|liquidación|balance|estatuto|compliance",
+        re.I,
+    )
+    candidatos = soup.select(
+        "article, .search-result, li.result-item, .card, tr"
+    )[:20]
+    for item in candidatos:
+        texto = item.get_text(separator=" ", strip=True)[:150]
+        if KW.search(texto):
+            # Intentar extraer número de resolución
+            m = re.search(r"(?:Res\.?|Resolución)\s*(?:Gral\.?)?\s*(\d+/\d{4})", texto, re.I)
+            ref = m.group(0) if m else "IGJ"
+            alertas.append({
+                "id": f"igj_{hash(texto) & 0xFFFF:04x}",
+                "descripcion": texto[:120],
+                "severidad": "naranja",
+                "categoria": "societario",
+                "vencimiento": None,
+                "fuente": f"IGJ — {ref}",
+                "fecha_deteccion": date.today().isoformat(),
+            })
+    return alertas[:5]
+
+
+PARSERS["igj"] = _parsear_igj
