@@ -245,8 +245,9 @@ def correr_etl() -> list[dict]:
     for clave, fuente in FUENTES.items():
         log.info(f"Scrapeando {fuente['nombre']} ...")
         soup = _fetch_html(fuente["url"])
-        if soup:
-            nuevas = PARSERS[clave](soup)
+        # Siempre llamar al parser: algunos (ej. OCDE) tienen fallback curado si soup es None
+        nuevas = PARSERS[clave](soup) if soup else PARSERS[clave](BeautifulSoup("", "html.parser"))
+        if nuevas:
             log.info(f"  → {len(nuevas)} alertas encontradas")
             todas.extend(nuevas)
         else:
