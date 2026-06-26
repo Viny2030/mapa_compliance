@@ -1,0 +1,60 @@
+{
+  "_comentario": "Archivo base para portal de login. Cada entrada es un cliente con acceso al Monitor de Compliance.",
+  "_version": "1.0",
+  "_uso": "Este archivo es leído por el backend (main.py) para autenticar clientes. NO exponer públicamente.",
+  "clientes": [
+    {
+      "id": "demo",
+      "nombre": "Constructora del Sur S.A.",
+      "cuit": "30-99887766-5",
+      "email": "compliance@constructoradelsur.com.ar",
+      "password_hash": "demo2024",
+      "config_file": "config.demo.js",
+      "plan": "professional",
+      "activo": true,
+      "fecha_alta": "2024-01-15",
+      "fecha_vencimiento": "2026-12-31",
+      "sector": "Construcción y obra pública",
+      "pais": "Argentina",
+      "notas": "Cuenta demo para prospects — datos ficticios"
+    },
+    {
+      "id": "cliente_001",
+      "nombre": "Empresa Demo S.A.",
+      "cuit": "30-00000000-0",
+      "email": "compliance@empresademo.com.ar",
+      "password_hash": "cambiar_en_produccion",
+      "config_file": "config.js",
+      "plan": "enterprise",
+      "activo": true,
+      "fecha_alta": "2024-03-01",
+      "fecha_vencimiento": "2026-12-31",
+      "sector": "Construcción y obra pública",
+      "pais": "Argentina",
+      "notas": "Cliente base — personalizar config.js con datos reales"
+    }
+  ],
+  "planes": {
+    "starter": {
+      "label": "Starter",
+      "frameworks": ["ley27401", "brasil", "fcpa"],
+      "max_usuarios": 2,
+      "reporte_pdf": false
+    },
+    "professional": {
+      "label": "Professional",
+      "frameworks": ["ley27401", "brasil", "fcpa", "iso37001", "iso14001", "gdpr", "iso27001", "soc2", "ccpa", "nis2", "euaiact", "dora", "iso27701", "pcidss"],
+      "max_usuarios": 5,
+      "reporte_pdf": true
+    },
+    "enterprise": {
+      "label": "Enterprise",
+      "frameworks": "all",
+      "max_usuarios": 99,
+      "reporte_pdf": true,
+      "crossmap": true,
+      "planaccion": true,
+      "benchmark": true
+    }
+  }
+}

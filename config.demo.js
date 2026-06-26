@@ -209,4 +209,12 @@ const CONFIG = {
       comercio:      { nombre: "Comercio y retail",           p25: 35, p50: 48, p75: 62, top10: 78 },
     },
   },
+
+  // ── Modo demo: frameworks adicionales ──────────────────────────────────
+  // ISO 27701 y PCI DSS se cargan en modo demo con estados realistas
+  // para mostrar a prospects cómo se verían los nuevos frameworks.
+  _demo_frameworks: {
+    iso27701: { habilitado: true, nota: "Demo — empresa procesa datos de personal y clientes" },
+    pcidss:   { habilitado: false, nota: "Demo — empresa no procesa tarjetas de pago (sector construcción)" },
+  },
 };
