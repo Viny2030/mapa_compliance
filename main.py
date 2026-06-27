@@ -103,3 +103,11 @@ async def upload_clientes_html():
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+@app.get("/onboarding.html", include_in_schema=False)
+async def onboarding_html():
+    return FileResponse(os.path.join(ROOT, "onboarding.html"))
+
+@app.get("/portal.html", include_in_schema=False)
+async def portal_html():
+    return FileResponse(os.path.join(ROOT, "portal.html"))

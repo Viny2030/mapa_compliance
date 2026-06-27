@@ -174,6 +174,83 @@ const CONFIG = {
   meaci_url: "https://meaci-production.up.railway.app",
   meaci_api: "https://meaci-production.up.railway.app/api/cruce-compr",
 
+  // ── Arquitectura modular ─────────────────────────────────────────────────
+  // Controlá qué pestañas son visibles para este cliente.
+  // true = visible · false = oculta
+  // El portal puede sobreescribir estos valores según el perfil del cliente.
+  modulos_activos: {
+    // Core — siempre activos
+    dashboard:      true,
+    board:          true,
+    planaccion:     true,
+    reporte:        true,
+    calendario:     true,
+
+    // Anticorrupción
+    ley27401:       true,   // Ley 27.401 Argentina
+    brasil:         true,   // Lei 12.846 Brasil
+    fcpa:           true,   // FCPA & UK Bribery
+    ocde:           true,   // OCDE Lineamientos (módulo standalone)
+
+    // Privacidad
+    lgpd:           true,   // LGPD Brasil
+    gdpr:           true,   // GDPR Europa
+    ccpa:           true,   // CCPA/CPRA California
+    iso27701:       true,   // ISO 27701
+
+    // Seguridad
+    iso27001:       true,   // ISO 27001
+    soc2:           true,   // SOC 2
+    nis2:           true,   // NIS2
+    pcidss:         true,   // PCI DSS v4.0
+
+    // Ambiental / Sostenibilidad
+    iso14001:       true,   // ISO 14001
+    esg:            true,   // ESG
+
+    // Gestión / Gobernanza
+    iso37001:       true,   // ISO 37001
+    iso45001:       false,  // ISO 45001 — Salud y seguridad laboral
+    cobit:          false,  // COBIT 2019 — Gobernanza TI
+    sox:            false,  // Sarbanes-Oxley SOX
+
+    // Digital / Tecnología
+    euaiact:        true,   // EU AI Act
+    dora:           true,   // DORA
+
+    // Cross & Otros
+    crossmap:       true,   // Cross-Framework Mapping
+    riesgo:         true,   // Mapa de Riesgo
+    capacitacion:   true,   // Capacitación
+    duediligence:   true,   // Due Diligence
+    internacional:  true,   // Internacional / OCDE (pestaña heredada)
+    rite:           true,   // RITE Argentina
+    mejoras:        true,   // Mejoras & Alertas
+    legislacion:    true,   // Legislación
+    denuncias:      true,   // Canal de Denuncias
+  },
+
+  // ── Perfil de onboarding ─────────────────────────────────────────────────
+  // Rellenado automáticamente por el wizard de 3 pasos al crear el cliente.
+  // Controla qué módulos sugiere el portal y cuáles activa por defecto.
+  onboarding: {
+    sector:       "construccion",       // construccion | servicios | industria | energia | finanzas | tecnologia | salud | comercio
+    tamanio:      "grande",             // pyme | mediana | grande | corporacion
+    pais:         "Argentina",
+    opera_internacional: true,
+    opera_en_brasil:     true,
+    opera_en_ue:         false,
+    opera_en_usa:        false,
+    opera_en_uk:         false,
+    tiene_empleados_gt50: true,
+    cotiza_en_bolsa:      false,
+    sector_financiero_reg: false,       // si requiere COBIT / SOX
+    sector_salud_industria: false,      // si requiere ISO 45001
+    maneja_tarjetas:      false,        // si requiere PCI DSS
+    completado:   true,
+    fecha_onboarding: "2025-06-01",
+  },
+
   // ── Predictor de riesgo ─────────────────────────────────────────────────
   // El predictor.html lee CONFIG.predictor para pre-cargar los valores por
   // defecto en lugar de depender de localStorage.
