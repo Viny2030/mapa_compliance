@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bridge — Generador config.js</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pri:#1a3a5c;--sec:#2196f3;--verde:#2e7d32;--rojo:#c62828;
+  --naranja:#e65100;--bg:#f0f4f8;--card:#fff;--texto:#1a1a2e;
+  --muted:#6b7280;--borde:#dde3ea;--radius:10px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--texto);line-height:1.5;min-height:100vh}
+
+nav{background:var(--pri);color:#fff;padding:.65rem 1.2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-brand{font-size:.9rem;font-weight:700}
+.nav-sub{font-size:.68rem;opacity:.5;margin-top:.05rem}
+.badge{background:rgba(255,200,0,.18);color:#ffd600;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:99px;border:1px solid rgba(255,200,0,.3);letter-spacing:.04em}
+
+.wrap{max-width:960px;margin:0 auto;padding:1.4rem 1rem 4rem}
+
+/* ── Steps ── */
+.steps{display:flex;gap:0;margin-bottom:1.8rem;border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--borde)}
+.step{flex:1;padding:.7rem 1rem;background:var(--card);text-align:center;position:relative;font-size:.78rem;font-weight:600;color:var(--muted);border-right:1.5px solid var(--borde);transition:background .2s,color .2s}
+.step:last-child{border-right:none}
+.step.active{background:var(--sec);color:#fff}
+.step.done{background:#e3f2fd;color:var(--sec)}
+.step-num{display:block;font-size:1.1rem;font-weight:800;margin-bottom:.1rem}
+
+/* ── Cards ── */
+.card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--borde);box-shadow:0 1px 4px rgba(0,0,0,.06);padding:1.4rem;margin-bottom:1rem}
+.card-title{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+
+/* ── Client selector ── */
+.cliente-grid{display:flex;flex-direction:column;gap:.5rem}
+.cliente-opt{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;border-radius:8px;border:1.5px solid var(--borde);background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
+.cliente-opt:hover{border-color:var(--sec);background:#f0f7ff}
+.cliente-opt.sel{border-color:var(--sec);background:#e3f2fd}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0}
+.cli-nombre{font-weight:700;font-size:.92rem;color:var(--pri)}
+.cli-meta{font-size:.73rem;color:var(--muted);margin-top:.1rem}
+.plan-badge{display:inline-block;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;letter-spacing:.04em;margin-left:.4rem;vertical-align:middle}
+.plan-badge.enterprise{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.plan-badge.professional{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+.plan-badge.starter{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
+
+/* ── Form fields ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.form-grid.full{grid-template-columns:1fr}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{font-family:inherit;font-size:.84rem;padding:.45rem .75rem;border:1.5px solid var(--borde);border-radius:7px;background:#fff;color:var(--texto);width:100%;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--sec)}
+.field textarea{resize:vertical;min-height:60px}
+
+/* ── Module toggles ── */
+.modulos-section{margin-top:.6rem}
+.modulos-group{margin-bottom:.8rem}
+.modulos-group-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:1px solid var(--borde)}
+.modulos-list{display:flex;flex-wrap:wrap;gap:.4rem}
+.mod-toggle{display:flex;align-items:center;gap:.4rem;font-size:.76rem;padding:.3rem .65rem;border-radius:6px;border:1.5px solid var(--borde);background:#fff;cursor:pointer;user-select:none;transition:all .15s}
+.mod-toggle.on{border-color:var(--sec);background:#e3f2fd;color:var(--sec);font-weight:600}
+.mod-toggle.core{border-color:#bdbdbd;background:#f5f5f5;color:#757575;cursor:not-allowed}
+.mod-toggle .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ── Output ── */
+.output-box{position:relative;background:#0d1117;border-radius:10px;overflow:hidden;margin-top:.5rem}
+.output-toolbar{display:flex;align-items:center;justify-content:space-between;padding:.5rem .9rem;background:#161b22;border-bottom:1px solid #30363d}
+.output-filename{font-size:.73rem;font-weight:700;color:#8b949e;font-family:var(--mono)}
+.output-actions{display:flex;gap:.5rem}
+.btn-copy,.btn-dl{font-size:.73rem;font-weight:700;padding:.3rem .75rem;border-radius:6px;border:none;cursor:pointer;transition:background .15s}
+.btn-copy{background:#238636;color:#fff}.btn-copy:hover{background:#2ea043}
+.btn-dl{background:#1f6feb;color:#fff}.btn-dl:hover{background:#388bfd}
+pre#output{padding:1rem;font-family:var(--mono);font-size:.73rem;line-height:1.6;color:#c9d1d9;overflow-x:auto;max-height:420px;overflow-y:auto}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:.6rem;margin-top:1rem}
+.btn{font-family:inherit;font-size:.84rem;font-weight:700;padding:.55rem 1.2rem;border-radius:8px;border:none;cursor:pointer;transition:background .15s,opacity .15s;display:inline-flex;align-items:center;gap:.4rem}
+.btn-pri{background:var(--sec);color:#fff}.btn-pri:hover{background:#1976d2}
+.btn-sec{background:var(--card);color:var(--pri);border:1.5px solid var(--borde)}.btn-sec:hover{border-color:var(--sec);color:var(--sec)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── Alert ── */
+.alert{display:flex;align-items:flex-start;gap:.6rem;padding:.75rem 1rem;border-radius:8px;font-size:.8rem;margin-bottom:.8rem}
+.alert.info{background:#e3f2fd;border:1px solid #90caf9;color:#1565c0}
+.alert.success{background:#e8f5e9;border:1px solid #a5d6a7;color:#2e7d32}
+
+/* ── Progress summary ── */
+.summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-top:.8rem}
+.sum-item{background:#f8fafc;border:1.5px solid var(--borde);border-radius:8px;padding:.65rem .8rem;font-size:.75rem}
+.sum-val{font-size:1.4rem;font-weight:800;color:var(--pri);line-height:1}
+.sum-label{color:var(--muted);font-size:.68rem;margin-top:.15rem;font-weight:600}
+
+/* ── Iframe preview ── */
+#preview-wrap{display:none;margin-top:.8rem}
+#preview-wrap iframe{width:100%;height:400px;border:1.5px solid var(--borde);border-radius:8px}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<nav>
+  <div>
+    <div class="nav-brand">⚙️ Bridge — Generador config.js</div>
+    <div class="nav-sub">Monitor de Compliance · Herramienta interna</div>
+  </div>
+  <span class="badge">FASE 1 · MANUAL</span>
+</nav>
+
+<div class="wrap">
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step active" id="s1"><span class="step-num">1</span>Elegir cliente</div>
+    <div class="step" id="s2"><span class="step-num">2</span>Datos empresa</div>
+    <div class="step" id="s3"><span class="step-num">3</span>Módulos</div>
+    <div class="step" id="s4"><span class="step-num">4</span>Generar</div>
+  </div>
+
+  <!-- PASO 1: Seleccionar cliente -->
+  <div id="pane-1">
+    <div class="alert info">💡 Seleccioná un cliente existente del portal, o creá una configuración nueva desde cero.</div>
+    <div class="card">
+      <div class="card-title">📋 Clientes en el portal</div>
+      <div class="cliente-grid" id="clientes-lista"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">➕ Nuevo cliente</div>
+      <div class="form-grid">
+        <div class="field"><label>Razón social</label><input id="new-nombre" placeholder="Empresa S.A."></div>
+        <div class="field"><label>CUIT</label><input id="new-cuit" placeholder="30-00000000-0"></div>
+        <div class="field"><label>Email compliance</label><input id="new-email" type="email" placeholder="compliance@empresa.com.ar"></div>
+        <div class="field"><label>Plan</label>
+          <select id="new-plan">
+            <option value="starter">Starter</option>
+            <option value="professional">Professional</option>
+            <option value="enterprise" selected>Enterprise</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-sec" onclick="crearNuevo()">Crear nuevo →</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-pri" id="btn-1-next" onclick="irA(2)" disabled>Continuar →</button>
+    </div>
+  </div>
+
+  <!-- PASO 2: Datos empresa -->
+  <div id="pane-2" class="hidden">
+    <div class="card">
+      <div class="card-title">🏢 Datos de la empresa</div>
+      <div class="form-grid">
+        <div class="field"><label>Razón social</label><input id="e-nombre"></div>
+        <div class="field"><label>CUIT</label><input id="e-cuit"></div>
+        <div class="field"><label>Sector</label>
+          <select id="e-sector">
+            <option value="construccion">Construcción y obra pública</option>
+            <option value="servicios">Servicios profesionales</option>
+            <option value="industria">Industria manufacturera</option>
+            <option value="energia">Energía y recursos naturales</option>
+            <option value="finanzas">Servicios financieros</option>
+            <option value="tecnologia">Tecnología</option>
+            <option value="salud">Salud y farmacéutico</option>
+            <option value="comercio">Comercio y retail</option>
+          </select>
+        </div>
+        <div class="field"><label>Tamaño</label>
+          <select id="e-tamanio">
+            <option value="pyme">PYME</option>
+            <option value="mediana">Mediana</option>
+            <option value="grande">Grande</option>
+            <option value="corporacion">Corporación</option>
+          </select>
+        </div>
+        <div class="field"><label>País sede</label>
+          <select id="e-pais">
+            <option value="Argentina">Argentina</option>
+            <option value="Brasil">Brasil</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Chile">Chile</option>
+            <option value="Colombia">Colombia</option>
+            <option value="México">México</option>
+            <option value="España">España</option>
+          </select>
+        </div>
+        <div class="field"><label>Provincias / Estados</label><input id="e-provincias" placeholder="CABA, Buenos Aires, Córdoba"></div>
+        <div class="field"><label>Responsable compliance</label><input id="e-responsable" placeholder="Dra. María González"></div>
+        <div class="field"><label>Email compliance</label><input id="e-email" type="email"></div>
+        <div class="field"><label>Color primario (hex)</label><input id="e-color" type="color" value="#1a3a5c" style="height:42px;padding:.2rem"></div>
+        <div class="field"><label>URL logo (opcional)</label><input id="e-logo" placeholder="https://..."></div>
+      </div>
+      <hr style="margin:1rem 0;border:none;border-top:1px solid var(--borde)">
+      <div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em">Operación internacional</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+        <label class="mod-toggle" id="tog-brasil"><span class="dot"></span>🇧🇷 Brasil</label>
+        <label class="mod-toggle" id="tog-ue"><span class="dot"></span>🇪🇺 Unión Europea</label>
+        <label class="mod-toggle" id="tog-usa"><span class="dot"></span>🇺🇸 USA / FCPA</label>
+        <label class="mod-toggle" id="tog-uk"><span class="dot"></span>🇬🇧 UK Bribery</label>
+      </div>
+      <hr style="margin:1rem 0;border:none;border-top:1px solid var(--borde)">
+      <div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em">Características del cliente</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+        <label class="mod-toggle" id="tog-bolsa"><span class="dot"></span>📈 Cotiza en bolsa</label>
+        <label class="mod-toggle" id="tog-tarjetas"><span class="dot"></span>💳 Maneja tarjetas</label>
+        <label class="mod-toggle" id="tog-finreg"><span class="dot"></span>🏦 Sector financiero regulado</label>
+        <label class="mod-toggle" id="tog-salud"><span class="dot"></span>🏥 Salud / Industria</label>
+        <label class="mod-toggle" id="tog-ia"><span class="dot"></span>🤖 Usa IA</label>
+        <label class="mod-toggle" id="tog-ambiental"><span class="dot"></span>🌿 Impacto ambiental</label>
+        <label class="mod-toggle" id="tog-rite"><span class="dot"></span>📋 Registrado RITE</label>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" onclick="irA(1)">← Volver</button>
+      <button class="btn btn-pri" onclick="sugerirModulos();irA(3)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- PASO 3: Módulos -->
+  <div id="pane-3" class="hidden">
+    <div class="alert info" id="alert-modulos">💡 Módulos sugeridos automáticamente según el perfil del cliente. Podés ajustar manualmente.</div>
+    <div class="card">
+      <div class="card-title">🔲 Módulos activos</div>
+      <div class="modulos-section" id="modulos-section"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Resumen</div>
+      <div class="summary" id="summary-modulos"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" onclick="irA(2)">← Volver</button>
+      <button class="btn btn-pri" onclick="generarConfig();irA(4)">Generar config.js →</button>
+    </div>
+  </div>
+
+  <!-- PASO 4: Output -->
+  <div id="pane-4" class="hidden">
+    <div class="alert success" id="alert-ok">✅ <strong>config.js generado.</strong> Copiá el contenido y pegalo en el repo del cliente, reemplazando el config.js existente.</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="output-box">
+        <div class="output-toolbar">
+          <span class="output-filename">config.js</span>
+          <div class="output-actions">
+            <button class="btn-copy" onclick="copiarConfig()">📋 Copiar</button>
+            <button class="btn-dl" onclick="descargarConfig()">⬇️ Descargar</button>
+          </div>
+        </div>
+        <pre id="output"></pre>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Instrucciones de deploy (Fase 1 — Manual)</div>
+      <ol style="padding-left:1.2rem;font-size:.82rem;line-height:2;color:var(--texto)">
+        <li>Descargá el <code style="background:#f0f4f8;padding:.1rem .3rem;border-radius:4px">config.js</code> generado</li>
+        <li>Abrí el repo del cliente en GitHub (<code style="background:#f0f4f8;padding:.1rem .3rem;border-radius:4px">Viny2030-BA / [nombre-cliente]</code>)</li>
+        <li>Reemplazá el <code style="background:#f0f4f8;padding:.1rem .3rem;border-radius:4px">config.js</code> existente con este archivo</li>
+        <li>Hacé commit con mensaje: <code style="background:#f0f4f8;padding:.1rem .3rem;border-radius:4px">chore: update config for [cliente]</code></li>
+        <li>Railway hace deploy automático en ~2 min ✅</li>
+      </ol>
+      <div style="margin-top:.8rem;padding:.6rem .8rem;background:#f0f7ff;border-radius:7px;font-size:.75rem;color:#1565c0">
+        <strong>Próximo paso (Fase 2):</strong> GitHub API + Railway API → el portal escribe el config.js directo al repo y dispara el deploy sin intervención manual.
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" onclick="irA(3)">← Ajustar módulos</button>
+      <button class="btn btn-pri" onclick="irA(1)">🔄 Nuevo cliente</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Estado global ──────────────────────────────────────────────────────────
+let clienteActual = null;
+let toggles = {};  // {key: bool}
+
+const MODULOS_DEF = {
+  core: {
+    label: '🔵 Core (siempre activos)',
+    items: {
+      dashboard:'Dashboard',board:'Board Ejecutivo',planaccion:'Plan de Acción',
+      reporte:'Reporte PDF',calendario:'Calendario',
+    }
+  },
+  anticorrupcion: {
+    label: '⚖️ Anticorrupción',
+    items: {
+      ley27401:'Ley 27.401 Argentina',brasil:'Lei 12.846 Brasil',fcpa:'FCPA & UK Bribery',
+      ocde:'OCDE Lineamientos',
+    }
+  },
+  privacidad: {
+    label: '🔒 Privacidad & Datos',
+    items: {
+      lgpd:'LGPD Brasil',gdpr:'GDPR Europa',ccpa:'CCPA/CPRA California',iso27701:'ISO 27701',
+    }
+  },
+  seguridad: {
+    label: '🛡️ Seguridad',
+    items: {
+      iso27001:'ISO 27001',soc2:'SOC 2',nis2:'NIS2',pcidss:'PCI DSS v4.0',
+    }
+  },
+  ambiental: {
+    label: '🌿 Ambiental / ESG',
+    items: { iso14001:'ISO 14001',esg:'ESG',}
+  },
+  gobernanza: {
+    label: '🏛️ Gestión & Gobernanza',
+    items: { iso37001:'ISO 37001',iso45001:'ISO 45001',cobit:'COBIT 2019',sox:'Sarbanes-Oxley SOX',}
+  },
+  digital: {
+    label: '💻 Digital / Tecnología',
+    items: { euaiact:'EU AI Act',dora:'DORA',}
+  },
+  cross: {
+    label: '🗂️ Cross & Otros',
+    items: {
+      crossmap:'Cross-Framework',riesgo:'Mapa de Riesgo',capacitacion:'Capacitación',
+      duediligence:'Due Diligence',internacional:'Internacional / OCDE',rite:'RITE Argentina',
+      mejoras:'Mejoras & Alertas',legislacion:'Legislación',denuncias:'Canal de Denuncias',
+    }
+  }
+};
+
+const CORE_KEYS = Object.keys(MODULOS_DEF.core.items);
+
+// Inicializar toggles todos en false
+Object.values(MODULOS_DEF).forEach(g=>Object.keys(g.items).forEach(k=>{toggles[k]=false}));
+CORE_KEYS.forEach(k=>{toggles[k]=true}); // core siempre on
+
+// Toggles de empresa (bools simples)
+const togEstado = {};
+['brasil','ue','usa','uk','bolsa','tarjetas','finreg','salud','ia','ambiental','rite'].forEach(k=>{togEstado[k]=false});
+
+// ── Clientes demo ──────────────────────────────────────────────────────────
+const CLIENTES_DEMO = [
+  {id:'cliente_001',nombre:'Empresa Demo S.A.',cuit:'30-00000000-0',email:'compliance@empresademo.com.ar',
+   plan:'enterprise',sector:'construccion',pais:'Argentina',responsable:'Dra. María González',
+   onboarding:{sector:'construccion',tamanio:'grande',pais:'Argentina',opera_en_brasil:true,opera_en_ue:false,opera_en_usa:false,opera_en_uk:false,cotiza_en_bolsa:false,maneja_tarjetas:false,sector_financiero_reg:false,sector_salud_industria:true,usa_ia:false,impacto_ambiental:true},
+   modulos_activos:{dashboard:true,board:true,planaccion:true,reporte:true,calendario:true,riesgo:true,capacitacion:true,duediligence:true,mejoras:true,denuncias:true,ley27401:true,brasil:true,fcpa:true,ocde:true,iso37001:true,rite:true,lgpd:true,gdpr:false,ccpa:false,iso27701:false,iso27001:false,soc2:false,nis2:false,pcidss:false,iso14001:true,esg:true,iso45001:true,cobit:false,sox:false,euaiact:false,dora:false,crossmap:true,internacional:true,legislacion:true},
+  },
+  {id:'demo',nombre:'Constructora del Sur S.A.',cuit:'30-99887766-5',email:'compliance@constructoradelsur.com.ar',
+   plan:'professional',sector:'construccion',pais:'Argentina',responsable:'',
+   onboarding:{sector:'construccion',tamanio:'grande',pais:'Argentina',opera_en_brasil:false,opera_en_ue:false,opera_en_usa:false,opera_en_uk:false,cotiza_en_bolsa:false,maneja_tarjetas:false,sector_financiero_reg:false,sector_salud_industria:true,usa_ia:false,impacto_ambiental:true},
+   modulos_activos:{dashboard:true,board:true,planaccion:true,reporte:true,calendario:true,riesgo:true,capacitacion:true,duediligence:true,mejoras:true,denuncias:true,ley27401:true,brasil:false,fcpa:false,ocde:true,iso37001:true,rite:true,lgpd:false,gdpr:false,ccpa:false,iso27701:false,iso27001:true,soc2:false,nis2:false,pcidss:false,iso14001:true,esg:true,iso45001:true,cobit:false,sox:false,euaiact:false,dora:false,crossmap:true,internacional:true,legislacion:true},
+  },
+  {id:'cliente_fin',nombre:'Fintech Norte S.A.',cuit:'30-55566677-8',email:'compliance@fintechnorte.com',
+   plan:'enterprise',sector:'finanzas',pais:'Argentina',responsable:'Lic. Carlos Ruiz',
+   onboarding:{sector:'finanzas',tamanio:'mediana',pais:'Argentina',opera_en_brasil:false,opera_en_ue:true,opera_en_usa:true,opera_en_uk:false,cotiza_en_bolsa:false,maneja_tarjetas:true,sector_financiero_reg:true,sector_salud_industria:false,usa_ia:true,impacto_ambiental:false},
+   modulos_activos:{dashboard:true,board:true,planaccion:true,reporte:true,calendario:true,riesgo:true,capacitacion:true,duediligence:true,mejoras:true,denuncias:true,ley27401:true,brasil:false,fcpa:true,ocde:true,iso37001:true,rite:false,lgpd:false,gdpr:true,ccpa:true,iso27701:true,iso27001:true,soc2:true,nis2:true,pcidss:true,iso14001:false,esg:false,iso45001:false,cobit:false,sox:false,euaiact:false,dora:false,crossmap:true,internacional:true,legislacion:true},
+  },
+];
+
+const COLORES = ['#1a3a5c','#2e7d32','#c62828','#e65100','#6a1b9a','#0277bd'];
+
+// ── Init ───────────────────────────────────────────────────────────────────
+function init(){
+  renderClientesLista();
+  renderModulosSection();
+  bindToggles();
+}
+
+function renderClientesLista(){
+  const cont = document.getElementById('clientes-lista');
+  cont.innerHTML = CLIENTES_DEMO.map((c,i)=>`
+    <div class="cliente-opt" id="opt-${c.id}" onclick="seleccionarCliente('${c.id}')">
+      <div class="avatar" style="background:${COLORES[i%COLORES.length]}">${c.nombre[0]}</div>
+      <div style="flex:1;min-width:0">
+        <div class="cli-nombre">${c.nombre}
+          <span class="plan-badge ${c.plan}">${c.plan}</span>
+        </div>
+        <div class="cli-meta">${c.cuit} · ${c.email}</div>
+      </div>
+      <div style="font-size:1.2rem">→</div>
+    </div>
+  `).join('');
+}
+
+function seleccionarCliente(id){
+  clienteActual = CLIENTES_DEMO.find(c=>c.id===id);
+  document.querySelectorAll('.cliente-opt').forEach(el=>el.classList.remove('sel'));
+  document.getElementById('opt-'+id).classList.add('sel');
+  document.getElementById('btn-1-next').disabled = false;
+
+  // Pre-cargar campos paso 2
+  document.getElementById('e-nombre').value = clienteActual.nombre;
+  document.getElementById('e-cuit').value = clienteActual.cuit;
+  document.getElementById('e-email').value = clienteActual.email;
+  document.getElementById('e-responsable').value = clienteActual.responsable||'';
+  document.getElementById('e-sector').value = clienteActual.onboarding.sector||'construccion';
+  document.getElementById('e-tamanio').value = clienteActual.onboarding.tamanio||'grande';
+  document.getElementById('e-pais').value = clienteActual.onboarding.pais||'Argentina';
+
+  // Toggles empresa
+  setTogEmp('brasil', clienteActual.onboarding.opera_en_brasil);
+  setTogEmp('ue', clienteActual.onboarding.opera_en_ue);
+  setTogEmp('usa', clienteActual.onboarding.opera_en_usa);
+  setTogEmp('uk', clienteActual.onboarding.opera_en_uk);
+  setTogEmp('bolsa', clienteActual.onboarding.cotiza_en_bolsa);
+  setTogEmp('tarjetas', clienteActual.onboarding.maneja_tarjetas);
+  setTogEmp('finreg', clienteActual.onboarding.sector_financiero_reg);
+  setTogEmp('salud', clienteActual.onboarding.sector_salud_industria);
+  setTogEmp('ia', clienteActual.onboarding.usa_ia);
+  setTogEmp('ambiental', clienteActual.onboarding.impacto_ambiental);
+
+  // Módulos
+  Object.keys(clienteActual.modulos_activos).forEach(k=>{
+    if(!CORE_KEYS.includes(k)) toggles[k] = !!clienteActual.modulos_activos[k];
+  });
+}
+
+function crearNuevo(){
+  const n = document.getElementById('new-nombre').value.trim();
+  const c = document.getElementById('new-cuit').value.trim();
+  const e = document.getElementById('new-email').value.trim();
+  const p = document.getElementById('new-plan').value;
+  if(!n||!c){alert('Completá razón social y CUIT'); return;}
+  clienteActual = {
+    id:'nuevo_'+Date.now(), nombre:n, cuit:c, email:e,
+    plan:p, sector:'construccion', pais:'Argentina', responsable:'',
+    onboarding:{sector:'construccion',tamanio:'grande',pais:'Argentina'},
+    modulos_activos:{},
+  };
+  // Pre-cargar campos
+  document.getElementById('e-nombre').value = n;
+  document.getElementById('e-cuit').value = c;
+  document.getElementById('e-email').value = e;
+  document.getElementById('btn-1-next').disabled = false;
+  irA(2);
+}
+
+function setTogEmp(key, val){
+  togEstado[key] = !!val;
+  const el = document.getElementById('tog-'+key);
+  if(el){ el.classList.toggle('on', !!val); }
+}
+
+function bindToggles(){
+  ['brasil','ue','usa','uk','bolsa','tarjetas','finreg','salud','ia','ambiental','rite'].forEach(key=>{
+    const el = document.getElementById('tog-'+key);
+    if(el){
+      el.addEventListener('click',()=>{
+        togEstado[key]=!togEstado[key];
+        el.classList.toggle('on',togEstado[key]);
+      });
+    }
+  });
+}
+
+function renderModulosSection(){
+  const sec = document.getElementById('modulos-section');
+  let html='';
+  Object.entries(MODULOS_DEF).forEach(([gk,g])=>{
+    html += `<div class="modulos-group">
+      <div class="modulos-group-title">${g.label}</div>
+      <div class="modulos-list">`;
+    Object.entries(g.items).forEach(([mk,ml])=>{
+      const isCore = CORE_KEYS.includes(mk);
+      html += `<div class="mod-toggle ${isCore?'core on':(toggles[mk]?'on':'')}" 
+        id="mt-${mk}" 
+        onclick="${isCore?'':'toggleMod(\''+mk+'\')'}" 
+        title="${isCore?'Siempre activo':''}">
+        <span class="dot"></span>${ml}
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  sec.innerHTML = html;
+  actualizarSummary();
+}
+
+function toggleMod(key){
+  if(CORE_KEYS.includes(key)) return;
+  toggles[key] = !toggles[key];
+  const el = document.getElementById('mt-'+key);
+  if(el) el.classList.toggle('on', toggles[key]);
+  actualizarSummary();
+}
+
+function actualizarSummary(){
+  const total = Object.keys(toggles).length;
+  const activos = Object.values(toggles).filter(Boolean).length;
+  const grupos = Object.values(MODULOS_DEF).filter(g=>{
+    return Object.keys(g.items).some(k=>toggles[k]);
+  }).length;
+  document.getElementById('summary-modulos').innerHTML = `
+    <div class="sum-item"><div class="sum-val">${activos}</div><div class="sum-label">módulos activos</div></div>
+    <div class="sum-item"><div class="sum-val">${total-activos}</div><div class="sum-label">módulos ocultos</div></div>
+    <div class="sum-item"><div class="sum-val">${grupos}</div><div class="sum-label">categorías cubiertas</div></div>
+    <div class="sum-item"><div class="sum-val">${Math.round(activos/total*100)}%</div><div class="sum-label">cobertura total</div></div>
+  `;
+}
+
+function sugerirModulos(){
+  const ob = togEstado;
+  const s = document.getElementById('e-sector').value;
+  const plan = clienteActual?.plan||'enterprise';
+
+  // Reset no-core
+  Object.keys(toggles).forEach(k=>{ if(!CORE_KEYS.includes(k)) toggles[k]=false; });
+
+  // Siempre
+  ['ley27401','ocde','riesgo','capacitacion','duediligence','mejoras','denuncias','internacional','legislacion','crossmap','iso37001'].forEach(k=>{toggles[k]=true});
+
+  // Geografía
+  if(ob.brasil){toggles.brasil=true; toggles.lgpd=true;}
+  if(ob.ue){toggles.gdpr=true; toggles.nis2=true;}
+  if(ob.usa){toggles.fcpa=true; toggles.ccpa=true;}
+  if(ob.uk){toggles.fcpa=true;}
+
+  // Sector
+  if(s==='finanzas'||ob.finreg){toggles.cobit=true; toggles.sox=true; toggles.iso27001=true; toggles.soc2=true;}
+  if(s==='tecnologia'||ob.ia){toggles.euaiact=true; toggles.dora=true; toggles.iso27001=true;}
+  if(ob.salud||s==='salud'){toggles.iso45001=true;}
+  if(ob.ambiental||['industria','energia','construccion'].includes(s)){toggles.iso14001=true; toggles.esg=true;}
+  if(ob.tarjetas){toggles.pcidss=true;}
+  if(ob.ia){toggles.euaiact=true;}
+  if(s==='finanzas'){toggles.iso27001=true; toggles.soc2=true;}
+  if(ob.ue||ob.usa){toggles.iso27701=true;}
+  if(ob.rite){toggles.rite=true;}
+
+  // Plan
+  if(plan==='starter'){
+    const allowed=['ley27401','brasil','fcpa','riesgo','capacitacion','duediligence','mejoras','denuncias','legislacion'];
+    Object.keys(toggles).forEach(k=>{ if(!CORE_KEYS.includes(k)&&!allowed.includes(k)) toggles[k]=false; });
+  }
+
+  // Refresh UI
+  Object.entries(toggles).forEach(([k,v])=>{
+    const el=document.getElementById('mt-'+k);
+    if(el&&!CORE_KEYS.includes(k)) el.classList.toggle('on',v);
+  });
+  actualizarSummary();
+
+  document.getElementById('alert-modulos').textContent = '✅ Módulos sugeridos automáticamente según el perfil. Podés ajustar manualmente antes de generar.';
+}
+
+function generarConfig(){
+  const now = new Date().toISOString().split('T')[0];
+  const nombre = document.getElementById('e-nombre').value||'Empresa S.A.';
+  const cuit = document.getElementById('e-cuit').value||'30-00000000-0';
+  const email = document.getElementById('e-email').value||'compliance@empresa.com.ar';
+  const responsable = document.getElementById('e-responsable').value||'Responsable Compliance';
+  const sector = document.getElementById('e-sector').value||'construccion';
+  const tamanio = document.getElementById('e-tamanio').value||'grande';
+  const pais = document.getElementById('e-pais').value||'Argentina';
+  const color = document.getElementById('e-color').value||'#1a3a5c';
+  const logo = document.getElementById('e-logo').value||'';
+  const provinciasRaw = document.getElementById('e-provincias').value||'CABA';
+  const provincias = provinciasRaw.split(',').map(s=>s.trim()).filter(Boolean);
+
+  const SECTOR_LABELS = {
+    construccion:{es:'Construcción y obra pública',en:'Construction and public works',pt:'Construção e obras públicas'},
+    servicios:{es:'Servicios profesionales',en:'Professional services',pt:'Serviços profissionais'},
+    industria:{es:'Industria manufacturera',en:'Manufacturing industry',pt:'Indústria manufatureira'},
+    energia:{es:'Energía y recursos naturales',en:'Energy and natural resources',pt:'Energia e recursos naturais'},
+    finanzas:{es:'Servicios financieros',en:'Financial services',pt:'Serviços financeiros'},
+    tecnologia:{es:'Tecnología',en:'Technology',pt:'Tecnologia'},
+    salud:{es:'Salud y farmacéutico',en:'Healthcare and pharmaceuticals',pt:'Saúde e farmacêutico'},
+    comercio:{es:'Comercio y retail',en:'Commerce and retail',pt:'Comércio e varejo'},
+  };
+  const TAMANIO_LABELS = {
+    pyme:{es:'PYME',en:'SME',pt:'PME'},
+    mediana:{es:'mediana',en:'medium',pt:'média'},
+    grande:{es:'grande',en:'large',pt:'grande'},
+    corporacion:{es:'corporación',en:'corporation',pt:'corporação'},
+  };
+  const sectorLabel = SECTOR_LABELS[sector]||SECTOR_LABELS.construccion;
+  const tamanioLabel = TAMANIO_LABELS[tamanio]||TAMANIO_LABELS.grande;
+
+  const ob = togEstado;
+  const leyes = ['Convención OCDE (Ley 25.319)','UNCAC (Ley 26.097)'];
+  if(ob.brasil) leyes.push('Lei Anticorrupção Brasil 12.846/2013');
+  if(ob.usa) leyes.push('Foreign Corrupt Practices Act (FCPA)');
+  if(ob.uk) leyes.push('UK Bribery Act 2010');
+  if(ob.ue) leyes.push('GDPR (Reglamento UE 2016/679)');
+
+  // Build modulos_activos object text
+  const modLines = [];
+  Object.entries(MODULOS_DEF).forEach(([gk,g])=>{
+    modLines.push(`\n    // ${g.label.replace(/[^\w\s\/ÁÉÍÓÚáéíóú&]/g,'')}`);
+    Object.entries(g.items).forEach(([mk,ml])=>{
+      modLines.push(`    ${mk.padEnd(14)}: ${toggles[mk]?'true ':'false'},  // ${ml}`);
+    });
+  });
+
+  const config = `/**
+ * config.js — Monitor de Compliance Empresarial
+ * ================================================
+ * Generado por Bridge el ${now}
+ * Cliente: ${nombre} (${cuit})
+ *
+ * ÚNICO ARCHIVO A EDITAR PARA PERSONALIZAR CADA CLIENTE.
+ */
+
+const CONFIG = {
+
+  empresa: {
+    nombre:       "${nombre}",
+    cuit:         "${cuit}",
+    sector:       { es: "${sectorLabel.es}", en: "${sectorLabel.en}", pt: "${sectorLabel.pt}" },
+    tamanio:      { es: "${tamanioLabel.es}", en: "${tamanioLabel.en}", pt: "${tamanioLabel.pt}" },
+    pais:         "${pais}",
+    provincias:   [${provincias.map(p=>`"${p}"`).join(', ')}],
+    internacional: ${ob.brasil||ob.ue||ob.usa||ob.uk},
+    logo:         "${logo}",
+    color_primario: "${color}",
+    responsable_compliance: "${responsable}",
+    contacto:     "${email}",
+  },
+
+  programa_integridad: {
+    nivel_madurez:   "inicial",
+    fecha_inicio:    "${now}",
+    ultima_revision: "${now}",
+    registrado_rite: ${!!ob.rite},
+    url_rite:        "${ob.rite?'https://www.rite.gob.ar/empresas':''}",
+
+    elementos_obligatorios: [
+      { id: "codigo_etica",
+        label: { es: "Código de ética / conducta", en: "Code of ethics / conduct", pt: "Código de ética / conduta" },
+        estado: "pendiente", evidencia: { es: "", en: "", pt: "" } },
+      { id: "reglas_licitacion",
+        label: { es: "Reglas para contrataciones públicas y licitaciones", en: "Rules for public procurement and tenders", pt: "Regras para contratações públicas e licitações" },
+        estado: "pendiente", evidencia: { es: "", en: "", pt: "" } },
+      { id: "capacitacion",
+        label: { es: "Capacitaciones periódicas a directores y empleados", en: "Periodic training for directors and employees", pt: "Treinamentos periódicos para diretores e funcionários" },
+        estado: "pendiente", evidencia: { es: "", en: "", pt: "" } },
+    ],
+
+    elementos_opcionales: [
+      { id: "canal_denuncias",
+        label: { es: "Canal de denuncias confidencial", en: "Confidential whistleblowing channel", pt: "Canal de denúncias confidencial" },
+        estado: "pendiente", evidencia: { es: "", en: "", pt: "" } },
+      { id: "due_diligence",
+        label: { es: "Due diligence de terceros", en: "Third-party due diligence", pt: "Due diligence de terceiros" },
+        estado: "pendiente", evidencia: { es: "", en: "", pt: "" } },
+      { id: "responsable",
+        label: { es: "Responsable interno de Compliance designado", en: "Internal Compliance Officer appointed", pt: "Responsável interno de Compliance designado" },
+        estado: ${responsable?'"completo"':'"pendiente"'},
+        evidencia: { es: "${responsable?responsable+' — designado':''}", en: "", pt: "" } },
+    ],
+  },
+
+  mapa_riesgo: [
+    { area: { es: "Comercial / Ventas", en: "Sales / Commercial", pt: "Comercial / Vendas" },
+      riesgo: "alto", probabilidad: 4, impacto: 5,
+      descripcion: { es: "Riesgo de cohecho en contrataciones.", en: "Risk of bribery in procurement.", pt: "Risco de suborno em contratações." } },
+    { area: { es: "Compras y Abastecimiento", en: "Procurement and Supply", pt: "Compras e Abastecimento" },
+      riesgo: "alto", probabilidad: 4, impacto: 4,
+      descripcion: { es: "Terceros sin evaluar. Riesgo cadena de proveedores.", en: "Unvetted third parties. Supply chain risk.", pt: "Terceiros não avaliados. Risco na cadeia." } },
+    { area: { es: "Finanzas y Contabilidad", en: "Finance and Accounting", pt: "Finanças e Contabilidade" },
+      riesgo: "medio", probabilidad: 3, impacto: 4,
+      descripcion: { es: "Riesgo de registros contables incorrectos.", en: "Risk of inaccurate accounting records.", pt: "Risco de registros contábeis incorretos." } },
+    { area: { es: "Recursos Humanos", en: "Human Resources", pt: "Recursos Humanos" },
+      riesgo: "medio", probabilidad: 2, impacto: 3,
+      descripcion: { es: "Conflictos de interés en contrataciones.", en: "Conflicts of interest in hiring.", pt: "Conflitos de interesse em contratações." } },
+    { area: { es: "Gobierno Corporativo", en: "Corporate Governance", pt: "Governança Corporativa" },
+      riesgo: "medio", probabilidad: 2, impacto: 5,
+      descripcion: { es: "Riesgo en toma de decisiones estratégicas.", en: "Risk in strategic decision-making.", pt: "Risco na tomada de decisões estratégicas." } },
+    { area: { es: "Tecnología e Información", en: "Technology and Information", pt: "Tecnologia e Informação" },
+      riesgo: "bajo", probabilidad: 2, impacto: 3,
+      descripcion: { es: "Acceso a datos sensibles.", en: "Access to sensitive data.", pt: "Acesso a dados sensíveis." } },
+  ],
+
+  capacitaciones: [
+    { modulo: { es: "Introducción a la Ley 27.401", en: "Introduction to Law 27.401", pt: "Introdução à Lei 27.401" },
+      obligatorio: true, completado: 0, fecha_limite: "${new Date(Date.now()+180*86400000).toISOString().split('T')[0]}",
+      destinatarios: { es: "Todos", en: "All", pt: "Todos" } },
+    { modulo: { es: "Código de Ética y Conducta", en: "Code of Ethics and Conduct", pt: "Código de Ética e Conduta" },
+      obligatorio: true, completado: 0, fecha_limite: "${new Date(Date.now()+180*86400000).toISOString().split('T')[0]}",
+      destinatarios: { es: "Todos", en: "All", pt: "Todos" } },
+  ],
+
+  cuits_verificados: [],
+
+  historial_score: [
+    { mes: "${new Date().toLocaleString('es-AR',{month:'short',year:'numeric'})}", score: 10 },
+  ],
+
+  plan_mejora: [
+    { accion: { es: "Aprobar Código de Ética", en: "Approve Code of Ethics", pt: "Aprovar Código de Ética" },
+      prioridad: "alta", responsable: { es: "Compliance", en: "Compliance", pt: "Compliance" },
+      vence: "${new Date(Date.now()+60*86400000).toISOString().split('T')[0]}", estado: "pendiente" },
+    { accion: { es: "Activar canal de denuncias", en: "Activate whistleblowing channel", pt: "Ativar canal de denúncias" },
+      prioridad: "alta", responsable: { es: "Compliance", en: "Compliance", pt: "Compliance" },
+      vence: "${new Date(Date.now()+90*86400000).toISOString().split('T')[0]}", estado: "pendiente" },
+    { accion: { es: "Completar capacitación inicial", en: "Complete initial training", pt: "Concluir treinamento inicial" },
+      prioridad: "media", responsable: { es: "RRHH", en: "HR", pt: "RH" },
+      vence: "${new Date(Date.now()+180*86400000).toISOString().split('T')[0]}", estado: "pendiente" },
+  ],
+
+  exposicion_internacional: {
+    opera_en_usa:    ${!!ob.usa},
+    opera_en_uk:     ${!!ob.uk},
+    opera_en_brasil: ${!!ob.brasil},
+    opera_en_ue:     ${!!ob.ue},
+    leyes_aplicables: [${leyes.map(l=>`"${l}"`).join(', ')}],
+  },
+
+  meaci_url: "https://meaci-production.up.railway.app",
+  meaci_api: "https://meaci-production.up.railway.app/api/cruce-compr",
+
+  // ── Arquitectura modular ─────────────────────────────────────────────────
+  modulos_activos: {${modLines.join('\n')}
+  },
+
+  // ── Perfil de onboarding ─────────────────────────────────────────────────
+  onboarding: {
+    sector:       "${sector}",
+    tamanio:      "${tamanio}",
+    pais:         "${pais}",
+    opera_internacional: ${ob.brasil||ob.ue||ob.usa||ob.uk},
+    opera_en_brasil:     ${!!ob.brasil},
+    opera_en_ue:         ${!!ob.ue},
+    opera_en_usa:        ${!!ob.usa},
+    opera_en_uk:         ${!!ob.uk},
+    tiene_empleados_gt50: ${tamanio!=='pyme'},
+    cotiza_en_bolsa:      ${!!ob.bolsa},
+    sector_financiero_reg: ${!!ob.finreg},
+    sector_salud_industria: ${!!ob.salud},
+    maneja_tarjetas:      ${!!ob.tarjetas},
+    usa_ia:               ${!!ob.ia},
+    impacto_ambiental:    ${!!ob.ambiental},
+    completado:   true,
+    fecha_onboarding: "${now}",
+  },
+
+  // ── Predictor de riesgo ─────────────────────────────────────────────────
+  predictor: {
+    pesos: { programa: 25, capacitacion: 20, due_diligence: 20, riesgo: 15, comunicacion: 10, investigacion: 10 },
+    valores_actuales: { programa: 10, capacitacion: 0, due_diligence: 0, riesgo: 40, comunicacion: 0, investigacion: 0 },
+    escenarios_base: [
+      { nombre: "Situación inicial", valores: { programa: 10, capacitacion: 0, due_diligence: 0, riesgo: 40, comunicacion: 0, investigacion: 0 } },
+      { nombre: "Meta 6 meses",      valores: { programa: 60, capacitacion: 60, due_diligence: 40, riesgo: 80, comunicacion: 40, investigacion: 40 } },
+      { nombre: "Nivel mínimo OA",   valores: { programa: 60, capacitacion: 60, due_diligence: 40, riesgo: 60, comunicacion: 40, investigacion: 40 } },
+    ],
+  },
+
+  // ── Benchmark sectorial ─────────────────────────────────────────────────
+  benchmark: {
+    score_propio: null,
+    sector_default: "${sector}",
+    sectores: {
+      construccion:  { nombre: "Construcción / Obra pública", p25: 38, p50: 52, p75: 68, top10: 84 },
+      servicios:     { nombre: "Servicios profesionales",     p25: 45, p50: 60, p75: 74, top10: 89 },
+      industria:     { nombre: "Industria manufacturera",     p25: 40, p50: 55, p75: 70, top10: 85 },
+      energia:       { nombre: "Energía y recursos naturales",p25: 50, p50: 65, p75: 78, top10: 92 },
+      finanzas:      { nombre: "Servicios financieros",       p25: 55, p50: 70, p75: 82, top10: 94 },
+      tecnologia:    { nombre: "Tecnología",                  p25: 48, p50: 63, p75: 76, top10: 91 },
+      salud:         { nombre: "Salud y farmacéutico",        p25: 52, p50: 66, p75: 79, top10: 93 },
+      comercio:      { nombre: "Comercio y retail",           p25: 35, p50: 48, p75: 62, top10: 78 },
+    },
+  },
+};`;
+
+  document.getElementById('output').textContent = config;
+  window._configGenerado = config;
+  window._nombreCliente = nombre.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+}
+
+function copiarConfig(){
+  if(!window._configGenerado){return;}
+  navigator.clipboard.writeText(window._configGenerado).then(()=>{
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent='✅ Copiado';
+    setTimeout(()=>btn.textContent='📋 Copiar',2000);
+  });
+}
+
+function descargarConfig(){
+  if(!window._configGenerado){return;}
+  const blob = new Blob([window._configGenerado],{type:'text/javascript'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='config.js'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Navegación entre pasos ─────────────────────────────────────────────────
+function irA(n){
+  [1,2,3,4].forEach(i=>{
+    document.getElementById('pane-'+i).classList.toggle('hidden', i!==n);
+    const st = document.getElementById('s'+i);
+    st.classList.remove('active','done');
+    if(i===n) st.classList.add('active');
+    else if(i<n) st.classList.add('done');
+  });
+  if(n===3) renderModulosSection();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+init();
+</script>
+</body>
+</html>
