@@ -18,7 +18,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query, Header
+from fastapi import APIRouter, HTTPException, Query, Header, Request
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -63,6 +63,34 @@ SESSION_HOURS   = int(os.getenv("SESSION_HOURS", "8"))
 
 # Tokens de sesión activos en memoria {token: {rol, expira}}
 _sesiones: dict = {}
+
+# ── Rate limiting del login (fuerza bruta) ──────────────────────────────────
+# Bloquea por IP después de demasiados intentos fallidos seguidos.
+MAX_INTENTOS_FALLIDOS = 5
+VENTANA_BLOQUEO_MIN = 15
+
+# {ip: [timestamps de intentos fallidos recientes]}
+_intentos_fallidos: dict = {}
+
+
+def _ip_bloqueada(ip: str) -> tuple[bool, int]:
+    """Devuelve (bloqueada, segundos_restantes) para la IP dada."""
+    intentos = _intentos_fallidos.get(ip, [])
+    corte = datetime.utcnow() - timedelta(minutes=VENTANA_BLOQUEO_MIN)
+    intentos = [t for t in intentos if t > corte]
+    _intentos_fallidos[ip] = intentos
+    if len(intentos) >= MAX_INTENTOS_FALLIDOS:
+        restante = intentos[0] + timedelta(minutes=VENTANA_BLOQUEO_MIN) - datetime.utcnow()
+        return True, max(int(restante.total_seconds()), 1)
+    return False, 0
+
+
+def _registrar_intento_fallido(ip: str) -> None:
+    _intentos_fallidos.setdefault(ip, []).append(datetime.utcnow())
+
+
+def _limpiar_intentos(ip: str) -> None:
+    _intentos_fallidos.pop(ip, None)
 
 
 # ── Base de datos ────────────────────────────────────────────────────────────
@@ -272,11 +300,25 @@ def _generar_alertas_si_procede(conn, denuncia_id: int, denuncia: dict):
 # ── Endpoints de autenticación ───────────────────────────────────────────────
 
 @router.post("/denuncias/auth/login", summary="Login con PIN")
-def login(body: LoginRequest):
+def login(body: LoginRequest, request: Request):
     """
     Ingresá el PIN de consultor o compliance officer.
     Devuelve un token de sesión válido por SESSION_HOURS horas.
+
+    Rate limiting: después de MAX_INTENTOS_FALLIDOS intentos fallidos
+    seguidos desde la misma IP, se bloquea por VENTANA_BLOQUEO_MIN minutos.
     """
+    ip = request.client.host if request.client else "desconocida"
+
+    bloqueada, segundos_restantes = _ip_bloqueada(ip)
+    if bloqueada:
+        log.warning("Login bloqueado por rate limit — IP %s, %ss restantes", ip, segundos_restantes)
+        raise HTTPException(
+            status_code=429,
+            detail=f"Demasiados intentos fallidos. Probá de nuevo en {segundos_restantes // 60 + 1} minuto(s).",
+            headers={"Retry-After": str(segundos_restantes)},
+        )
+
     if _pin_expirado():
         raise HTTPException(
             status_code=403,
@@ -284,6 +326,7 @@ def login(body: LoginRequest):
         )
 
     if body.pin == PIN_CONSULTOR:
+        _limpiar_intentos(ip)
         token = _nueva_sesion("consultor")
         _log_sesion("consultor", "login")
         expira = (_sesiones[token]["expira"]).isoformat()
@@ -295,6 +338,7 @@ def login(body: LoginRequest):
             "session_hours": SESSION_HOURS,
         }
     elif body.pin == PIN_COMPLIANCE:
+        _limpiar_intentos(ip)
         token = _nueva_sesion("compliance")
         _log_sesion("compliance", "login")
         expira = (_sesiones[token]["expira"]).isoformat()
@@ -306,6 +350,7 @@ def login(body: LoginRequest):
             "session_hours": SESSION_HOURS,
         }
     else:
+        _registrar_intento_fallido(ip)
         _log_sesion("desconocido", "login_fallido")
         raise HTTPException(status_code=401, detail="PIN incorrecto.")
 
