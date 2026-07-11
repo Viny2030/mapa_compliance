@@ -31,7 +31,10 @@ SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")          # App Password de Gmail
 EMAIL_DESTINO = os.getenv("EMAIL_DESTINO", "ecosistematransparencia@gmail.com")
 
 # ── Carpeta de backups ────────────────────────────────────────────────────────
-SUBMISSIONS_DIR = Path(__file__).parent.parent / "data" / "submissions"
+# SUBMISSIONS_DIR permite apuntar a un Volume persistente de Railway.
+# Si no está seteada, usa la ruta local por defecto (se pierde en cada
+# redeploy si no hay volumen montado — ver readme.md, sección Persistencia).
+SUBMISSIONS_DIR = Path(os.getenv("SUBMISSIONS_DIR") or (Path(__file__).parent.parent / "data" / "submissions"))
 SUBMISSIONS_DIR.mkdir(parents=True, exist_ok=True)
 
 

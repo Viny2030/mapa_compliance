@@ -22,8 +22,11 @@ jobs:
       - name: Instalar dependencias
         run: pip install requests beautifulsoup4 lxml
 
-      - name: Ejecutar ETL alertas y normativa
+      - name: Ejecutar ETL de alertas
         run: python scripts/etl_alertas.py
+
+      - name: Ejecutar ETL de normativa
+        run: python scripts/etl_normativa.py
 
       - name: Commit y push si hay cambios
         uses: stefanzweifel/git-auto-commit-action@v5

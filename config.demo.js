@@ -217,4 +217,22 @@ const CONFIG = {
     iso27701: { habilitado: true, nota: "Demo — empresa procesa datos de personal y clientes" },
     pcidss:   { habilitado: false, nota: "Demo — empresa no procesa tarjetas de pago (sector construcción)" },
   },
+
+  // ── Arquitectura modular ─────────────────────────────────────────────────
+  // Igual que en config.js. Antes config.demo.js no definía esta clave, y
+  // aplicarModulosActivos() no ocultaba ninguna pestaña en modo demo
+  // (?demo=true) — se veían TODAS, incluso módulos apagados por defecto en
+  // clientes reales (ISO 45001, COBIT, SOX). Acá se dejan todas en true a
+  // propósito, para que la demo muestre el catálogo completo a prospects.
+  modulos_activos: {
+    dashboard: true, board: true, planaccion: true, reporte: true, calendario: true,
+    ley27401: true, brasil: true, fcpa: true, ocde: true,
+    lgpd: true, gdpr: true, ccpa: true, iso27701: true,
+    iso27001: true, soc2: true, nis2: true, pcidss: true,
+    iso14001: true, esg: true,
+    iso37001: true, iso45001: true, cobit: true, sox: true,
+    euaiact: true, dora: true,
+    crossmap: true, riesgo: true, capacitacion: true, duediligence: true,
+    internacional: true, rite: true, mejoras: true, legislacion: true, denuncias: true,
+  },
 };

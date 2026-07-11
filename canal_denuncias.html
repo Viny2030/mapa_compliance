@@ -1,697 +1,697 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Canal de Denuncias Â· Compliance</title>
-<style>
-  :root {
-    --primary: #1a3a5c;
-    --accent:  #e8a020;
-    --danger:  #c0392b;
-    --ok:      #27ae60;
-    --bg:      #f4f6f9;
-    --card:    #ffffff;
-    --border:  #dce3ec;
-    --text:    #2c3e50;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
-
-  header {
-    background: var(--primary); color: #fff; padding: 1rem 2rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  header h1 { font-size: 1.2rem; font-weight: 600; }
-  header span { font-size: 0.8rem; opacity: .7; }
-
-  .tabs {
-    display: flex; gap: 0; background: var(--primary);
-    padding: 0 2rem;
-  }
-  .tab {
-    padding: .7rem 1.4rem; cursor: pointer; color: rgba(255,255,255,.6);
-    font-size: .9rem; border-bottom: 3px solid transparent; transition: all .2s;
-  }
-  .tab.active { color: #fff; border-bottom-color: var(--accent); }
-
-  .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
-  }
-  .card h2 { font-size: 1rem; color: var(--primary); margin-bottom: 1rem; }
-
-  label { font-size: .85rem; font-weight: 600; display: block; margin-bottom: .3rem; margin-top: .8rem; }
-  input, textarea, select {
-    width: 100%; padding: .6rem .8rem; border: 1px solid var(--border);
-    border-radius: 6px; font-size: .9rem; background: #fafbfc;
-  }
-  textarea { min-height: 100px; resize: vertical; }
-
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-  .btn {
-    display: inline-block; padding: .7rem 1.6rem; border-radius: 6px;
-    border: none; cursor: pointer; font-size: .9rem; font-weight: 600;
-    margin-top: 1rem; transition: opacity .2s;
-  }
-  .btn:hover { opacity: .85; }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-accent  { background: var(--accent);  color: #fff; }
-  .btn-sm { padding: .4rem .9rem; font-size: .8rem; margin-top: 0; }
-
-  .badge {
-    display: inline-block; padding: .2rem .6rem; border-radius: 20px;
-    font-size: .75rem; font-weight: 700;
-  }
-  .badge-recibida      { background: #eaf4fb; color: #2980b9; }
-  .badge-investigacion { background: #fef9e7; color: #d4ac0d; }
-  .badge-cerrada       { background: #eafaf1; color: var(--ok); }
-  .badge-alta   { background: #fdedec; color: var(--danger); }
-  .badge-media  { background: #fef9e7; color: #d4ac0d; }
-  .badge-baja   { background: #eaf4fb; color: #2980b9; }
-
-  .alerta-item {
-    border-left: 4px solid var(--danger); padding: .7rem 1rem;
-    background: #fdedec; border-radius: 0 6px 6px 0; margin-bottom: .7rem;
-  }
-  .alerta-item.proximo { border-color: var(--accent); background: #fef9e7; }
-  .alerta-item.critico { border-color: #8e44ad; background: #f5eef8; }
-
-  .denuncia-row {
-    border: 1px solid var(--border); border-radius: 6px; padding: 1rem;
-    margin-bottom: .8rem; display: flex; justify-content: space-between; align-items: flex-start;
-  }
-  .denuncia-row .meta { font-size: .78rem; color: #7f8c8d; margin-top: .3rem; }
-
-  .chat-msg {
-    padding: .6rem .9rem; border-radius: 8px; margin-bottom: .5rem; font-size: .88rem;
-  }
-  .chat-msg.compliance  { background: #eaf4fb; border-left: 3px solid var(--primary); }
-  .chat-msg.denunciante { background: #f9f9f9; border-left: 3px solid #95a5a6; }
-
-  .codigo-box {
-    background: var(--primary); color: var(--accent); font-family: monospace;
-    font-size: 1.4rem; letter-spacing: .15rem; padding: 1rem 1.5rem;
-    border-radius: 8px; text-align: center; font-weight: 700;
-  }
-
-  #resultado { display: none; }
-  #panel     { display: none; }
-  #seguimiento-panel { display: none; }
-
-  .hidden { display: none !important; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  .stat-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
-  .stat-card {
-    background: var(--primary); color: #fff; border-radius: 8px;
-    padding: .8rem 1.2rem; flex: 1; min-width: 120px; text-align: center;
-  }
-  .stat-card .num { font-size: 1.6rem; font-weight: 700; }
-  .stat-card .lbl { font-size: .75rem; opacity: .75; }
-
-  .msg { padding: .8rem 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: .88rem; }
-  .msg-ok  { background: #eafaf1; color: var(--ok); border: 1px solid #a9dfbf; }
-  .msg-err { background: #fdedec; color: var(--danger); border: 1px solid #f1948a; }
-
-  /* ââ Login PIN ââ */
-  #login-overlay {
-    position: fixed; inset: 0; background: rgba(26,58,92,.97);
-    display: flex; align-items: center; justify-content: center; z-index: 1000;
-  }
-  #login-overlay.hidden { display: none; }
-  .login-box {
-    background: #fff; border-radius: 12px; padding: 2rem 2.5rem;
-    width: 100%; max-width: 360px; text-align: center;
-  }
-  .login-box h2 { color: var(--primary); font-size: 1.1rem; margin-bottom: .3rem; }
-  .login-box p  { font-size: .82rem; color: #7f8c8d; margin-bottom: 1.2rem; }
-  .pin-input {
-    width: 100%; font-size: 1.8rem; letter-spacing: .4rem; text-align: center;
-    border: 2px solid var(--border); border-radius: 8px; padding: .7rem;
-    font-family: monospace; margin-bottom: .8rem;
-  }
-  .pin-input:focus { border-color: var(--primary); outline: none; }
-  .login-error { color: var(--danger); font-size: .83rem; margin-bottom: .7rem; min-height: 1.2rem; }
-  .rol-badge {
-    display: inline-block; padding: .25rem .8rem; border-radius: 20px;
-    font-size: .78rem; font-weight: 700; margin-bottom: 1rem;
-  }
-  .rol-consultor  { background: #e8f4fd; color: #2980b9; }
-  .rol-compliance { background: #eafaf1; color: var(--ok); }
-  .pin-expira { font-size: .75rem; color: #e8a020; margin-top: .5rem; }
-  #session-bar {
-    background: #0d2137; color: #a8c7e8; font-size: .75rem;
-    padding: .3rem 1rem; display: flex; justify-content: space-between; align-items: center;
-  }
-  #session-bar.hidden { display: none; }
-</style>
-</head>
-<body>
-
-<!-- ââââââââââ LOGIN OVERLAY ââââââââââ -->
-<div id="login-overlay">
-  <div class="login-box">
-    <div style="font-size:2rem;margin-bottom:.5rem">ð</div>
-    <h2>Panel de Compliance</h2>
-    <p>IngresÃ¡ tu PIN para acceder al panel de gestiÃ³n de denuncias.</p>
-    <input type="password" class="pin-input" id="pin-input" maxlength="8"
-      placeholder="â¢â¢â¢â¢" onkeydown="if(event.key==='Enter') doLogin()">
-    <div class="login-error" id="login-error"></div>
-    <button class="btn btn-primary" style="width:100%;margin-top:0" onclick="doLogin()">Ingresar â</button>
-    <div class="pin-expira" id="pin-expira-msg"></div>
-  </div>
-</div>
-
-<!-- ââââââââââ BARRA DE SESIÃN ââââââââââ -->
-<div id="session-bar" class="hidden">
-  <span id="session-rol-badge"></span>
-  <span id="session-expira"></span>
-  <button onclick="doLogout()" style="background:rgba(255,255,255,.1);border:none;color:#a8c7e8;font-size:.75rem;padding:.2rem .6rem;border-radius:4px;cursor:pointer">Cerrar sesiÃ³n</button>
-</div>
-
-
-<header>
-  <div>
-    <h1>ð Canal de Denuncias</h1>
-    <span>Ecosistema Transparencia Â· Ley 2/2023 / Ley 27.401</span>
-  </div>
-</header>
-
-<div class="tabs">
-  <div class="tab active" onclick="showTab('denunciar')">Presentar Denuncia</div>
-  <div class="tab" onclick="showTab('seguimiento')">Consultar Estado</div>
-  <div class="tab" onclick="mostrarPanelOLogin()">Panel Compliance ð</div>
-</div>
-
-<!-- ââââââââââ TAB 1: DENUNCIAR ââââââââââ -->
-<div id="tab-denunciar" class="tab-content active">
-<div class="container">
-  <div class="card">
-    <h2>ð Nueva Denuncia</h2>
-
-    <div id="msg-denuncia"></div>
-
-    <label>CategorÃ­a *</label>
-    <select id="categoria">
-      <option value="">â Seleccione â</option>
-      <option value="corrupcion">CorrupciÃ³n / Soborno</option>
-      <option value="acoso">Acoso laboral / sexual</option>
-      <option value="fraude">Fraude / FalsificaciÃ³n</option>
-      <option value="conflicto_interes">Conflicto de interÃ©s</option>
-      <option value="datos">ViolaciÃ³n de datos</option>
-      <option value="ambiental">Incumplimiento ambiental</option>
-      <option value="otro">Otro</option>
-    </select>
-
-    <label>DescripciÃ³n de los hechos *</label>
-    <textarea id="descripcion" placeholder="Describa los hechos con el mayor detalle posible (quÃ©, cuÃ¡ndo, quiÃ©nes, dÃ³nde)â¦"></textarea>
-
-    <div class="row">
-      <div>
-        <label>Prioridad sugerida</label>
-        <select id="prioridad">
-          <option value="media">Media</option>
-          <option value="alta">Alta â riesgo inmediato</option>
-          <option value="baja">Baja â informativa</option>
-        </select>
-      </div>
-      <div>
-        <label>Ãrea relacionada (opcional)</label>
-        <input type="text" id="area" placeholder="ej: Finanzas, RRHH, TIâ¦">
-      </div>
-    </div>
-
-    <label>Â¿Denuncia anÃ³nima?</label>
-    <select id="es_anonima" onchange="toggleContacto()">
-      <option value="true">SÃ­ â prefiero mantener el anonimato</option>
-      <option value="false">No â incluyo mis datos de contacto</option>
-    </select>
-
-    <div id="contacto-box" class="hidden">
-      <label>Datos de contacto</label>
-      <input type="text" id="datos_contacto" placeholder="Email o telÃ©fono de contacto">
-    </div>
-
-    <button class="btn btn-primary" onclick="enviarDenuncia()">Enviar Denuncia</button>
-  </div>
-
-  <div id="resultado" class="card">
-    <h2>â Denuncia registrada</h2>
-    <p style="margin-bottom:1rem;font-size:.9rem">
-      Guarde este cÃ³digo. Es <strong>la Ãºnica forma</strong> de consultar y comunicarse sobre su caso.
-    </p>
-    <div class="codigo-box" id="codigo-generado">â</div>
-    <div style="margin-top:1rem;font-size:.82rem;color:#7f8c8d">
-      Plazo de acuse de recibo: <strong id="plazo-acuse">â</strong><br>
-      Plazo mÃ¡ximo de resoluciÃ³n: <strong id="plazo-cierre">â</strong>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ââââââââââ TAB 2: SEGUIMIENTO ââââââââââ -->
-<div id="tab-seguimiento" class="tab-content">
-<div class="container">
-  <div class="card">
-    <h2>ð Consultar estado de mi caso</h2>
-    <label>CÃ³digo de seguimiento</label>
-    <input type="text" id="codigo-buscar" placeholder="ej: A3F7B2C1" maxlength="8"
-           style="text-transform:uppercase;font-family:monospace;font-size:1.1rem;letter-spacing:.1rem">
-    <button class="btn btn-primary" onclick="consultarSeguimiento()">Consultar</button>
-  </div>
-
-  <div id="seguimiento-panel">
-    <div class="card" id="seg-info"></div>
-    <div class="card">
-      <h2>ð¬ ComunicaciÃ³n con el equipo de Compliance</h2>
-      <div id="chat-mensajes" style="margin-bottom:1rem;max-height:300px;overflow-y:auto"></div>
-      <textarea id="nuevo-mensaje" placeholder="Agregue informaciÃ³n adicional o consulte el estadoâ¦" style="min-height:70px"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:.5rem" onclick="enviarMensaje()">Enviar mensaje</button>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ââââââââââ TAB 3: PANEL COMPLIANCE ââââââââââ -->
-<div id="tab-panel" class="tab-content">
-<div class="container">
-
-  <div class="stat-row" id="stats-row">
-    <div class="stat-card"><div class="num" id="stat-total">â</div><div class="lbl">Total</div></div>
-    <div class="stat-card"><div class="num" id="stat-recibidas">â</div><div class="lbl">Recibidas</div></div>
-    <div class="stat-card"><div class="num" id="stat-invest">â</div><div class="lbl">En investigaciÃ³n</div></div>
-    <div class="stat-card"><div class="num" id="stat-cerradas">â</div><div class="lbl">Cerradas</div></div>
-    <div class="stat-card"><div class="num" id="stat-alertas">â</div><div class="lbl">Alertas</div></div>
-  </div>
-
-  <div class="card" id="alertas-card">
-    <h2>ð¨ Alertas activas</h2>
-    <div id="alertas-list"><em style="color:#aaa;font-size:.85rem">Cargandoâ¦</em></div>
-  </div>
-
-  <div class="card">
-    <h2>ð Denuncias</h2>
-    <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
-      <select id="filtro-estado" onchange="cargarPanel()" style="width:auto;padding:.4rem .7rem;font-size:.82rem">
-        <option value="">Todos los estados</option>
-        <option value="recibida">Recibida</option>
-        <option value="en_investigacion">En investigaciÃ³n</option>
-        <option value="cerrada">Cerrada</option>
-      </select>
-      <select id="filtro-prioridad" onchange="cargarPanel()" style="width:auto;padding:.4rem .7rem;font-size:.82rem">
-        <option value="">Todas las prioridades</option>
-        <option value="alta">Alta</option>
-        <option value="media">Media</option>
-        <option value="baja">Baja</option>
-      </select>
-    </div>
-    <div id="denuncias-list"></div>
-  </div>
-
-</div>
-</div>
-
-
-<!-- ââ Modal actualizar denuncia ââ -->
-<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center">
-  <div style="background:#fff;border-radius:10px;padding:1.5rem;width:420px;max-width:95%">
-    <h3 style="margin-bottom:1rem;color:var(--primary)">Actualizar denuncia #<span id="modal-id"></span></h3>
-    <label>Estado</label>
-    <select id="modal-estado">
-      <option value="recibida">Recibida</option>
-      <option value="en_investigacion">En investigaciÃ³n</option>
-      <option value="cerrada">Cerrada</option>
-    </select>
-    <label>Prioridad</label>
-    <select id="modal-prioridad">
-      <option value="alta">Alta</option>
-      <option value="media">Media</option>
-      <option value="baja">Baja</option>
-    </select>
-    <label>Mensaje para el denunciante</label>
-    <textarea id="modal-mensaje" placeholder="Opcional: mensaje de actualizaciÃ³nâ¦" style="min-height:60px"></textarea>
-    <div style="display:flex;gap:.5rem;margin-top:.8rem">
-      <button class="btn btn-primary btn-sm" onclick="guardarActualizacion()">Guardar</button>
-      <button class="btn btn-sm" style="background:#eee" onclick="cerrarModal()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-
-<script>
-const API = '/api/v1';
-let sessionToken = localStorage.getItem('denuncias_token') || '';
-let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
-let currentDenunciaId = null;
-let currentCodigo = null;
-
-// ââ Tabs ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-function showTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  document.querySelectorAll('.tab')[['denunciar','seguimiento','panel'].indexOf(name)].classList.add('active');
-  if (name === 'panel') { /* panel cargado por mostrarPanelOLogin */ }
-}
-
-// ââ Tab 1: Denunciar ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-function toggleContacto() {
-  const anon = document.getElementById('es_anonima').value === 'true';
-  document.getElementById('contacto-box').classList.toggle('hidden', anon);
-}
-
-async function enviarDenuncia() {
-  const cat  = document.getElementById('categoria').value;
-  const desc = document.getElementById('descripcion').value.trim();
-  const msgDiv = document.getElementById('msg-denuncia');
-
-  if (!cat || !desc) {
-    msgDiv.innerHTML = '<div class="msg msg-err">â  CategorÃ­a y descripciÃ³n son obligatorias.</div>';
-    return;
-  }
-
-  const body = {
-    categoria: cat,
-    descripcion: desc,
-    prioridad: document.getElementById('prioridad').value,
-    area_relacionada: document.getElementById('area').value || null,
-    es_anonima: document.getElementById('es_anonima').value === 'true',
-    datos_contacto: document.getElementById('datos_contacto').value || null,
-  };
-
-  const r = await fetch(`${API}/denuncias`, {
-    method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-  });
-  const data = await r.json();
-
-  if (!r.ok) {
-    msgDiv.innerHTML = `<div class="msg msg-err">â  ${data.detail || 'Error al enviar.'}</div>`;
-    return;
-  }
-
-  document.getElementById('codigo-generado').textContent = data.codigo_seguimiento;
-  document.getElementById('plazo-acuse').textContent = formatFecha(data.fecha_limite_acuse);
-  document.getElementById('plazo-cierre').textContent = formatFecha(data.fecha_limite_cierre);
-  document.getElementById('resultado').style.display = 'block';
-  msgDiv.innerHTML = '';
-  window.scrollTo(0, document.getElementById('resultado').offsetTop - 20);
-}
-
-// ââ Tab 2: Seguimiento ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-async function consultarSeguimiento() {
-  const codigo = document.getElementById('codigo-buscar').value.trim().toUpperCase();
-  if (!codigo) return;
-  currentCodigo = codigo;
-
-  const r = await fetch(`${API}/denuncias/seguimiento/${codigo}`);
-  if (!r.ok) {
-    alert('CÃ³digo no encontrado. Verifique e intente nuevamente.');
-    return;
-  }
-  const data = await r.json();
-  const d = data.denuncia;
-
-  document.getElementById('seg-info').innerHTML = `
-    <h2>Caso ${d.codigo_seguimiento}</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.8rem">
-      <div><span style="font-size:.78rem;color:#7f8c8d">Estado</span><br>
-        <span class="badge badge-${d.estado === 'en_investigacion' ? 'investigacion' : d.estado}">
-          ${estadoLabel(d.estado)}
-        </span></div>
-      <div><span style="font-size:.78rem;color:#7f8c8d">Prioridad</span><br>
-        <span class="badge badge-${d.prioridad}">${d.prioridad.toUpperCase()}</span></div>
-      <div><span style="font-size:.78rem;color:#7f8c8d">CategorÃ­a</span><br>${d.categoria}</div>
-      <div><span style="font-size:.78rem;color:#7f8c8d">Ãrea</span><br>${d.area_relacionada || 'â'}</div>
-      <div><span style="font-size:.78rem;color:#7f8c8d">Fecha creaciÃ³n</span><br>${formatFecha(d.fecha_creacion)}</div>
-      <div><span style="font-size:.78rem;color:#7f8c8d">LÃ­mite resoluciÃ³n</span><br>${formatFecha(d.fecha_limite_cierre)}</div>
-    </div>
-  `;
-
-  const chatDiv = document.getElementById('chat-mensajes');
-  if (data.actualizaciones.length === 0) {
-    chatDiv.innerHTML = '<em style="color:#aaa;font-size:.82rem">Sin mensajes aÃºn.</em>';
-  } else {
-    chatDiv.innerHTML = data.actualizaciones.slice().reverse().map(m => `
-      <div class="chat-msg ${m.autor}">
-        <strong>${m.autor === 'compliance' ? 'ð¢ Compliance' : 'ð¤ Denunciante'}</strong>
-        <span style="float:right;font-size:.75rem;color:#999">${formatFecha(m.fecha)}</span><br>
-        ${m.mensaje}
-      </div>
-    `).join('');
-  }
-
-  document.getElementById('seguimiento-panel').style.display = 'block';
-}
-
-async function enviarMensaje() {
-  const msg = document.getElementById('nuevo-mensaje').value.trim();
-  if (!msg || !currentCodigo) return;
-
-  const r = await fetch(`${API}/denuncias/seguimiento/${currentCodigo}/mensaje`, {
-    method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ mensaje: msg, autor: 'denunciante' })
-  });
-  if (r.ok) {
-    document.getElementById('nuevo-mensaje').value = '';
-    consultarSeguimiento();
-  }
-}
-
-// ââ Auth / Login ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-
-async function doLogin() {
-  const pin = document.getElementById('pin-input').value.trim();
-  if (!pin) return;
-  document.getElementById('login-error').textContent = '';
-
-  try {
-    const r = await fetch(`${API}/denuncias/auth/login`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ pin })
-    });
-    if (!r.ok) {
-      const e = await r.json();
-      document.getElementById('login-error').textContent = e.detail || 'PIN incorrecto.';
-      document.getElementById('pin-input').value = '';
-      return;
-    }
-    const data = await r.json();
-    sessionToken = data.token;
-    sessionRol   = data.rol;
-    localStorage.setItem('denuncias_token', sessionToken);
-    localStorage.setItem('denuncias_rol',   sessionRol);
-
-    document.getElementById('login-overlay').classList.add('hidden');
-    mostrarSessionBar(data);
-    showTab('panel');
-    cargarPanel();
-  } catch(e) {
-    document.getElementById('login-error').textContent = 'Error de conexiÃ³n.';
-  }
-}
-
-async function doLogout() {
-  if (sessionToken) {
-    await fetch(`${API}/denuncias/auth/logout`, {
-      method: 'POST', headers: {'X-Session-Token': sessionToken}
-    }).catch(() => {});
-  }
-  sessionToken = '';
-  sessionRol   = '';
-  localStorage.removeItem('denuncias_token');
-  localStorage.removeItem('denuncias_rol');
-  document.getElementById('session-bar').classList.add('hidden');
-  showTab('denunciar');
-}
-
-function mostrarSessionBar(data) {
-  const rolLabels = { consultor: 'ðµ Consultor', compliance: 'ð¢ Compliance Officer' };
-  const expira = new Date(data.expira || data.expira_en || '');
-  document.getElementById('session-rol-badge').textContent = rolLabels[data.rol] || data.rol;
-  document.getElementById('session-expira').textContent =
-    `SesiÃ³n vÃ¡lida hasta ${expira.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}`;
-  document.getElementById('session-bar').classList.remove('hidden');
-}
-
-function mostrarPanelOLogin() {
-  if (sessionToken) {
-    showTab('panel');
-    cargarPanel();
-  } else {
-    document.getElementById('login-overlay').classList.remove('hidden');
-    document.getElementById('pin-input').focus();
-  }
-}
-
-// Verificar sesiÃ³n guardada al cargar
-async function verificarSesionGuardada() {
-  if (!sessionToken) return;
-  try {
-    const r = await fetch(`${API}/denuncias/auth/estado`, {
-      headers: {'X-Session-Token': sessionToken}
-    });
-    if (r.ok) {
-      const data = await r.json();
-      mostrarSessionBar({ rol: data.rol, expira: data.expira });
-      // Advertencia si el PIN expira pronto
-      if (data.pin_expira_en_dias <= 5) {
-        document.getElementById('pin-expira-msg').textContent =
-          `â ï¸ El PIN expira en ${data.pin_expira_en_dias} dÃ­as. Actualizarlo en .env`;
-      }
-    } else {
-      // SesiÃ³n expirada
-      sessionToken = '';
-      localStorage.removeItem('denuncias_token');
-      localStorage.removeItem('denuncias_rol');
-    }
-  } catch(e) {}
-}
-
-function authHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    'X-Session-Token': sessionToken
-  };
-}
-
-// ââ Tab 3: Panel Compliance âââââââââââââââââââââââââââââââââââââââââââââââââ
-async function cargarPanel() {
-  const estado    = document.getElementById('filtro-estado').value;
-  const prioridad = document.getElementById('filtro-prioridad').value;
-
-  let url = `${API}/denuncias?limit=100`;
-  if (estado)    url += `&estado=${estado}`;
-  if (prioridad) url += `&prioridad=${prioridad}`;
-
-  const opts = { headers: authHeaders() };
-  const [rDen, rAlerta] = await Promise.all([
-    fetch(url, opts),
-    fetch(`${API}/denuncias/alertas`, opts)
-  ]);
-  const dataDen    = await rDen.json();
-  const dataAlerta = await rAlerta.json();
-
-  // Stats
-  const all = dataDen.denuncias;
-  document.getElementById('stat-total').textContent     = dataDen.total;
-  document.getElementById('stat-recibidas').textContent = all.filter(d => d.estado === 'recibida').length;
-  document.getElementById('stat-invest').textContent    = all.filter(d => d.estado === 'en_investigacion').length;
-  document.getElementById('stat-cerradas').textContent  = all.filter(d => d.estado === 'cerrada').length;
-  document.getElementById('stat-alertas').textContent   = dataAlerta.total;
-
-  // Alertas
-  const aDiv = document.getElementById('alertas-list');
-  if (dataAlerta.total === 0) {
-    aDiv.innerHTML = '<span style="color:#27ae60;font-size:.88rem">â Sin alertas activas.</span>';
-  } else {
-    aDiv.innerHTML = dataAlerta.alertas.map(a => {
-      const cls = a.tipo === 'plazo_acuse_vencido' ? '' :
-                  a.tipo === 'plazo_respuesta_proximo' ? 'proximo' : 'critico';
-      const icon = a.tipo === 'plazo_acuse_vencido' ? 'â°' :
-                   a.tipo === 'plazo_respuesta_proximo' ? 'â ï¸' : 'ð´';
-      return `<div class="alerta-item ${cls}">
-        ${icon} <strong>${tipoAlertaLabel(a.tipo)}</strong>
-        â Caso <code>${a.codigo_seguimiento}</code> Â· ${a.categoria} Â· ${a.area_relacionada || 'â'}
-        <span style="float:right;font-size:.75rem;color:#888">${formatFecha(a.fecha_generada)}</span>
-        <br><button class="btn btn-sm" style="background:#eee;margin-top:.3rem"
-          onclick="marcarLeida(${a.id})">Marcar leÃ­da</button>
-      </div>`;
-    }).join('');
-  }
-
-  // Denuncias
-  const dDiv = document.getElementById('denuncias-list');
-  if (all.length === 0) {
-    dDiv.innerHTML = '<em style="color:#aaa;font-size:.85rem">Sin denuncias con los filtros seleccionados.</em>';
-  } else {
-    dDiv.innerHTML = all.map(d => `
-      <div class="denuncia-row">
-        <div>
-          <code style="font-size:.9rem">${d.codigo_seguimiento}</code>
-          <span class="badge badge-${d.estado === 'en_investigacion' ? 'investigacion' : d.estado}" style="margin-left:.5rem">
-            ${estadoLabel(d.estado)}
-          </span>
-          <span class="badge badge-${d.prioridad}" style="margin-left:.3rem">${d.prioridad.toUpperCase()}</span>
-          <br>
-          <span style="font-size:.88rem">${d.categoria}${d.area_relacionada ? ' Â· ' + d.area_relacionada : ''}</span>
-          <div class="meta">${formatFecha(d.fecha_creacion)} Â· Cierre: ${formatFecha(d.fecha_limite_cierre)}</div>
-          <div style="font-size:.82rem;margin-top:.3rem;color:#555;max-width:500px">${d.descripcion.slice(0,120)}${d.descripcion.length > 120 ? 'â¦' : ''}</div>
-        </div>
-        <button class="btn btn-sm btn-primary" onclick="abrirModal(${d.id}, '${d.estado}', '${d.prioridad}')">Gestionar</button>
-      </div>
-    `).join('');
-  }
-}
-
-async function marcarLeida(id) {
-  await fetch(`${API}/denuncias/alertas/${id}/leer`, { method: 'PATCH', headers: authHeaders() });
-  cargarPanel();
-}
-
-// ââ Modal âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-function abrirModal(id, estado, prioridad) {
-  currentDenunciaId = id;
-  document.getElementById('modal-id').textContent = id;
-  document.getElementById('modal-estado').value   = estado;
-  document.getElementById('modal-prioridad').value = prioridad;
-  document.getElementById('modal-mensaje').value  = '';
-  document.getElementById('modal').style.display  = 'flex';
-}
-function cerrarModal() {
-  document.getElementById('modal').style.display = 'none';
-}
-
-async function guardarActualizacion() {
-  const estado    = document.getElementById('modal-estado').value;
-  const prioridad = document.getElementById('modal-prioridad').value;
-  const mensaje   = document.getElementById('modal-mensaje').value.trim();
-
-  await fetch(`${API}/denuncias/${currentDenunciaId}`, {
-    method: 'PATCH', headers: authHeaders(),
-    body: JSON.stringify({ estado, prioridad })
-  });
-
-  if (mensaje) {
-    // Buscar el cÃ³digo de la denuncia actual
-    const r = await fetch(`${API}/denuncias?limit=200`, { headers: authHeaders() });
-    const d = await r.json();
-    const den = d.denuncias.find(x => x.id === currentDenunciaId);
-    if (den) {
-      await fetch(`${API}/denuncias/seguimiento/${den.codigo_seguimiento}/mensaje`, {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ mensaje, autor: 'compliance' })
-      });
-    }
-  }
-
-  cerrarModal();
-  cargarPanel();
-}
-
-// ââ Helpers âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-function formatFecha(iso) {
-  if (!iso) return 'â';
-  const d = new Date(iso);
-  return d.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
-}
-function estadoLabel(e) {
-  return { recibida: 'Recibida', en_investigacion: 'En investigaciÃ³n', cerrada: 'Cerrada' }[e] || e;
-}
-function tipoAlertaLabel(t) {
-  return {
-    plazo_acuse_vencido:     'Plazo de acuse vencido',
-    plazo_respuesta_proximo: 'Plazo de respuesta prÃ³ximo',
-    caso_critico:            'Caso crÃ­tico â revisar urgente'
-  }[t] || t;
-}
-
-// Inicializar
-verificarSesionGuardada();
-</script>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canal de Denuncias · Compliance</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent:  #e8a020;
+    --danger:  #c0392b;
+    --ok:      #27ae60;
+    --bg:      #f4f6f9;
+    --card:    #ffffff;
+    --border:  #dce3ec;
+    --text:    #2c3e50;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  header {
+    background: var(--primary); color: #fff; padding: 1rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 600; }
+  header span { font-size: 0.8rem; opacity: .7; }
+
+  .tabs {
+    display: flex; gap: 0; background: var(--primary);
+    padding: 0 2rem;
+  }
+  .tab {
+    padding: .7rem 1.4rem; cursor: pointer; color: rgba(255,255,255,.6);
+    font-size: .9rem; border-bottom: 3px solid transparent; transition: all .2s;
+  }
+  .tab.active { color: #fff; border-bottom-color: var(--accent); }
+
+  .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .card h2 { font-size: 1rem; color: var(--primary); margin-bottom: 1rem; }
+
+  label { font-size: .85rem; font-weight: 600; display: block; margin-bottom: .3rem; margin-top: .8rem; }
+  input, textarea, select {
+    width: 100%; padding: .6rem .8rem; border: 1px solid var(--border);
+    border-radius: 6px; font-size: .9rem; background: #fafbfc;
+  }
+  textarea { min-height: 100px; resize: vertical; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .btn {
+    display: inline-block; padding: .7rem 1.6rem; border-radius: 6px;
+    border: none; cursor: pointer; font-size: .9rem; font-weight: 600;
+    margin-top: 1rem; transition: opacity .2s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-accent  { background: var(--accent);  color: #fff; }
+  .btn-sm { padding: .4rem .9rem; font-size: .8rem; margin-top: 0; }
+
+  .badge {
+    display: inline-block; padding: .2rem .6rem; border-radius: 20px;
+    font-size: .75rem; font-weight: 700;
+  }
+  .badge-recibida      { background: #eaf4fb; color: #2980b9; }
+  .badge-investigacion { background: #fef9e7; color: #d4ac0d; }
+  .badge-cerrada       { background: #eafaf1; color: var(--ok); }
+  .badge-alta   { background: #fdedec; color: var(--danger); }
+  .badge-media  { background: #fef9e7; color: #d4ac0d; }
+  .badge-baja   { background: #eaf4fb; color: #2980b9; }
+
+  .alerta-item {
+    border-left: 4px solid var(--danger); padding: .7rem 1rem;
+    background: #fdedec; border-radius: 0 6px 6px 0; margin-bottom: .7rem;
+  }
+  .alerta-item.proximo { border-color: var(--accent); background: #fef9e7; }
+  .alerta-item.critico { border-color: #8e44ad; background: #f5eef8; }
+
+  .denuncia-row {
+    border: 1px solid var(--border); border-radius: 6px; padding: 1rem;
+    margin-bottom: .8rem; display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .denuncia-row .meta { font-size: .78rem; color: #7f8c8d; margin-top: .3rem; }
+
+  .chat-msg {
+    padding: .6rem .9rem; border-radius: 8px; margin-bottom: .5rem; font-size: .88rem;
+  }
+  .chat-msg.compliance  { background: #eaf4fb; border-left: 3px solid var(--primary); }
+  .chat-msg.denunciante { background: #f9f9f9; border-left: 3px solid #95a5a6; }
+
+  .codigo-box {
+    background: var(--primary); color: var(--accent); font-family: monospace;
+    font-size: 1.4rem; letter-spacing: .15rem; padding: 1rem 1.5rem;
+    border-radius: 8px; text-align: center; font-weight: 700;
+  }
+
+  #resultado { display: none; }
+  #panel     { display: none; }
+  #seguimiento-panel { display: none; }
+
+  .hidden { display: none !important; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .stat-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .stat-card {
+    background: var(--primary); color: #fff; border-radius: 8px;
+    padding: .8rem 1.2rem; flex: 1; min-width: 120px; text-align: center;
+  }
+  .stat-card .num { font-size: 1.6rem; font-weight: 700; }
+  .stat-card .lbl { font-size: .75rem; opacity: .75; }
+
+  .msg { padding: .8rem 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: .88rem; }
+  .msg-ok  { background: #eafaf1; color: var(--ok); border: 1px solid #a9dfbf; }
+  .msg-err { background: #fdedec; color: var(--danger); border: 1px solid #f1948a; }
+
+  /* ── Login PIN ── */
+  #login-overlay {
+    position: fixed; inset: 0; background: rgba(26,58,92,.97);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+  #login-overlay.hidden { display: none; }
+  .login-box {
+    background: #fff; border-radius: 12px; padding: 2rem 2.5rem;
+    width: 100%; max-width: 360px; text-align: center;
+  }
+  .login-box h2 { color: var(--primary); font-size: 1.1rem; margin-bottom: .3rem; }
+  .login-box p  { font-size: .82rem; color: #7f8c8d; margin-bottom: 1.2rem; }
+  .pin-input {
+    width: 100%; font-size: 1.8rem; letter-spacing: .4rem; text-align: center;
+    border: 2px solid var(--border); border-radius: 8px; padding: .7rem;
+    font-family: monospace; margin-bottom: .8rem;
+  }
+  .pin-input:focus { border-color: var(--primary); outline: none; }
+  .login-error { color: var(--danger); font-size: .83rem; margin-bottom: .7rem; min-height: 1.2rem; }
+  .rol-badge {
+    display: inline-block; padding: .25rem .8rem; border-radius: 20px;
+    font-size: .78rem; font-weight: 700; margin-bottom: 1rem;
+  }
+  .rol-consultor  { background: #e8f4fd; color: #2980b9; }
+  .rol-compliance { background: #eafaf1; color: var(--ok); }
+  .pin-expira { font-size: .75rem; color: #e8a020; margin-top: .5rem; }
+  #session-bar {
+    background: #0d2137; color: #a8c7e8; font-size: .75rem;
+    padding: .3rem 1rem; display: flex; justify-content: space-between; align-items: center;
+  }
+  #session-bar.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN OVERLAY ══════════ -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div style="font-size:2rem;margin-bottom:.5rem">🔐</div>
+    <h2>Panel de Compliance</h2>
+    <p>Ingresá tu PIN para acceder al panel de gestión de denuncias.</p>
+    <input type="password" class="pin-input" id="pin-input" maxlength="8"
+      placeholder="••••" onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-error" id="login-error"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:0" onclick="doLogin()">Ingresar →</button>
+    <div class="pin-expira" id="pin-expira-msg"></div>
+  </div>
+</div>
+
+<!-- ══════════ BARRA DE SESIÓN ══════════ -->
+<div id="session-bar" class="hidden">
+  <span id="session-rol-badge"></span>
+  <span id="session-expira"></span>
+  <button onclick="doLogout()" style="background:rgba(255,255,255,.1);border:none;color:#a8c7e8;font-size:.75rem;padding:.2rem .6rem;border-radius:4px;cursor:pointer">Cerrar sesión</button>
+</div>
+
+
+<header>
+  <div>
+    <h1>🔒 Canal de Denuncias</h1>
+    <span>Ecosistema Transparencia · Ley 2/2023 / Ley 27.401</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('denunciar')">Presentar Denuncia</div>
+  <div class="tab" onclick="showTab('seguimiento')">Consultar Estado</div>
+  <div class="tab" onclick="mostrarPanelOLogin()">Panel Compliance 🔐</div>
+</div>
+
+<!-- ══════════ TAB 1: DENUNCIAR ══════════ -->
+<div id="tab-denunciar" class="tab-content active">
+<div class="container">
+  <div class="card">
+    <h2>📝 Nueva Denuncia</h2>
+
+    <div id="msg-denuncia"></div>
+
+    <label>Categoría *</label>
+    <select id="categoria">
+      <option value="">— Seleccione —</option>
+      <option value="corrupcion">Corrupción / Soborno</option>
+      <option value="acoso">Acoso laboral / sexual</option>
+      <option value="fraude">Fraude / Falsificación</option>
+      <option value="conflicto_interes">Conflicto de interés</option>
+      <option value="datos">Violación de datos</option>
+      <option value="ambiental">Incumplimiento ambiental</option>
+      <option value="otro">Otro</option>
+    </select>
+
+    <label>Descripción de los hechos *</label>
+    <textarea id="descripcion" placeholder="Describa los hechos con el mayor detalle posible (qué, cuándo, quiénes, dónde)…"></textarea>
+
+    <div class="row">
+      <div>
+        <label>Prioridad sugerida</label>
+        <select id="prioridad">
+          <option value="media">Media</option>
+          <option value="alta">Alta — riesgo inmediato</option>
+          <option value="baja">Baja — informativa</option>
+        </select>
+      </div>
+      <div>
+        <label>Área relacionada (opcional)</label>
+        <input type="text" id="area" placeholder="ej: Finanzas, RRHH, TI…">
+      </div>
+    </div>
+
+    <label>¿Denuncia anónima?</label>
+    <select id="es_anonima" onchange="toggleContacto()">
+      <option value="true">Sí — prefiero mantener el anonimato</option>
+      <option value="false">No — incluyo mis datos de contacto</option>
+    </select>
+
+    <div id="contacto-box" class="hidden">
+      <label>Datos de contacto</label>
+      <input type="text" id="datos_contacto" placeholder="Email o teléfono de contacto">
+    </div>
+
+    <button class="btn btn-primary" onclick="enviarDenuncia()">Enviar Denuncia</button>
+  </div>
+
+  <div id="resultado" class="card">
+    <h2>✅ Denuncia registrada</h2>
+    <p style="margin-bottom:1rem;font-size:.9rem">
+      Guarde este código. Es <strong>la única forma</strong> de consultar y comunicarse sobre su caso.
+    </p>
+    <div class="codigo-box" id="codigo-generado">—</div>
+    <div style="margin-top:1rem;font-size:.82rem;color:#7f8c8d">
+      Plazo de acuse de recibo: <strong id="plazo-acuse">—</strong><br>
+      Plazo máximo de resolución: <strong id="plazo-cierre">—</strong>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ TAB 2: SEGUIMIENTO ══════════ -->
+<div id="tab-seguimiento" class="tab-content">
+<div class="container">
+  <div class="card">
+    <h2>🔍 Consultar estado de mi caso</h2>
+    <label>Código de seguimiento</label>
+    <input type="text" id="codigo-buscar" placeholder="ej: A3F7B2C1" maxlength="8"
+           style="text-transform:uppercase;font-family:monospace;font-size:1.1rem;letter-spacing:.1rem">
+    <button class="btn btn-primary" onclick="consultarSeguimiento()">Consultar</button>
+  </div>
+
+  <div id="seguimiento-panel">
+    <div class="card" id="seg-info"></div>
+    <div class="card">
+      <h2>💬 Comunicación con el equipo de Compliance</h2>
+      <div id="chat-mensajes" style="margin-bottom:1rem;max-height:300px;overflow-y:auto"></div>
+      <textarea id="nuevo-mensaje" placeholder="Agregue información adicional o consulte el estado…" style="min-height:70px"></textarea>
+      <button class="btn btn-accent btn-sm" style="margin-top:.5rem" onclick="enviarMensaje()">Enviar mensaje</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ TAB 3: PANEL COMPLIANCE ══════════ -->
+<div id="tab-panel" class="tab-content">
+<div class="container">
+
+  <div class="stat-row" id="stats-row">
+    <div class="stat-card"><div class="num" id="stat-total">—</div><div class="lbl">Total</div></div>
+    <div class="stat-card"><div class="num" id="stat-recibidas">—</div><div class="lbl">Recibidas</div></div>
+    <div class="stat-card"><div class="num" id="stat-invest">—</div><div class="lbl">En investigación</div></div>
+    <div class="stat-card"><div class="num" id="stat-cerradas">—</div><div class="lbl">Cerradas</div></div>
+    <div class="stat-card"><div class="num" id="stat-alertas">—</div><div class="lbl">Alertas</div></div>
+  </div>
+
+  <div class="card" id="alertas-card">
+    <h2>🚨 Alertas activas</h2>
+    <div id="alertas-list"><em style="color:#aaa;font-size:.85rem">Cargando…</em></div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Denuncias</h2>
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+      <select id="filtro-estado" onchange="cargarPanel()" style="width:auto;padding:.4rem .7rem;font-size:.82rem">
+        <option value="">Todos los estados</option>
+        <option value="recibida">Recibida</option>
+        <option value="en_investigacion">En investigación</option>
+        <option value="cerrada">Cerrada</option>
+      </select>
+      <select id="filtro-prioridad" onchange="cargarPanel()" style="width:auto;padding:.4rem .7rem;font-size:.82rem">
+        <option value="">Todas las prioridades</option>
+        <option value="alta">Alta</option>
+        <option value="media">Media</option>
+        <option value="baja">Baja</option>
+      </select>
+    </div>
+    <div id="denuncias-list"></div>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ══ Modal actualizar denuncia ══ -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:1.5rem;width:420px;max-width:95%">
+    <h3 style="margin-bottom:1rem;color:var(--primary)">Actualizar denuncia #<span id="modal-id"></span></h3>
+    <label>Estado</label>
+    <select id="modal-estado">
+      <option value="recibida">Recibida</option>
+      <option value="en_investigacion">En investigación</option>
+      <option value="cerrada">Cerrada</option>
+    </select>
+    <label>Prioridad</label>
+    <select id="modal-prioridad">
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select>
+    <label>Mensaje para el denunciante</label>
+    <textarea id="modal-mensaje" placeholder="Opcional: mensaje de actualización…" style="min-height:60px"></textarea>
+    <div style="display:flex;gap:.5rem;margin-top:.8rem">
+      <button class="btn btn-primary btn-sm" onclick="guardarActualizacion()">Guardar</button>
+      <button class="btn btn-sm" style="background:#eee" onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const API = '/api/v1';
+let sessionToken = localStorage.getItem('denuncias_token') || '';
+let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
+let currentDenunciaId = null;
+let currentCodigo = null;
+
+// ── Tabs ────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab')[['denunciar','seguimiento','panel'].indexOf(name)].classList.add('active');
+  if (name === 'panel') { /* panel cargado por mostrarPanelOLogin */ }
+}
+
+// ── Tab 1: Denunciar ────────────────────────────────────────────────────────
+function toggleContacto() {
+  const anon = document.getElementById('es_anonima').value === 'true';
+  document.getElementById('contacto-box').classList.toggle('hidden', anon);
+}
+
+async function enviarDenuncia() {
+  const cat  = document.getElementById('categoria').value;
+  const desc = document.getElementById('descripcion').value.trim();
+  const msgDiv = document.getElementById('msg-denuncia');
+
+  if (!cat || !desc) {
+    msgDiv.innerHTML = '<div class="msg msg-err">⚠ Categoría y descripción son obligatorias.</div>';
+    return;
+  }
+
+  const body = {
+    categoria: cat,
+    descripcion: desc,
+    prioridad: document.getElementById('prioridad').value,
+    area_relacionada: document.getElementById('area').value || null,
+    es_anonima: document.getElementById('es_anonima').value === 'true',
+    datos_contacto: document.getElementById('datos_contacto').value || null,
+  };
+
+  const r = await fetch(`${API}/denuncias`, {
+    method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
+  const data = await r.json();
+
+  if (!r.ok) {
+    msgDiv.innerHTML = `<div class="msg msg-err">⚠ ${data.detail || 'Error al enviar.'}</div>`;
+    return;
+  }
+
+  document.getElementById('codigo-generado').textContent = data.codigo_seguimiento;
+  document.getElementById('plazo-acuse').textContent = formatFecha(data.fecha_limite_acuse);
+  document.getElementById('plazo-cierre').textContent = formatFecha(data.fecha_limite_cierre);
+  document.getElementById('resultado').style.display = 'block';
+  msgDiv.innerHTML = '';
+  window.scrollTo(0, document.getElementById('resultado').offsetTop - 20);
+}
+
+// ── Tab 2: Seguimiento ──────────────────────────────────────────────────────
+async function consultarSeguimiento() {
+  const codigo = document.getElementById('codigo-buscar').value.trim().toUpperCase();
+  if (!codigo) return;
+  currentCodigo = codigo;
+
+  const r = await fetch(`${API}/denuncias/seguimiento/${codigo}`);
+  if (!r.ok) {
+    alert('Código no encontrado. Verifique e intente nuevamente.');
+    return;
+  }
+  const data = await r.json();
+  const d = data.denuncia;
+
+  document.getElementById('seg-info').innerHTML = `
+    <h2>Caso ${d.codigo_seguimiento}</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.8rem">
+      <div><span style="font-size:.78rem;color:#7f8c8d">Estado</span><br>
+        <span class="badge badge-${d.estado === 'en_investigacion' ? 'investigacion' : d.estado}">
+          ${estadoLabel(d.estado)}
+        </span></div>
+      <div><span style="font-size:.78rem;color:#7f8c8d">Prioridad</span><br>
+        <span class="badge badge-${d.prioridad}">${d.prioridad.toUpperCase()}</span></div>
+      <div><span style="font-size:.78rem;color:#7f8c8d">Categoría</span><br>${d.categoria}</div>
+      <div><span style="font-size:.78rem;color:#7f8c8d">Área</span><br>${d.area_relacionada || '—'}</div>
+      <div><span style="font-size:.78rem;color:#7f8c8d">Fecha creación</span><br>${formatFecha(d.fecha_creacion)}</div>
+      <div><span style="font-size:.78rem;color:#7f8c8d">Límite resolución</span><br>${formatFecha(d.fecha_limite_cierre)}</div>
+    </div>
+  `;
+
+  const chatDiv = document.getElementById('chat-mensajes');
+  if (data.actualizaciones.length === 0) {
+    chatDiv.innerHTML = '<em style="color:#aaa;font-size:.82rem">Sin mensajes aún.</em>';
+  } else {
+    chatDiv.innerHTML = data.actualizaciones.slice().reverse().map(m => `
+      <div class="chat-msg ${m.autor}">
+        <strong>${m.autor === 'compliance' ? '🏢 Compliance' : '👤 Denunciante'}</strong>
+        <span style="float:right;font-size:.75rem;color:#999">${formatFecha(m.fecha)}</span><br>
+        ${m.mensaje}
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('seguimiento-panel').style.display = 'block';
+}
+
+async function enviarMensaje() {
+  const msg = document.getElementById('nuevo-mensaje').value.trim();
+  if (!msg || !currentCodigo) return;
+
+  const r = await fetch(`${API}/denuncias/seguimiento/${currentCodigo}/mensaje`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ mensaje: msg, autor: 'denunciante' })
+  });
+  if (r.ok) {
+    document.getElementById('nuevo-mensaje').value = '';
+    consultarSeguimiento();
+  }
+}
+
+// ── Auth / Login ────────────────────────────────────────────────────────────
+
+async function doLogin() {
+  const pin = document.getElementById('pin-input').value.trim();
+  if (!pin) return;
+  document.getElementById('login-error').textContent = '';
+
+  try {
+    const r = await fetch(`${API}/denuncias/auth/login`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ pin })
+    });
+    if (!r.ok) {
+      const e = await r.json();
+      document.getElementById('login-error').textContent = e.detail || 'PIN incorrecto.';
+      document.getElementById('pin-input').value = '';
+      return;
+    }
+    const data = await r.json();
+    sessionToken = data.token;
+    sessionRol   = data.rol;
+    localStorage.setItem('denuncias_token', sessionToken);
+    localStorage.setItem('denuncias_rol',   sessionRol);
+
+    document.getElementById('login-overlay').classList.add('hidden');
+    mostrarSessionBar(data);
+    showTab('panel');
+    cargarPanel();
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Error de conexión.';
+  }
+}
+
+async function doLogout() {
+  if (sessionToken) {
+    await fetch(`${API}/denuncias/auth/logout`, {
+      method: 'POST', headers: {'X-Session-Token': sessionToken}
+    }).catch(() => {});
+  }
+  sessionToken = '';
+  sessionRol   = '';
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  document.getElementById('session-bar').classList.add('hidden');
+  showTab('denunciar');
+}
+
+function mostrarSessionBar(data) {
+  const rolLabels = { consultor: '🔵 Consultor', compliance: '🟢 Compliance Officer' };
+  const expira = new Date(data.expira || data.expira_en || '');
+  document.getElementById('session-rol-badge').textContent = rolLabels[data.rol] || data.rol;
+  document.getElementById('session-expira').textContent =
+    `Sesión válida hasta ${expira.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}`;
+  document.getElementById('session-bar').classList.remove('hidden');
+}
+
+function mostrarPanelOLogin() {
+  if (sessionToken) {
+    showTab('panel');
+    cargarPanel();
+  } else {
+    document.getElementById('login-overlay').classList.remove('hidden');
+    document.getElementById('pin-input').focus();
+  }
+}
+
+// Verificar sesión guardada al cargar
+async function verificarSesionGuardada() {
+  if (!sessionToken) return;
+  try {
+    const r = await fetch(`${API}/denuncias/auth/estado`, {
+      headers: {'X-Session-Token': sessionToken}
+    });
+    if (r.ok) {
+      const data = await r.json();
+      mostrarSessionBar({ rol: data.rol, expira: data.expira });
+      // Advertencia si el PIN expira pronto
+      if (data.pin_expira_en_dias <= 5) {
+        document.getElementById('pin-expira-msg').textContent =
+          `⚠️ El PIN expira en ${data.pin_expira_en_dias} días. Actualizarlo en .env`;
+      }
+    } else {
+      // Sesión expirada
+      sessionToken = '';
+      localStorage.removeItem('denuncias_token');
+      localStorage.removeItem('denuncias_rol');
+    }
+  } catch(e) {}
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'X-Session-Token': sessionToken
+  };
+}
+
+// ── Tab 3: Panel Compliance ─────────────────────────────────────────────────
+async function cargarPanel() {
+  const estado    = document.getElementById('filtro-estado').value;
+  const prioridad = document.getElementById('filtro-prioridad').value;
+
+  let url = `${API}/denuncias?limit=100`;
+  if (estado)    url += `&estado=${estado}`;
+  if (prioridad) url += `&prioridad=${prioridad}`;
+
+  const opts = { headers: authHeaders() };
+  const [rDen, rAlerta] = await Promise.all([
+    fetch(url, opts),
+    fetch(`${API}/denuncias/alertas`, opts)
+  ]);
+  const dataDen    = await rDen.json();
+  const dataAlerta = await rAlerta.json();
+
+  // Stats
+  const all = dataDen.denuncias;
+  document.getElementById('stat-total').textContent     = dataDen.total;
+  document.getElementById('stat-recibidas').textContent = all.filter(d => d.estado === 'recibida').length;
+  document.getElementById('stat-invest').textContent    = all.filter(d => d.estado === 'en_investigacion').length;
+  document.getElementById('stat-cerradas').textContent  = all.filter(d => d.estado === 'cerrada').length;
+  document.getElementById('stat-alertas').textContent   = dataAlerta.total;
+
+  // Alertas
+  const aDiv = document.getElementById('alertas-list');
+  if (dataAlerta.total === 0) {
+    aDiv.innerHTML = '<span style="color:#27ae60;font-size:.88rem">✅ Sin alertas activas.</span>';
+  } else {
+    aDiv.innerHTML = dataAlerta.alertas.map(a => {
+      const cls = a.tipo === 'plazo_acuse_vencido' ? '' :
+                  a.tipo === 'plazo_respuesta_proximo' ? 'proximo' : 'critico';
+      const icon = a.tipo === 'plazo_acuse_vencido' ? '⏰' :
+                   a.tipo === 'plazo_respuesta_proximo' ? '⚠️' : '🔴';
+      return `<div class="alerta-item ${cls}">
+        ${icon} <strong>${tipoAlertaLabel(a.tipo)}</strong>
+        — Caso <code>${a.codigo_seguimiento}</code> · ${a.categoria} · ${a.area_relacionada || '—'}
+        <span style="float:right;font-size:.75rem;color:#888">${formatFecha(a.fecha_generada)}</span>
+        <br><button class="btn btn-sm" style="background:#eee;margin-top:.3rem"
+          onclick="marcarLeida(${a.id})">Marcar leída</button>
+      </div>`;
+    }).join('');
+  }
+
+  // Denuncias
+  const dDiv = document.getElementById('denuncias-list');
+  if (all.length === 0) {
+    dDiv.innerHTML = '<em style="color:#aaa;font-size:.85rem">Sin denuncias con los filtros seleccionados.</em>';
+  } else {
+    dDiv.innerHTML = all.map(d => `
+      <div class="denuncia-row">
+        <div>
+          <code style="font-size:.9rem">${d.codigo_seguimiento}</code>
+          <span class="badge badge-${d.estado === 'en_investigacion' ? 'investigacion' : d.estado}" style="margin-left:.5rem">
+            ${estadoLabel(d.estado)}
+          </span>
+          <span class="badge badge-${d.prioridad}" style="margin-left:.3rem">${d.prioridad.toUpperCase()}</span>
+          <br>
+          <span style="font-size:.88rem">${d.categoria}${d.area_relacionada ? ' · ' + d.area_relacionada : ''}</span>
+          <div class="meta">${formatFecha(d.fecha_creacion)} · Cierre: ${formatFecha(d.fecha_limite_cierre)}</div>
+          <div style="font-size:.82rem;margin-top:.3rem;color:#555;max-width:500px">${d.descripcion.slice(0,120)}${d.descripcion.length > 120 ? '…' : ''}</div>
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="abrirModal(${d.id}, '${d.estado}', '${d.prioridad}')">Gestionar</button>
+      </div>
+    `).join('');
+  }
+}
+
+async function marcarLeida(id) {
+  await fetch(`${API}/denuncias/alertas/${id}/leer`, { method: 'PATCH', headers: authHeaders() });
+  cargarPanel();
+}
+
+// ── Modal ───────────────────────────────────────────────────────────────────
+function abrirModal(id, estado, prioridad) {
+  currentDenunciaId = id;
+  document.getElementById('modal-id').textContent = id;
+  document.getElementById('modal-estado').value   = estado;
+  document.getElementById('modal-prioridad').value = prioridad;
+  document.getElementById('modal-mensaje').value  = '';
+  document.getElementById('modal').style.display  = 'flex';
+}
+function cerrarModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+async function guardarActualizacion() {
+  const estado    = document.getElementById('modal-estado').value;
+  const prioridad = document.getElementById('modal-prioridad').value;
+  const mensaje   = document.getElementById('modal-mensaje').value.trim();
+
+  await fetch(`${API}/denuncias/${currentDenunciaId}`, {
+    method: 'PATCH', headers: authHeaders(),
+    body: JSON.stringify({ estado, prioridad })
+  });
+
+  if (mensaje) {
+    // Buscar el código de la denuncia actual
+    const r = await fetch(`${API}/denuncias?limit=200`, { headers: authHeaders() });
+    const d = await r.json();
+    const den = d.denuncias.find(x => x.id === currentDenunciaId);
+    if (den) {
+      await fetch(`${API}/denuncias/seguimiento/${den.codigo_seguimiento}/mensaje`, {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ mensaje, autor: 'compliance' })
+      });
+    }
+  }
+
+  cerrarModal();
+  cargarPanel();
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function formatFecha(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+function estadoLabel(e) {
+  return { recibida: 'Recibida', en_investigacion: 'En investigación', cerrada: 'Cerrada' }[e] || e;
+}
+function tipoAlertaLabel(t) {
+  return {
+    plazo_acuse_vencido:     'Plazo de acuse vencido',
+    plazo_respuesta_proximo: 'Plazo de respuesta próximo',
+    caso_critico:            'Caso crítico — revisar urgente'
+  }[t] || t;
+}
+
+// Inicializar
+verificarSesionGuardada();
+</script>
+</body>
+</html>
