@@ -1986,15 +1986,18 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 </footer>
 
 <script>
-/* ── Modo demo: carga config.demo.js si la URL contiene ?demo=true ── */
+/* ── Modo demo: carga config.demo.js si la URL contiene ?demo=true ──
+   IMPORTANTE: se carga con document.write (no createElement+insertBefore)
+   para que sea síncrona y bloquee el parser HTML. La versión anterior
+   insertaba el <script> de forma asíncrona, lo que generaba una carrera:
+   el script principal de más abajo a veces se ejecutaba ANTES de que
+   config.js terminara de cargar, y tiraba "Uncaught ReferenceError:
+   CONFIG is not defined" (intermitente, según caché/velocidad de red). */
 (function(){
   const isDemo = new URLSearchParams(window.location.search).get('demo') === 'true';
-  const script = document.createElement('script');
-  script.src = isDemo ? 'config.demo.js' : 'config.js';
-  document.currentScript.parentNode.insertBefore(script, document.currentScript.nextSibling);
   window.__IS_DEMO__ = isDemo;
+  document.write('<script src="' + (isDemo ? 'config.demo.js' : 'config.js') + '"><\/script>');
 })();
-</script>
 <script>
 const T={
   es:{
