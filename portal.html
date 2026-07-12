@@ -149,9 +149,32 @@ nav{background:var(--pri);color:#fff;padding:.65rem 1.2rem;display:flex;align-it
   .cliente-badges{display:none}
   .kpi-row{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ── Login PIN ── */
+#login-overlay{position:fixed;inset:0;background:rgba(26,58,92,.97);display:flex;align-items:center;justify-content:center;z-index:1000}
+#login-overlay.hidden{display:none}
+.login-box{background:#fff;border-radius:12px;padding:2rem 2.5rem;width:100%;max-width:360px;text-align:center}
+.login-box h2{color:var(--pri);font-size:1.1rem;margin-bottom:.3rem}
+.login-box p{font-size:.82rem;color:var(--muted);margin-bottom:1.2rem}
+.pin-input{width:100%;font-size:1.8rem;letter-spacing:.4rem;text-align:center;border:2px solid var(--borde);border-radius:8px;padding:.7rem;font-family:monospace;margin-bottom:.8rem}
+.pin-input:focus{border-color:var(--pri);outline:none}
+.login-error{color:var(--rojo);font-size:.83rem;margin-bottom:.7rem;min-height:1.2rem}
 </style>
 </head>
 <body>
+
+<!-- ══════════ LOGIN OVERLAY ══════════ -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div style="font-size:2rem;margin-bottom:.5rem">🔐</div>
+    <h2>Portal Admin</h2>
+    <p>Ingresá tu PIN para acceder a la lista de clientes.</p>
+    <input type="password" class="pin-input" id="pin-input" maxlength="8"
+      placeholder="••••" onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-error" id="login-error"></div>
+    <button class="nav-btn pri" style="width:100%;justify-content:center;padding:.6rem" onclick="doLogin()">Ingresar →</button>
+  </div>
+</div>
 
 <nav>
   <div>
@@ -161,6 +184,7 @@ nav{background:var(--pri);color:#fff;padding:.65rem 1.2rem;display:flex;align-it
   <div class="nav-actions">
     <a href="onboarding.html" class="nav-btn pri">✚ Nuevo cliente</a>
     <a href="index.html" class="nav-btn">📊 Dashboard demo</a>
+    <button class="nav-btn" onclick="doLogout()">🔓 Cerrar sesión</button>
   </div>
 </nav>
 
@@ -404,13 +428,77 @@ let clientes = [];
 let filtroActual = 'todos';
 let busqueda = '';
 let modalCallback = null;
+const API = '/api/v1';
+let sessionToken = localStorage.getItem('denuncias_token') || '';
+let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
+
+// ── Auth / Login ─────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pin = document.getElementById('pin-input').value.trim();
+  if (!pin) return;
+  document.getElementById('login-error').textContent = '';
+  try {
+    const r = await fetch(`${API}/denuncias/auth/login`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ pin })
+    });
+    if (!r.ok) {
+      const e = await r.json();
+      document.getElementById('login-error').textContent = e.detail || 'PIN incorrecto.';
+      document.getElementById('pin-input').value = '';
+      return;
+    }
+    const data = await r.json();
+    sessionToken = data.token;
+    sessionRol   = data.rol;
+    localStorage.setItem('denuncias_token', sessionToken);
+    localStorage.setItem('denuncias_rol',   sessionRol);
+    document.getElementById('login-overlay').classList.add('hidden');
+    init();
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Error de conexión.';
+  }
+}
+
+async function doLogout() {
+  if (sessionToken) {
+    await fetch(`${API}/denuncias/auth/logout`, {
+      method: 'POST', headers: {'X-Session-Token': sessionToken}
+    }).catch(() => {});
+  }
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  location.reload();
+}
+
+async function verificarSesion() {
+  if (!sessionToken) return false;
+  try {
+    const r = await fetch(`${API}/denuncias/auth/estado`, { headers: {'X-Session-Token': sessionToken} });
+    if (r.ok) return true;
+  } catch(e) {}
+  sessionToken = '';
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  return false;
+}
 
 // ══════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════
+async function iniciarApp() {
+  const ok = await verificarSesion();
+  if (!ok) {
+    document.getElementById('pin-input').focus();
+    return;
+  }
+  document.getElementById('login-overlay').classList.add('hidden');
+  await init();
+}
+
 async function init() {
   try {
-    const r = await fetch('/api/v1/clientes');
+    const r = await fetch(`${API}/clientes`, { headers: {'X-Session-Token': sessionToken} });
     if(r.ok){ const d = await r.json(); clientes = d.clientes || CLIENTES_DEMO; }
     else { clientes = CLIENTES_DEMO; }
   } catch(e) { clientes = CLIENTES_DEMO; }
@@ -703,7 +791,7 @@ document.getElementById('modal-activar').addEventListener('click', function(e){
 // ══════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════
-init();
+iniciarApp();
 </script>
 </body>
 </html>

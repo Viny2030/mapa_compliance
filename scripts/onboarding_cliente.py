@@ -8,6 +8,7 @@ Emails:
   - cliente (email ingresado)          → confirmación de recepción
 """
 
+import html
 import os
 import json
 import smtplib
@@ -17,9 +18,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
+
+from scripts.canal_denuncias import _validar_token
 
 router = APIRouter()
 
@@ -47,7 +50,7 @@ class SolicitudOnboarding(BaseModel):
     tamanio:     str
     pais:        str
     # Contacto
-    email:       str
+    email:       EmailStr
     responsable: Optional[str] = ""
     telefono:    Optional[str] = ""
     # Plan y flags
@@ -125,8 +128,22 @@ def _enviar_email(to: str, subject: str, html: str):
 
 
 def _email_interno(s: SolicitudOnboarding, sid: str) -> str:
-    flags    = _flags_activos(s)
-    modulos  = _modulos_activos(s.modulos)
+    # Todos los campos de texto vienen del formulario público, sin ninguna
+    # autenticación de por medio — se escapan antes de inyectarlos en el
+    # HTML del email interno para que nadie pueda meter markup/links
+    # arbitrarios (ej. en "mensaje") en el correo que recibe el equipo.
+    nombre      = html.escape(s.nombre)
+    cuit        = html.escape(s.cuit)
+    sector      = html.escape(s.sector.title())
+    tamanio     = html.escape(s.tamanio.title())
+    pais        = html.escape(s.pais)
+    email       = html.escape(s.email)
+    responsable = html.escape(s.responsable) if s.responsable else ""
+    telefono    = html.escape(s.telefono) if s.telefono else ""
+    mensaje     = html.escape(s.mensaje) if s.mensaje else ""
+
+    flags    = [html.escape(f) for f in _flags_activos(s)]
+    modulos  = [html.escape(m) for m in _modulos_activos(s.modulos)]
     plan_map = {"starter": "Starter", "professional": "Professional", "enterprise": "Enterprise"}
     filas_modulos = "".join(
         f"<span style='background:#e3f2fd;padding:2px 8px;border-radius:4px;margin:2px;display:inline-block;font-size:12px'>{m}</span>"
@@ -142,32 +159,32 @@ def _email_interno(s: SolicitudOnboarding, sid: str) -> str:
 
         <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #ddd;padding-bottom:6px">Empresa</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:18px">
-          <tr><td style="padding:5px 0;color:#555;width:40%">Nombre</td><td style="font-weight:700">{s.nombre}</td></tr>
-          <tr><td style="padding:5px 0;color:#555">CUIT</td><td>{s.cuit}</td></tr>
-          <tr><td style="padding:5px 0;color:#555">Sector</td><td>{s.sector.title()}</td></tr>
-          <tr><td style="padding:5px 0;color:#555">Tamaño</td><td>{s.tamanio.title()}</td></tr>
-          <tr><td style="padding:5px 0;color:#555">País</td><td>{s.pais}</td></tr>
+          <tr><td style="padding:5px 0;color:#555;width:40%">Nombre</td><td style="font-weight:700">{nombre}</td></tr>
+          <tr><td style="padding:5px 0;color:#555">CUIT</td><td>{cuit}</td></tr>
+          <tr><td style="padding:5px 0;color:#555">Sector</td><td>{sector}</td></tr>
+          <tr><td style="padding:5px 0;color:#555">Tamaño</td><td>{tamanio}</td></tr>
+          <tr><td style="padding:5px 0;color:#555">País</td><td>{pais}</td></tr>
         </table>
 
         <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #ddd;padding-bottom:6px">Contacto</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:18px">
-          <tr><td style="padding:5px 0;color:#555;width:40%">Email</td><td><a href="mailto:{s.email}">{s.email}</a></td></tr>
-          <tr><td style="padding:5px 0;color:#555">Responsable</td><td>{s.responsable or '—'}</td></tr>
-          <tr><td style="padding:5px 0;color:#555">Teléfono</td><td>{s.telefono or '—'}</td></tr>
+          <tr><td style="padding:5px 0;color:#555;width:40%">Email</td><td><a href="mailto:{email}">{email}</a></td></tr>
+          <tr><td style="padding:5px 0;color:#555">Responsable</td><td>{responsable or '—'}</td></tr>
+          <tr><td style="padding:5px 0;color:#555">Teléfono</td><td>{telefono or '—'}</td></tr>
         </table>
 
         <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #ddd;padding-bottom:6px">Plan & Alcance</h2>
-        <p style="margin:6px 0"><strong>Plan:</strong> <span style="background:#1565c0;color:#fff;padding:2px 10px;border-radius:12px;font-size:13px">{plan_map.get(s.plan, s.plan)}</span></p>
+        <p style="margin:6px 0"><strong>Plan:</strong> <span style="background:#1565c0;color:#fff;padding:2px 10px;border-radius:12px;font-size:13px">{plan_map.get(s.plan, html.escape(s.plan))}</span></p>
         <p style="margin:6px 0"><strong>Flags operacionales:</strong><br>
           {''.join(f'<span style="background:#fff3e0;padding:2px 8px;border-radius:4px;margin:2px;display:inline-block;font-size:12px">✓ {f}</span>' for f in flags) or '<em style="color:#999">Ninguno adicional</em>'}
         </p>
         <p style="margin:10px 0 4px"><strong>Módulos calculados ({len(modulos)}):</strong></p>
         <div>{filas_modulos}</div>
 
-        {"<h2 style='font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #ddd;padding-bottom:6px;margin-top:18px'>Mensaje</h2><p style='background:#fff;border-left:3px solid #1565c0;padding:10px 14px;border-radius:0 6px 6px 0'>" + s.mensaje + "</p>" if s.mensaje else ""}
+        {"<h2 style='font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #ddd;padding-bottom:6px;margin-top:18px'>Mensaje</h2><p style='background:#fff;border-left:3px solid #1565c0;padding:10px 14px;border-radius:0 6px 6px 0'>" + mensaje + "</p>" if mensaje else ""}
 
         <div style="margin-top:20px;padding:12px 16px;background:#e8f5e9;border-radius:8px;font-size:13px">
-          📌 <strong>Próximo paso:</strong> contactar a {s.responsable or s.nombre} en <a href="mailto:{s.email}">{s.email}</a> para coordinar deploy en Railway y configurar config.js.
+          📌 <strong>Próximo paso:</strong> contactar a {responsable or nombre} en <a href="mailto:{email}">{email}</a> para coordinar deploy en Railway y configurar config.js.
         </div>
       </div>
     </div>
@@ -175,6 +192,9 @@ def _email_interno(s: SolicitudOnboarding, sid: str) -> str:
 
 
 def _email_cliente(s: SolicitudOnboarding, sid: str) -> str:
+    nombre      = html.escape(s.nombre)
+    responsable = html.escape(s.responsable) if s.responsable else ""
+    pais        = html.escape(s.pais)
     plan_map = {"starter": "Starter", "professional": "Professional", "enterprise": "Enterprise"}
     return f"""
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e">
@@ -183,15 +203,15 @@ def _email_cliente(s: SolicitudOnboarding, sid: str) -> str:
         <p style="color:#bbdefb;margin:6px 0 0;font-size:14px">Monitor de Compliance Empresarial</p>
       </div>
       <div style="background:#f8fafc;padding:28px;border:1px solid #e0e7ef;border-top:none;border-radius:0 0 10px 10px">
-        <p style="font-size:16px">Hola {s.responsable or s.nombre},</p>
-        <p>Recibimos tu solicitud para <strong>{s.nombre}</strong>. En las próximas 24–48 horas nos pondremos en contacto para coordinar la configuración de tu plataforma.</p>
+        <p style="font-size:16px">Hola {responsable or nombre},</p>
+        <p>Recibimos tu solicitud para <strong>{nombre}</strong>. En las próximas 24–48 horas nos pondremos en contacto para coordinar la configuración de tu plataforma.</p>
 
         <div style="background:#fff;border:1px solid #e0e7ef;border-radius:8px;padding:16px;margin:20px 0">
           <p style="margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#888">Resumen de tu solicitud</p>
-          <p style="margin:4px 0"><strong>Empresa:</strong> {s.nombre}</p>
-          <p style="margin:4px 0"><strong>Plan seleccionado:</strong> {plan_map.get(s.plan, s.plan)}</p>
-          <p style="margin:4px 0"><strong>País:</strong> {s.pais}</p>
-          <p style="margin:4px 0"><strong>N.° de referencia:</strong> <code style="background:#e3f2fd;padding:1px 6px;border-radius:4px">#{sid}</code></p>
+          <p style="margin:4px 0"><strong>Empresa:</strong> {nombre}</p>
+          <p style="margin:4px 0"><strong>Plan seleccionado:</strong> {plan_map.get(s.plan, html.escape(s.plan))}</p>
+          <p style="margin:4px 0"><strong>País:</strong> {pais}</p>
+          <p style="margin:4px 0"><strong>N.° de referencia:</strong> <code style="background:#e3f2fd;padding:1px 6px;border-radius:4px">#{html.escape(sid)}</code></p>
         </div>
 
         <p>Si tenés preguntas podés responder este email directamente.</p>
@@ -239,8 +259,13 @@ async def recibir_solicitud(data: SolicitudOnboarding):
 
 
 @router.get("/onboarding/submissions", tags=["Onboarding"])
-async def listar_submissions():
-    """Lista todas las solicitudes guardadas (uso interno)."""
+async def listar_submissions(x_session_token: str = Header(...)):
+    """
+    Lista todas las solicitudes guardadas (uso interno).
+    Requiere sesión (X-Session-Token) — expone nombre de empresa, CUIT,
+    email, teléfono y responsable de cada solicitud.
+    """
+    _validar_token(x_session_token)
     items = []
     for f in sorted(SUBMISSIONS_DIR.glob("*.json"), reverse=True):
         try:

@@ -318,11 +318,39 @@ def procesar_documento(contenido: bytes, nombre_archivo: str, tipo_forzado: str 
     }
 
 
+def _sanitizar_nombre_archivo(nombre_archivo: str) -> str:
+    """
+    Valida que nombre_archivo sea un nombre de archivo simple, sin
+    componentes de directorio ni secuencias de path traversal.
+    Se usa tanto al guardar como al eliminar — nunca confiar en el
+    nombre tal cual llega del cliente (upload o parámetro de URL).
+    """
+    if not nombre_archivo or "\x00" in nombre_archivo:
+        raise ValueError("Nombre de archivo inválido.")
+    if "/" in nombre_archivo or "\\" in nombre_archivo or ".." in nombre_archivo:
+        raise ValueError("Nombre de archivo inválido: no puede contener separadores de ruta.")
+    nombre = nombre_archivo.strip()
+    if nombre in ("", ".", ".."):
+        raise ValueError("Nombre de archivo inválido.")
+    return nombre
+
+
+def _sanitizar_tipo(tipo: str) -> str:
+    """Valida que 'tipo' sea uno de los tipos de documento reconocidos."""
+    if tipo not in TIPOS_DOC and tipo != "otro":
+        raise ValueError(f"Tipo de documento inválido: {tipo}")
+    return tipo
+
+
 def guardar_documento(contenido: bytes, nombre_archivo: str, tipo: str) -> Path:
     """Guarda el archivo en data/uploads/{tipo}/"""
-    carpeta = UPLOADS_DIR / tipo
+    nombre_seguro = _sanitizar_nombre_archivo(nombre_archivo)
+    tipo_seguro = _sanitizar_tipo(tipo)
+    carpeta = UPLOADS_DIR / tipo_seguro
     carpeta.mkdir(parents=True, exist_ok=True)
-    destino = carpeta / nombre_archivo
+    destino = (carpeta / nombre_seguro).resolve()
+    if carpeta.resolve() not in destino.parents:
+        raise ValueError("Ruta de destino fuera del directorio de uploads.")
     destino.write_bytes(contenido)
     return destino
 
@@ -353,7 +381,14 @@ def registrar_documento(metadata: dict):
 
 def eliminar_documento(nombre_archivo: str, tipo: str) -> bool:
     """Elimina un archivo del disco y del registro."""
-    ruta = UPLOADS_DIR / tipo / nombre_archivo
+    nombre_seguro = _sanitizar_nombre_archivo(nombre_archivo)
+    tipo_seguro = _sanitizar_tipo(tipo)
+
+    carpeta = (UPLOADS_DIR / tipo_seguro).resolve()
+    ruta = (carpeta / nombre_seguro).resolve()
+    if carpeta not in ruta.parents:
+        raise ValueError("Ruta fuera del directorio de uploads.")
+
     if ruta.exists():
         ruta.unlink()
     docs = listar_documentos()

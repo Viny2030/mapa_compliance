@@ -86,9 +86,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--pri);box-sh
 .extrac-key{color:var(--muted);min-width:130px;flex-shrink:0}
 .extrac-val{color:var(--texto);font-weight:500;word-break:break-all}
 .cuit-tag{display:inline-block;background:#e3f2fd;color:#0d47a1;font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;margin:.1rem .2rem .1rem 0;font-family:monospace}
+
+/* ── Login PIN ── */
+#login-overlay{position:fixed;inset:0;background:rgba(26,58,92,.97);display:flex;align-items:center;justify-content:center;z-index:1000}
+#login-overlay.hidden{display:none}
+.login-box{background:#fff;border-radius:12px;padding:2rem 2.5rem;width:100%;max-width:360px;text-align:center}
+.login-box h2{color:var(--pri);font-size:1.1rem;margin-bottom:.3rem}
+.login-box p{font-size:.82rem;color:var(--muted);margin-bottom:1.2rem}
+.pin-input{width:100%;font-size:1.8rem;letter-spacing:.4rem;text-align:center;border:2px solid var(--borde);border-radius:8px;padding:.7rem;font-family:monospace;margin-bottom:.8rem}
+.pin-input:focus{border-color:var(--pri);outline:none}
+.login-error{color:var(--rojo);font-size:.83rem;margin-bottom:.7rem;min-height:1.2rem}
+#session-bar{background:#0d2137;color:#a8c7e8;font-size:.75rem;padding:.3rem 1rem;display:flex;justify-content:flex-end;align-items:center;gap:1rem;position:fixed;top:0;left:0;right:0;z-index:250}
+#session-bar.hidden{display:none}
+body.gated{padding-top:88px}
 </style>
 </head>
 <body>
+
+<!-- ══════════ LOGIN OVERLAY ══════════ -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div style="font-size:2rem;margin-bottom:.5rem">🔐</div>
+    <h2>Panel de Documentos</h2>
+    <p>Ingresá tu PIN para subir o eliminar documentos del cliente.</p>
+    <input type="password" class="pin-input" id="pin-input" maxlength="8"
+      placeholder="••••" onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-error" id="login-error"></div>
+    <button class="btn" style="width:100%" onclick="doLogin()">Ingresar →</button>
+  </div>
+</div>
+
+<!-- ══════════ BARRA DE SESIÓN ══════════ -->
+<div id="session-bar" class="hidden">
+  <span id="session-rol-badge"></span>
+  <button onclick="doLogout()" style="background:rgba(255,255,255,.1);border:none;color:#a8c7e8;font-size:.75rem;padding:.2rem .6rem;border-radius:4px;cursor:pointer">Cerrar sesión</button>
+</div>
 
 <nav>
   <div class="nav-top">
@@ -166,8 +198,80 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--pri);box-sh
 
 <script>
 const API = '/api/v1';
+let sessionToken = localStorage.getItem('denuncias_token') || '';
+let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
+
+// ── Auth / Login ─────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pin = document.getElementById('pin-input').value.trim();
+  if (!pin) return;
+  document.getElementById('login-error').textContent = '';
+  try {
+    const r = await fetch(`${API}/denuncias/auth/login`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ pin })
+    });
+    if (!r.ok) {
+      const e = await r.json();
+      document.getElementById('login-error').textContent = e.detail || 'PIN incorrecto.';
+      document.getElementById('pin-input').value = '';
+      return;
+    }
+    const data = await r.json();
+    sessionToken = data.token;
+    sessionRol   = data.rol;
+    localStorage.setItem('denuncias_token', sessionToken);
+    localStorage.setItem('denuncias_rol',   sessionRol);
+    mostrarSesion();
+    init();
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Error de conexión.';
+  }
+}
+
+async function doLogout() {
+  if (sessionToken) {
+    await fetch(`${API}/denuncias/auth/logout`, {
+      method: 'POST', headers: {'X-Session-Token': sessionToken}
+    }).catch(() => {});
+  }
+  sessionToken = '';
+  sessionRol   = '';
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  location.reload();
+}
+
+function mostrarSesion() {
+  const rolLabels = { consultor: '🔵 Consultor', compliance: '🟢 Compliance Officer' };
+  document.getElementById('session-rol-badge').textContent = rolLabels[sessionRol] || sessionRol;
+  document.getElementById('login-overlay').classList.add('hidden');
+  document.getElementById('session-bar').classList.remove('hidden');
+  document.body.classList.add('gated');
+}
+
+async function verificarSesion() {
+  if (!sessionToken) return false;
+  try {
+    const r = await fetch(`${API}/denuncias/auth/estado`, { headers: {'X-Session-Token': sessionToken} });
+    if (r.ok) { mostrarSesion(); return true; }
+  } catch(e) {}
+  sessionToken = '';
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  return false;
+}
 
 // ── Inicialización ──────────────────────────────────────────────────────────
+async function iniciarApp() {
+  const ok = await verificarSesion();
+  if (!ok) {
+    document.getElementById('pin-input').focus();
+    return;
+  }
+  await init();
+}
+
 async function init() {
   await cargarTipos();
   await cargarTodo();
@@ -295,7 +399,11 @@ async function subirArchivo(archivo) {
   }, 150);
 
   try {
-    const r = await fetch(`${API}/documentos-cliente/upload`, { method: 'POST', body: formData });
+    const r = await fetch(`${API}/documentos-cliente/upload`, {
+      method: 'POST',
+      headers: {'X-Session-Token': sessionToken},
+      body: formData
+    });
     clearInterval(timer);
     progressFill.style.width = '100%';
 
@@ -389,7 +497,10 @@ async function eliminarDoc(tipo, nombreEnc) {
   const nombre = decodeURIComponent(nombreEnc);
   if (!confirm(`¿Eliminás "${nombre}"?`)) return;
   try {
-    const r = await fetch(`${API}/documentos-cliente/${tipo}/${nombreEnc}`, { method: 'DELETE' });
+    const r = await fetch(`${API}/documentos-cliente/${tipo}/${nombreEnc}`, {
+      method: 'DELETE',
+      headers: {'X-Session-Token': sessionToken}
+    });
     if (r.ok) {
       toast(`"${nombre}" eliminado`, 'ok');
       await cargarTodo();
@@ -407,7 +518,7 @@ function toast(msg, tipo='ok') {
   setTimeout(() => el.classList.remove('show'), 3500);
 }
 
-init();
+iniciarApp();
 </script>
 </body>
 </html>

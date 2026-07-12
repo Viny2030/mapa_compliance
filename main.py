@@ -20,11 +20,29 @@ app = FastAPI(
     version="1.1.0",
 )
 
+# ── CORS ──────────────────────────────────────────────────────────────────
+# ALLOWED_ORIGINS: lista separada por comas en variables de entorno
+# (ver .env.example). Si no está seteada, se usa por defecto la lista de
+# dominios propios de Railway en vez de "*" — un wildcard combinado con
+# endpoints sin auth permite a cualquier sitio invocar la API desde el
+# navegador de un visitante y leer la respuesta.
+_origins_env = os.getenv("ALLOWED_ORIGINS", "").strip()
+if _origins_env == "*":
+    ALLOWED_ORIGINS = ["*"]
+elif _origins_env:
+    ALLOWED_ORIGINS = [o.strip() for o in _origins_env.split(",") if o.strip()]
+else:
+    ALLOWED_ORIGINS = [
+        "https://mapacompliance-production.up.railway.app",
+        "https://mapatransparencia-production.up.railway.app",
+        "https://meaci-production.up.railway.app",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "X-Session-Token"],
 )
 
 # ── Rutas API ───────────────────────────────────────────────────────────────

@@ -8,13 +8,13 @@ import re
 from datetime import date, datetime
 from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException, Query, File, UploadFile, Form
+from fastapi import APIRouter, HTTPException, Query, File, UploadFile, Form, Header, Request
 from fastapi.responses import Response
 from pathlib import Path
 from pydantic import BaseModel
 
 from scripts.motor_score import score_desde_dict, calcular_score, DatosPrograma, PESOS, score_lei_12846_desde_dict, calcular_score_lei_12846, DadosLei12846, ELEMENTOS_LEI_12846
-from scripts.etl_alertas import cargar_alertas
+from scripts.etl_alertas import cargar_alertas, ALERTAS_FILE
 from scripts.etl_normativa import cargar_normativa
 from scripts.generador_pdf import generar_reporte
 from scripts.ia_alertas import resumir_alerta_async
@@ -23,6 +23,8 @@ from scripts.procesador_docs import (
     registrar_documento, listar_documentos, eliminar_documento,
     TIPOS_DOC,
 )
+from scripts.canal_denuncias import _validar_token
+from scripts.rate_limit import limitar
 
 router = APIRouter()
 
@@ -105,8 +107,9 @@ async def score_demo():
 
 
 @router.post("/score")
-async def calcular_score_endpoint(req: ScoreRequest):
+async def calcular_score_endpoint(req: ScoreRequest, request: Request):
     """Calcula el score a partir de los datos reales del programa."""
+    limitar(request, "score", max_llamadas=30, ventana_seg=60)
     try:
         resultado = score_desde_dict(req.dict())
         return resultado
@@ -160,12 +163,11 @@ async def resumen_ia_alerta(alerta_id: str):
         )
 
     # Persistir en el JSON para no volver a llamar
+    # Usa ALERTAS_FILE de etl_alertas.py (respeta DATA_DIR) en vez de un
+    # path hardcodeado, para no desincronizarse si DATA_DIR cambia.
     alerta["resumen_ia"] = resumen
-    import json
-    from pathlib import Path
-    alertas_path = Path("data/alertas.json")
-    if alertas_path.exists():
-        alertas_path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+    if ALERTAS_FILE.exists():
+        ALERTAS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2))
 
     return {"id": alerta_id, "resumen_ia": resumen, "cached": False}
 
@@ -195,8 +197,9 @@ async def get_normativa(
 
 
 @router.post("/due-diligence")
-async def due_diligence(req: DueDiligenceRequest):
+async def due_diligence(req: DueDiligenceRequest, request: Request):
     """Verificación de CUIT contra AFIP, UIF y listas OCDE."""
+    limitar(request, "due-diligence", max_llamadas=20, ventana_seg=60)
     cuit = _limpiar_cuit(req.cuit)
     if not cuit:
         raise HTTPException(status_code=400, detail="CUIT inválido")
@@ -204,8 +207,9 @@ async def due_diligence(req: DueDiligenceRequest):
 
 
 @router.post("/reporte/pdf")
-async def exportar_pdf(req: PDFRequest):
+async def exportar_pdf(req: PDFRequest, request: Request):
     """Genera y retorna el reporte PDF ejecutivo."""
+    limitar(request, "reporte-pdf", max_llamadas=10, ventana_seg=60)
     try:
         pdf_bytes = generar_reporte(req.dict())
         nombre = f"compliance_{req.empresa.replace(' ', '_')}_{date.today()}.pdf"
@@ -258,13 +262,18 @@ async def plan_mejora():
 # ── Portal multi-cliente (portal.html) ──────────────────────────────────────
 
 @router.get("/clientes")
-async def get_clientes():
+async def get_clientes(x_session_token: str = Header(...)):
     """
     Lista los clientes registrados en data/clientes.json, para el portal
     multi-cliente (portal.html). Nunca devuelve password_hash ni otros
     campos sensibles — data/clientes.json está marcado "NO exponer
     públicamente" y este endpoint filtra antes de responder.
+
+    Requiere sesión (X-Session-Token) — nombre, CUIT y email de los
+    clientes son datos reales, no deben quedar accesibles a cualquiera
+    con la URL.
     """
+    _validar_token(x_session_token)
     clientes_file = Path(__file__).parent.parent / "data" / "clientes.json"
     if not clientes_file.exists():
         return {"clientes": []}
@@ -351,10 +360,18 @@ async def checklist_documentacion():
 
 @router.post("/documentos-cliente/upload")
 async def upload_documento(
+    request: Request,
     archivo: UploadFile = File(...),
     tipo_forzado: str = Form(""),
+    x_session_token: str = Header(...),
 ):
-    """Sube un documento y lo procesa. Formatos: PDF, XLSX, XLS, CSV, DOC, DOCX."""
+    """
+    Sube un documento y lo procesa. Formatos: PDF, XLSX, XLS, CSV, DOC, DOCX.
+    Requiere sesión (X-Session-Token).
+    """
+    _validar_token(x_session_token)
+    limitar(request, "documentos-upload", max_llamadas=10, ventana_seg=60)
+
     EXTENSIONES_OK = {".pdf", ".xlsx", ".xls", ".csv", ".doc", ".docx"}
     MAX_MB = 20
 
@@ -370,7 +387,10 @@ async def upload_documento(
         raise HTTPException(status_code=413, detail=f"Archivo mayor a {MAX_MB} MB")
 
     metadata = procesar_documento(contenido, archivo.filename, tipo_forzado)
-    guardar_documento(contenido, archivo.filename, metadata["tipo"])
+    try:
+        guardar_documento(contenido, archivo.filename, metadata["tipo"])
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     registrar_documento(metadata)
 
     return {
@@ -381,9 +401,13 @@ async def upload_documento(
 
 
 @router.delete("/documentos-cliente/{tipo}/{nombre_archivo}")
-async def delete_documento(tipo: str, nombre_archivo: str):
-    """Elimina un documento del registro y del disco."""
-    eliminar_documento(nombre_archivo, tipo)
+async def delete_documento(tipo: str, nombre_archivo: str, x_session_token: str = Header(...)):
+    """Elimina un documento del registro y del disco. Requiere sesión (X-Session-Token)."""
+    _validar_token(x_session_token)
+    try:
+        eliminar_documento(nombre_archivo, tipo)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True, "mensaje": f"'{nombre_archivo}' eliminado"}
 
 
