@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>New Client — Onboarding Wizard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pri:#1a3a5c;--sec:#2196f3;--verde:#2e7d32;--rojo:#c62828;
+  --naranja:#e65100;--bg:#f0f4f8;--card:#fff;--texto:#1a1a2e;
+  --muted:#6b7280;--borde:#dde3ea;--radius:12px;
+}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--texto);min-height:100vh;line-height:1.5}
+
+/* ── Header ── */
+.topbar{background:var(--pri);color:#fff;padding:.75rem 1.5rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar-brand{font-size:.9rem;font-weight:700;opacity:.9}
+.topbar-sub{font-size:.72rem;opacity:.5;margin-top:.05rem}
+
+/* ── Progress bar ── */
+.progress-wrap{background:#fff;border-bottom:1px solid var(--borde);padding:.9rem 1.5rem;position:sticky;top:0;z-index:100}
+.progress-steps{display:flex;gap:0;max-width:700px;margin:0 auto;position:relative}
+.progress-steps::before{content:'';position:absolute;top:18px;left:32px;right:32px;height:2px;background:var(--borde);z-index:0}
+.progress-fill{position:absolute;top:18px;left:32px;height:2px;background:var(--sec);z-index:1;transition:width .4s ease}
+.step-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:.35rem;position:relative;z-index:2;cursor:pointer}
+.step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;border:2px solid var(--borde);background:#fff;color:var(--muted);transition:all .25s}
+.step-circle.active{border-color:var(--sec);background:var(--sec);color:#fff}
+.step-circle.done{border-color:var(--verde);background:var(--verde);color:#fff}
+.step-label{font-size:.68rem;font-weight:600;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.step-label.active{color:var(--sec)}
+.step-label.done{color:var(--verde)}
+
+/* ── Main layout ── */
+.main{max-width:780px;margin:0 auto;padding:2rem 1rem 4rem}
+
+/* ── Step cards ── */
+.step-panel{display:none}.step-panel.active{display:block}
+.step-header{margin-bottom:1.5rem}
+.step-header h2{font-size:1.3rem;color:var(--pri);margin-bottom:.3rem}
+.step-header p{font-size:.87rem;color:var(--muted)}
+
+/* ── Form elements ── */
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-size:.8rem;font-weight:700;color:var(--pri);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+.field input,.field select,.field textarea{width:100%;font-family:inherit;font-size:.88rem;padding:.55rem .8rem;border:1.5px solid var(--borde);border-radius:8px;background:#fff;color:var(--texto);transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--sec)}
+.field .hint{font-size:.74rem;color:var(--muted);margin-top:.3rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+/* ── Sector grid ── */
+.sector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem}
+.sector-card{border:2px solid var(--borde);border-radius:10px;padding:.8rem;cursor:pointer;transition:all .2s;background:#fff;text-align:center}
+.sector-card:hover{border-color:var(--sec);background:#f0f7ff}
+.sector-card.selected{border-color:var(--sec);background:#e3f2fd}
+.sector-card .sc-ico{font-size:1.5rem;margin-bottom:.3rem}
+.sector-card .sc-label{font-size:.78rem;font-weight:700;color:var(--pri)}
+.sector-card .sc-sub{font-size:.68rem;color:var(--muted);margin-top:.1rem}
+
+/* ── Toggle switches ── */
+.toggle-group{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid var(--borde);border-radius:8px;padding:.6rem .9rem}
+.toggle-row.active-row{border-color:#bfe0ff;background:#f0f7ff}
+.toggle-info{flex:1}
+.toggle-title{font-size:.84rem;font-weight:600;color:var(--texto)}
+.toggle-desc{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.toggle-switch{position:relative;width:42px;height:24px;flex-shrink:0;margin-left:.8rem}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;border-radius:12px;background:#dde3ea;cursor:pointer;transition:background .2s}
+.toggle-track::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle-switch input:checked+.toggle-track{background:var(--sec)}
+.toggle-switch input:checked+.toggle-track::after{transform:translateX(18px)}
+
+/* ── Módulos preview ── */
+.modulos-preview{margin-top:1.2rem}
+.modulos-preview h3{font-size:.85rem;font-weight:700;color:var(--pri);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.04em}
+.mod-grid{display:flex;flex-wrap:wrap;gap:.35rem}
+.mod-tag{display:inline-flex;align-items:center;gap:.3rem;font-size:.73rem;font-weight:600;padding:.28rem .6rem;border-radius:6px;border:1.5px solid}
+.mod-tag.on{background:#e8f5e9;border-color:#a5d6a7;color:#1b5e20}
+.mod-tag.off{background:#f5f5f5;border-color:#e0e0e0;color:#9e9e9e;text-decoration:line-through;opacity:.6}
+
+/* ── Step 3 — Output ── */
+.output-section{background:#1a1a2e;border-radius:12px;padding:1.2rem;margin-bottom:1rem;position:relative}
+.output-section pre{color:#a8d8ea;font-size:.75rem;font-family:'Cascadia Code','Fira Code',monospace;overflow-x:auto;max-height:320px;overflow-y:auto;line-height:1.6;white-space:pre-wrap}
+.copy-btn{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:.7rem;padding:.3rem .7rem;border-radius:5px;cursor:pointer;transition:background .2s}
+.copy-btn:hover{background:rgba(255,255,255,.2)}
+.copy-btn.copied{background:#2e7d32;border-color:#2e7d32}
+
+/* ── Summary cards ── */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.summary-card{background:#fff;border:1.5px solid var(--borde);border-radius:10px;padding:.9rem;display:flex;gap:.7rem;align-items:flex-start}
+.summary-ico{font-size:1.3rem;flex-shrink:0;margin-top:.1rem}
+.summary-label{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.summary-value{font-size:.88rem;font-weight:700;color:var(--pri);margin-top:.1rem}
+
+/* ── Sugeridor highlight ── */
+.sugerencia-banner{background:linear-gradient(135deg,#e3f2fd 0%,#f3e5f5 100%);border:1.5px solid #bce0fd;border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.2rem}
+.sugerencia-banner h3{font-size:.87rem;font-weight:700;color:#0d47a1;margin-bottom:.4rem}
+.sugerencia-list{display:flex;flex-wrap:wrap;gap:.35rem}
+.sug-tag{font-size:.73rem;font-weight:700;padding:.25rem .6rem;border-radius:6px;background:#0d47a1;color:#fff;display:inline-flex;align-items:center;gap:.3rem}
+.sug-tag.warn{background:#e65100}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:.7rem;justify-content:flex-end;margin-top:1.5rem}
+.btn{font-family:inherit;font-size:.85rem;font-weight:600;padding:.6rem 1.3rem;border-radius:8px;border:none;cursor:pointer;transition:all .18s}
+.btn-pri{background:var(--sec);color:#fff}.btn-pri:hover{background:#1976d2}
+.btn-sec{background:#fff;color:var(--pri);border:1.5px solid var(--borde)}.btn-sec:hover{background:#f0f4f8}
+.btn-success{background:var(--verde);color:#fff}.btn-success:hover{background:#1b5e20}
+.btn:disabled{opacity:.4;cursor:default}
+
+/* ── Card wrapper ── */
+.card{background:#fff;border-radius:var(--radius);padding:1.4rem;box-shadow:0 1px 6px rgba(0,0,0,.06);margin-bottom:1rem;border-top:3px solid var(--pri)}
+.card h3{color:var(--pri);font-size:.95rem;margin-bottom:.8rem;font-weight:700}
+.card-sec{border-top-color:var(--sec)}
+.card-verde{border-top-color:var(--verde)}
+
+/* ── Alert ── */
+.alert{display:flex;gap:.6rem;padding:.7rem .9rem;border-radius:8px;font-size:.82rem;margin-bottom:.8rem}
+.alert-info{background:#e3f2fd;border-left:3px solid var(--sec);color:#0d47a1}
+.alert-warn{background:#fff3e0;border-left:3px solid var(--naranja);color:#7c3a00}
+
+.section-sep{height:1px;background:var(--borde);margin:1.2rem 0}
+
+/* ── Instrucciones de deploy ── */
+.deploy-steps{counter-reset:ds}
+.deploy-step{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--borde)}
+.deploy-step:last-child{border:none}
+.deploy-num{width:26px;height:26px;background:var(--pri);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}
+.deploy-txt{flex:1;font-size:.83rem}
+.deploy-txt strong{color:var(--pri)}
+.deploy-txt code{font-size:.78rem;background:#f0f4f8;padding:.1rem .35rem;border-radius:4px;font-family:monospace}
+
+/* ── Responsive ── */
+@media(max-width:480px){
+  .main{padding:1.2rem .75rem 3rem}
+  .step-label{font-size:.6rem}
+}
+</style>
+</head>
+<body><div style="position:fixed;top:8px;right:8px;z-index:99999;display:flex;gap:.2rem;background:#1a3a5c;padding:.3rem;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.25);font-family:system-ui,sans-serif"><a href="onboarding.html" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:pointer">ES</a><a href="onboarding-en.html" style="background:#2196f3;color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:default">EN</a><a href="onboarding-fr.html" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:pointer">FR</a><a href="onboarding-pt.html" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:pointer">PT</a></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div>
+    <div class="topbar-brand">🛡️ Compliance Monitor — Client Portal</div>
+    <div class="topbar-sub">New client configuration wizard</div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-steps" id="progress-steps">
+    <div class="step-item" onclick="goStep(1)">
+      <div class="step-circle active" id="sc1">1</div>
+      <div class="step-label active" id="sl1">Profile</div>
+    </div>
+    <div class="step-item" onclick="goStep(2)">
+      <div class="step-circle" id="sc2">2</div>
+      <div class="step-label" id="sl2">Operations</div>
+    </div>
+    <div class="step-item" onclick="goStep(3)">
+      <div class="step-circle" id="sc3">3</div>
+      <div class="step-label" id="sl3">Modules & Config</div>
+    </div>
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══════════ PASO 1 — PERFIL ══════════ -->
+<div class="step-panel active" id="step1">
+  <div class="step-header">
+    <h2>Client profile</h2>
+    <p>Basic company details. These go into the <code>config.js</code> of the client.</p>
+  </div>
+
+  <div class="card">
+    <h3>🏢 Company details</h3>
+    <div class="grid2">
+      <div class="field">
+        <label>Company name *</label>
+        <input type="text" id="nombre" placeholder="E.g.: Constructora Norte S.A.">
+      </div>
+      <div class="field">
+        <label>Tax ID</label>
+        <input type="text" id="cuit" placeholder="30-00000000-0">
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>Compliance email *</label>
+        <input type="email" id="email" placeholder="compliance@empresa.com">
+      </div>
+      <div class="field">
+        <label>Compliance Officer</label>
+        <input type="text" id="responsable" placeholder="E.g.: Juan Pérez">
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>Main country</label>
+        <select id="pais">
+          <option value="Argentina">🇦🇷 Argentina</option>
+          <option value="Brazil">🇧🇷 Brazil</option>
+          <option value="Uruguay">🇺🇾 Uruguay</option>
+          <option value="Chile">🇨🇱 Chile</option>
+          <option value="Mexico">🇲🇽 Mexico</option>
+          <option value="Colombia">🇨🇴 Colombia</option>
+          <option value="Perú">🇵🇪 Peru</option>
+          <option value="Spain">🇪🇸 Spain</option>
+          <option value="Estados Unidos">🇺🇸 United States</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Size</label>
+        <select id="tamanio">
+          <option value="pyme">PyME (hasta 50 emp.)</option>
+          <option value="mediana">Mediana (51–250 emp.)</option>
+          <option value="grande" selected>Grande (251–1000 emp.)</option>
+          <option value="corporacion">Corporación (+1000 emp.)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Plan</label>
+      <select id="plan">
+        <option value="starter">Starter — Core anti-corruption</option>
+        <option value="professional" selected>Professional — Anti-corruption + Privacy + Security</option>
+        <option value="enterprise">Enterprise — All frameworks + CrossMap + Predictor</option>
+      </select>
+      <div class="hint">The plan defines the base set of frameworks. You can adjust manually in step 3.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏭 Business sector *</h3>
+    <div class="sector-grid" id="sector-grid">
+      <div class="sector-card selected" data-sector="construccion" onclick="selectSector(this)">
+        <div class="sc-ico">🏗️</div>
+        <div class="sc-label">Construction</div>
+        <div class="sc-sub">Public works · Infrastructure</div>
+      </div>
+      <div class="sector-card" data-sector="servicios" onclick="selectSector(this)">
+        <div class="sc-ico">💼</div>
+        <div class="sc-label">Services</div>
+        <div class="sc-sub">Consulting · Professional services</div>
+      </div>
+      <div class="sector-card" data-sector="industria" onclick="selectSector(this)">
+        <div class="sc-ico">🏭</div>
+        <div class="sc-label">Industry</div>
+        <div class="sc-sub">Manufacturing · Production</div>
+      </div>
+      <div class="sector-card" data-sector="energia" onclick="selectSector(this)">
+        <div class="sc-ico">⚡</div>
+        <div class="sc-label">Energy</div>
+        <div class="sc-sub">Oil & gas · Renewables</div>
+      </div>
+      <div class="sector-card" data-sector="finanzas" onclick="selectSector(this)">
+        <div class="sc-ico">🏦</div>
+        <div class="sc-label">Finance</div>
+        <div class="sc-sub">Banking · Insurance · Fintech</div>
+      </div>
+      <div class="sector-card" data-sector="tecnologia" onclick="selectSector(this)">
+        <div class="sc-ico">💻</div>
+        <div class="sc-label">Technology</div>
+        <div class="sc-sub">Software · SaaS · IT</div>
+      </div>
+      <div class="sector-card" data-sector="salud" onclick="selectSector(this)">
+        <div class="sc-ico">🏥</div>
+        <div class="sc-label">Health</div>
+        <div class="sc-sub">Hospitals · Pharma</div>
+      </div>
+      <div class="sector-card" data-sector="comercio" onclick="selectSector(this)">
+        <div class="sc-ico">🛒</div>
+        <div class="sc-label">Trade</div>
+        <div class="sc-sub">Retail · Distribution</div>
+      </div>
+      <div class="sector-card" data-sector="agro" onclick="selectSector(this)">
+        <div class="sc-ico">🌾</div>
+        <div class="sc-label">Agro</div>
+        <div class="sc-sub">Agribusiness · Food</div>
+      </div>
+      <div class="sector-card" data-sector="mineria" onclick="selectSector(this)">
+        <div class="sc-ico">⛏️</div>
+        <div class="sc-label">Mining</div>
+        <div class="sc-sub">Extraction · Processing</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-pri" onclick="step1Next()">Continue → Operations</button>
+  </div>
+</div>
+
+<!-- ══════════ PASO 2 — OPERACIONES ══════════ -->
+<div class="step-panel" id="step2">
+  <div class="step-header">
+    <h2>Operational scope</h2>
+    <p>Where does the company operate and what are its characteristics? This determines which frameworks are mandatory.</p>
+  </div>
+
+  <div class="card">
+    <h3>🌍 Geographic presence</h3>
+    <div class="toggle-group" id="geo-toggles">
+      <div class="toggle-row" id="tr-brasil">
+        <div class="toggle-info">
+          <div class="toggle-title">🇧🇷 Operates in Brazil</div>
+          <div class="toggle-desc">Activates Lei 12.846, LGPD in the Cross-Framework engine</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-brasil" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-ue">
+        <div class="toggle-info">
+          <div class="toggle-title">🇪🇺 Operates in the European Union</div>
+          <div class="toggle-desc">Activa GDPR, NIS2, EU AI Act, DORA (si es financiera)</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-ue" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-usa">
+        <div class="toggle-info">
+          <div class="toggle-title">🇺🇸 Operates in the U.S.</div>
+          <div class="toggle-desc">Activates FCPA, CCPA (California), SOX if publicly traded</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-usa" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-uk">
+        <div class="toggle-info">
+          <div class="toggle-title">🇬🇧 Operates in the UK</div>
+          <div class="toggle-desc">Activa UK Bribery Act (incluido en FCPA & Bribery)</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-uk" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚙️ Company characteristics</h3>
+    <div class="toggle-group">
+      <div class="toggle-row" id="tr-bolsa">
+        <div class="toggle-info">
+          <div class="toggle-title">📈 Publicly traded (NYSE / NASDAQ / Merval)</div>
+          <div class="toggle-desc">Activates SOX — mandatory financial reporting controls</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-bolsa" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-tarjetas">
+        <div class="toggle-info">
+          <div class="toggle-title">💳 Processes card payments</div>
+          <div class="toggle-desc">Activates PCI DSS v4.0</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-tarjetas" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-fintech">
+        <div class="toggle-info">
+          <div class="toggle-title">🏦 Regulated financial entity</div>
+          <div class="toggle-desc">Activa COBIT 2019 + DORA (si opera en UE)</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-fintech" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-industria-sst">
+        <div class="toggle-info">
+          <div class="toggle-title">🦺 Sector with high workplace risk</div>
+          <div class="toggle-desc">Activates ISO 45001 — Construction, Industry, Energy, Mining, Health</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-sst" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-ia">
+        <div class="toggle-info">
+          <div class="toggle-title">🤖 Uses or develops AI systems</div>
+          <div class="toggle-desc">Activates EU AI Act</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-ia" onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="tr-env">
+        <div class="toggle-info">
+          <div class="toggle-title">🌿 Significant environmental impact</div>
+          <div class="toggle-desc">Activates ISO 14001 + ESG</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-env" checked onchange="updatePreviews()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sugeridor de módulos en tiempo real -->
+  <div class="card card-sec">
+    <h3>💡 Modules suggested by profile</h3>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.9rem">Based on the sector and operations you configured. You can adjust it in step 3.</p>
+    <div id="sugerencias-preview"></div>
+    <div class="section-sep"></div>
+    <div class="modulos-preview">
+      <h3>Tab preview</h3>
+      <div class="mod-grid" id="mod-preview"></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-sec" onclick="goStep(1)">← Back</button>
+    <button class="btn btn-pri" onclick="step2Next()">Continue → Config</button>
+  </div>
+</div>
+
+<!-- ══════════ PASO 3 — MÓDULOS & CONFIG ══════════ -->
+<div class="step-panel" id="step3">
+  <div class="step-header">
+    <h2>Config generated</h2>
+    <p>Review the active modules, copy the block and paste it into the <code>config.js</code> of the client.</p>
+  </div>
+
+  <!-- Resumen del cliente -->
+  <div class="summary-grid" id="summary-cards"></div>
+
+  <!-- Sugeridor final -->
+  <div class="sugerencia-banner" id="sugerencia-final"></div>
+
+  <!-- Toggle manual de módulos -->
+  <div class="card">
+    <h3>🔧 Fine-tune modules</h3>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.9rem">Activate or deactivate individual modules. The config updates in real time.</p>
+    <div id="modulos-manual-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.45rem"></div>
+  </div>
+
+  <!-- Output config -->
+  <div class="card card-verde">
+    <h3>📋 Block <code>modulos_activos</code> + <code>onboarding</code> para config.js</h3>
+    <div class="output-section">
+      <button class="copy-btn" id="copy-btn" onclick="copyConfig()">📋 Copy</button>
+      <pre id="config-output"></pre>
+    </div>
+    <div class="alert alert-info" style="margin-top:.8rem;margin-bottom:0">
+      <span>ℹ️</span>
+      <span>Replace the block <code>modulos_activos</code> y <code>onboarding</code> in the <code>config.js</code> of the client with this content.</span>
+    </div>
+  </div>
+
+  <!-- Entrada clientes.json -->
+  <div class="card">
+    <h3>📁 Entry for <code>data/clientes.json</code></h3>
+    <div class="output-section">
+      <button class="copy-btn" id="copy-btn2" onclick="copyCliente()">📋 Copy</button>
+      <pre id="cliente-output"></pre>
+    </div>
+  </div>
+
+  <!-- Instrucciones de deploy -->
+  <div class="card">
+    <h3>🚀 Steps to activate the client</h3>
+    <div class="deploy-steps">
+      <div class="deploy-step">
+        <div class="deploy-num">1</div>
+        <div class="deploy-txt">Copy the block above and replace <code>modulos_activos</code> + <code>onboarding</code> in the file <strong id="deploy-config-file">config.js</strong> of the client.</div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-num">2</div>
+        <div class="deploy-txt">Add the entry for <code>clientes.json</code> al array <code>clientes[]</code> en <strong>data/clientes.json</strong>.</div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-num">3</div>
+        <div class="deploy-txt">If the client has their own subdomain or folder, copy the base repo and point it <code>config_file</code> to the correct config.</div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-num">4</div>
+        <div class="deploy-txt">Send the credentials to the client: URL, login email, and temporary password. We recommend requiring a password change on first login.</div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-num">5</div>
+        <div class="deploy-txt">The client will only see the activated tabs. To add modules, edit <code>modulos_activos</code> in its config, or use this wizard again.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-sec" onclick="goStep(2)">← Back</button>
+    <button class="btn btn-success" onclick="downloadConfig()">⬇️ Download partial config.js</button>
+    <button class="btn btn-pri" onclick="nuevoCliente()">✚ New client</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════
+
+const TODOS_MODULOS = [
+  // Core
+  {id:'dashboard',     label:'📊 Dashboard',         core:true},
+  {id:'board',         label:'🏛️ Board View',         core:true},
+  {id:'planaccion',    label:'📋 Action Plan',      core:true},
+  {id:'reporte',       label:'📄 Reporte',             core:true},
+  {id:'calendario',    label:'📅 Calendario',          core:true},
+  // Anti-corruption
+  {id:'ley27401',      label:'⚖️ Law 27,401',          grupo:'anticorrupcion'},
+  {id:'brasil',        label:'🇧🇷 Lei 12.846',          grupo:'anticorrupcion', flags:['brasil']},
+  {id:'fcpa',          label:'🇺🇸 FCPA & Bribery',      grupo:'anticorrupcion', flags:['usa','uk']},
+  {id:'ocde',          label:'🌐 OCDE',                 grupo:'anticorrupcion'},
+  {id:'iso37001',      label:'🚫 ISO 37001',            grupo:'anticorrupcion'},
+  // Privacidad
+  {id:'lgpd',          label:'🇧🇷 LGPD',                grupo:'privacidad', flags:['brasil']},
+  {id:'gdpr',          label:'🇪🇺 GDPR',                grupo:'privacidad', flags:['ue']},
+  {id:'ccpa',          label:'🌴 CCPA',                 grupo:'privacidad', flags:['usa']},
+  {id:'iso27701',      label:'🔏 ISO 27701',            grupo:'privacidad'},
+  // Seguridad
+  {id:'iso27001',      label:'🔐 ISO 27001',            grupo:'seguridad'},
+  {id:'soc2',          label:'☁️ SOC 2',                grupo:'seguridad'},
+  {id:'nis2',          label:'🛡️ NIS2',                 grupo:'seguridad', flags:['ue']},
+  {id:'pcidss',        label:'💳 PCI DSS',              grupo:'seguridad', flags:['tarjetas']},
+  // Ambiental
+  {id:'iso14001',      label:'🌿 ISO 14001',            grupo:'ambiental', flags:['env']},
+  {id:'esg',           label:'🌱 ESG',                  grupo:'ambiental', flags:['env']},
+  // Gobernanza
+  {id:'iso45001',      label:'🦺 ISO 45001',            grupo:'gobernanza', flags:['sst']},
+  {id:'cobit',         label:'🖥️ COBIT 2019',           grupo:'gobernanza', flags:['fintech']},
+  {id:'sox',           label:'📈 SOX',                  grupo:'gobernanza', flags:['bolsa']},
+  // Digital
+  {id:'euaiact',       label:'🤖 EU AI Act',            grupo:'digital', flags:['ia','ue']},
+  {id:'dora',          label:'⚡ DORA',                 grupo:'digital', flags:['fintech','ue']},
+  // Cross
+  {id:'crossmap',      label:'🗺️ Cross-Framework',      grupo:'cross'},
+  {id:'riesgo',        label:'🗺️ Riesgo',               core:true},
+  {id:'capacitacion',  label:'📚 Training',         core:true},
+  {id:'duediligence',  label:'🔍 Due Diligence',        core:true},
+  {id:'internacional', label:'🌍 Internacional',         core:true},
+  {id:'rite',          label:'🏛️ RITE',                 grupo:'anticorrupcion'},
+  {id:'mejoras',       label:'📈 Mejoras & Alertas',    core:true},
+  {id:'legislacion',   label:'📋 Legislation',          core:true},
+  {id:'denuncias',     label:'🔒 Whistleblower Channel',   core:true},
+];
+
+// Módulos que sugiere cada sector
+const SECTOR_BASE = {
+  construccion: ['ley27401','iso37001','iso45001','iso14001','esg','ocde','rite','riesgo'],
+  servicios:    ['ley27401','iso37001','iso27001','soc2','gdpr','iso27701','ocde'],
+  industria:    ['ley27401','iso37001','iso45001','iso14001','esg','ocde','riesgo'],
+  energia:      ['ley27401','iso37001','iso45001','iso14001','esg','ocde','riesgo'],
+  finanzas:     ['ley27401','iso37001','iso27001','soc2','cobit','dora','pcidss','ocde'],
+  tecnologia:   ['ley27401','iso27001','soc2','gdpr','ccpa','iso27701','euaiact','ocde'],
+  salud:        ['ley27401','iso37001','iso45001','iso27001','gdpr','iso27701','esg','ocde'],
+  comercio:     ['ley27401','iso27001','pcidss','gdpr','ccpa','ocde'],
+  agro:         ['ley27401','iso45001','iso14001','esg','ocde','riesgo'],
+  mineria:      ['ley27401','iso37001','iso45001','iso14001','esg','ocde','riesgo'],
+};
+
+const PLAN_BASE = {
+  starter:      ['ley27401','brasil','fcpa','iso37001','ocde','rite','riesgo','capacitacion','duediligence','denuncias'],
+  professional: ['ley27401','brasil','fcpa','iso37001','iso14001','gdpr','iso27001','soc2','ccpa','nis2','euaiact','iso27701','pcidss','ocde','lgpd','esg','riesgo','capacitacion','duediligence','rite','mejoras','legislacion','denuncias','planaccion','reporte','calendario'],
+  enterprise:   'all',
+};
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  step: 1,
+  sector: 'construccion',
+  tamanio: 'grande',
+  pais: 'Argentina',
+  plan: 'professional',
+  // flags geo/operacional
+  brasil: false, ue: false, usa: false, uk: false,
+  bolsa: false, tarjetas: false, fintech: false, sst: false, ia: false, env: true,
+  // módulos calculados (se puede ajustar en paso 3)
+  modulos: {},
+};
+
+// ══════════════════════════════════════════════════════════════
+// STEP 1
+// ══════════════════════════════════════════════════════════════
+function selectSector(card){
+  document.querySelectorAll('.sector-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  state.sector = card.dataset.sector;
+  // Auto-toggle SST para sectores de riesgo alto
+  const sstSectors = ['construccion','industria','energia','mineria','salud','agro'];
+  const togSST = document.getElementById('tog-sst');
+  if(togSST) togSST.checked = sstSectors.includes(state.sector);
+  const togEnv = document.getElementById('tog-env');
+  const envSectors = ['construccion','industria','energia','mineria','agro'];
+  if(togEnv) togEnv.checked = envSectors.includes(state.sector);
+  updatePreviews();
+}
+
+function step1Next(){
+  const nombre = document.getElementById('nombre').value.trim();
+  const email  = document.getElementById('email').value.trim();
+  if(!nombre){ alert('Enter the company name.'); return; }
+  if(!email){ alert('Enter the compliance email.'); return; }
+  state.nombre    = nombre;
+  state.cuit      = document.getElementById('cuit').value.trim();
+  state.email     = email;
+  state.responsable = document.getElementById('responsable').value.trim();
+  state.pais      = document.getElementById('pais').value;
+  state.tamanio   = document.getElementById('tamanio').value;
+  state.plan      = document.getElementById('plan').value;
+  goStep(2);
+}
+
+// ══════════════════════════════════════════════════════════════
+// STEP 2
+// ══════════════════════════════════════════════════════════════
+function readFlags(){
+  ['brasil','ue','usa','uk','bolsa','tarjetas','fintech','sst','ia','env'].forEach(f=>{
+    const el = document.getElementById('tog-'+f);
+    if(el) state[f] = el.checked;
+  });
+}
+
+function calcModulos(){
+  readFlags();
+  const all = state.plan === 'enterprise';
+  const planBase = all ? TODOS_MODULOS.map(m=>m.id) : (PLAN_BASE[state.plan]||[]);
+  const sectorBase = SECTOR_BASE[state.sector] || [];
+  const combined = new Set([...planBase, ...sectorBase]);
+
+  // Agregar por flags
+  if(state.brasil)  { combined.add('brasil'); combined.add('lgpd'); }
+  if(state.ue)      { combined.add('gdpr'); combined.add('nis2'); combined.add('euaiact'); if(state.fintech) combined.add('dora'); }
+  if(state.usa)     { combined.add('fcpa'); combined.add('ccpa'); if(state.bolsa) combined.add('sox'); }
+  if(state.uk)      { combined.add('fcpa'); }
+  if(state.bolsa)   { combined.add('sox'); }
+  if(state.tarjetas){ combined.add('pcidss'); }
+  if(state.fintech) { combined.add('cobit'); if(state.ue) combined.add('dora'); }
+  if(state.sst)     { combined.add('iso45001'); }
+  if(state.ia)      { combined.add('euaiact'); }
+  if(state.env)     { combined.add('iso14001'); combined.add('esg'); }
+
+  // Siempre core
+  ['dashboard','board','planaccion','reporte','calendario','riesgo','capacitacion',
+   'duediligence','internacional','rite','mejoras','legislacion','denuncias','crossmap',
+   'ley27401','ocde','iso37001'].forEach(m=>combined.add(m));
+
+  const result = {};
+  TODOS_MODULOS.forEach(m=>{ result[m.id] = combined.has(m.id); });
+  state.modulos = result;
+  return result;
+}
+
+function updatePreviews(){
+  readFlags();
+  const mods = calcModulos();
+  renderSugerencias();
+  renderModPreview(mods);
+}
+
+function renderSugerencias(){
+  const el = document.getElementById('sugerencias-preview');
+  if(!el) return;
+  const activos = TODOS_MODULOS.filter(m=>state.modulos[m.id] && !m.core);
+  const warns = [];
+  if(state.brasil && !state.modulos['lgpd']) warns.push('LGPD');
+  if(state.ue && !state.modulos['gdpr']) warns.push('GDPR');
+
+  const tags = activos.map(m=>`<span class="sug-tag">${m.label}</span>`).join('');
+  const warnTags = warns.map(w=>`<span class="sug-tag warn">⚠️ ${w}</span>`).join('');
+  el.innerHTML = `<div class="sugerencia-banner">
+    <h3>✅ Frameworks sugeridos para ${state.sector} · ${state.pais}</h3>
+    <div class="sugerencia-list">${tags}${warnTags}</div>
+  </div>`;
+}
+
+function renderModPreview(mods){
+  const el = document.getElementById('mod-preview');
+  if(!el) return;
+  el.innerHTML = TODOS_MODULOS.map(m=>{
+    const on = mods[m.id];
+    return `<span class="mod-tag ${on?'on':'off'}">${m.label}</span>`;
+  }).join('');
+}
+
+function step2Next(){
+  readFlags();
+  calcModulos();
+  goStep(3);
+  renderStep3();
+}
+
+// ══════════════════════════════════════════════════════════════
+// STEP 3
+// ══════════════════════════════════════════════════════════════
+function renderStep3(){
+  renderSummaryCards();
+  renderSugerenciaFinal();
+  renderManualToggles();
+  regenerateOutput();
+}
+
+function renderSummaryCards(){
+  const el = document.getElementById('summary-cards');
+  const sectorLabels = {
+    construccion:'🏗️ Construction',servicios:'💼 Servicios',industria:'🏭 Industria',
+    energia:'⚡ Energy',finanzas:'🏦 Finanzas',tecnologia:'🦺 Technology',
+    salud:'🏥 Salud',comercio:'🛒 Comercio',agro:'🌾 Agro',mineria:'⛏️ Mining',
+  };
+  const tamanioLabels = {pyme:'PyME',mediana:'Medium',grande:'Large',corporacion:'Corporation'};
+  const activeCount = Object.values(state.modulos).filter(Boolean).length;
+  el.innerHTML = `
+    <div class="summary-card"><div class="summary-ico">🏢</div><div><div class="summary-label">Company</div><div class="summary-value">${state.nombre||'—'}</div></div></div>
+    <div class="summary-card"><div class="summary-ico">🏭</div><div><div class="summary-label">Sector</div><div class="summary-value">${sectorLabels[state.sector]||state.sector}</div></div></div>
+    <div class="summary-card"><div class="summary-ico">📏</div><div><div class="summary-label">Size</div><div class="summary-value">${tamanioLabels[state.tamanio]||state.tamanio}</div></div></div>
+    <div class="summary-card"><div class="summary-ico">🌐</div><div><div class="summary-label">Country</div><div class="summary-value">${state.pais}</div></div></div>
+    <div class="summary-card"><div class="summary-ico">⭐</div><div><div class="summary-label">Plan</div><div class="summary-value">${state.plan.charAt(0).toUpperCase()+state.plan.slice(1)}</div></div></div>
+    <div class="summary-card"><div class="summary-ico">✅</div><div><div class="summary-label">Active modules</div><div class="summary-value">${activeCount} / ${TODOS_MODULOS.length}</div></div></div>
+  `;
+}
+
+function renderSugerenciaFinal(){
+  const el = document.getElementById('sugerencia-final');
+  const activos = TODOS_MODULOS.filter(m=>state.modulos[m.id] && !m.core);
+  el.innerHTML = `
+    <h3>🎯 Frameworks activados para este perfil</h3>
+    <div class="sugerencia-list" style="margin-top:.5rem">${activos.map(m=>`<span class="sug-tag">${m.label}</span>`).join('')}</div>
+  `;
+}
+
+function renderManualToggles(){
+  const el = document.getElementById('modulos-manual-grid');
+  el.innerHTML = TODOS_MODULOS.map(m=>{
+    const on = state.modulos[m.id];
+    const disabled = m.core ? 'disabled' : '';
+    return `<label style="display:flex;align-items:center;gap:.5rem;background:#fff;border:1.5px solid var(--borde);border-radius:8px;padding:.45rem .7rem;cursor:${m.core?'default':'pointer'};opacity:${m.core?.7:1}">
+      <input type="checkbox" ${on?'checked':''} ${disabled} data-mod="${m.id}" onchange="toggleMod('${m.id}',this.checked)" style="width:15px;height:15px;flex-shrink:0">
+      <span style="font-size:.78rem;font-weight:${on?'600':'400'};color:${on?'var(--pri)':'var(--muted)'}">${m.label}</span>
+      ${m.core?'<span style="font-size:.62rem;color:var(--muted);margin-left:auto">core</span>':''}
+    </label>`;
+  }).join('');
+}
+
+function toggleMod(id, val){
+  state.modulos[id] = val;
+  regenerateOutput();
+  renderSummaryCards();
+  renderSugerenciaFinal();
+}
+
+function regenerateOutput(){
+  // Config block
+  const lines = ['  modulos_activos: {'];
+  const grupos = ['core','anticorrupcion','privacidad','seguridad','ambiental','gobernanza','digital','cross'];
+  const grupoLabels = {
+    core:'Core — siempre activos',
+    anticorrupcion:'Anti-corruption',
+    privacidad:'Privacidad',
+    seguridad:'Seguridad',
+    ambiental:'Ambiental / Sostenibilidad',
+    gobernanza:'Management / Governance',
+    digital:'Digital / Technology',
+    cross:'Cross & Otros',
+  };
+  grupos.forEach(g=>{
+    const items = TODOS_MODULOS.filter(m=>(m.core && g==='core') || m.grupo===g);
+    if(!items.length) return;
+    lines.push(`    // ${grupoLabels[g]}`);
+    items.forEach(m=>{
+      const val = state.modulos[m.id] ? 'true ' : 'false';
+      const pad = ' '.repeat(Math.max(0, 18-m.id.length));
+      lines.push(`    ${m.id}:${pad}${val}, // ${m.label}`);
+    });
+    lines.push('');
+  });
+  lines.push('  },');
+  lines.push('');
+  lines.push('  onboarding: {');
+  lines.push(`    sector:               "${state.sector}",`);
+  lines.push(`    tamanio:              "${state.tamanio}",`);
+  lines.push(`    pais:                 "${state.pais}",`);
+  lines.push(`    opera_internacional:  ${state.brasil||state.ue||state.usa||state.uk},`);
+  lines.push(`    opera_en_brasil:      ${state.brasil},`);
+  lines.push(`    opera_en_ue:          ${state.ue},`);
+  lines.push(`    opera_en_usa:         ${state.usa},`);
+  lines.push(`    opera_en_uk:          ${state.uk},`);
+  lines.push(`    cotiza_en_bolsa:      ${state.bolsa},`);
+  lines.push(`    maneja_tarjetas:      ${state.tarjetas},`);
+  lines.push(`    sector_financiero_reg: ${state.fintech},`);
+  lines.push(`    sector_salud_industria: ${state.sst},`);
+  lines.push(`    usa_ia:               ${state.ia},`);
+  lines.push(`    impacto_ambiental:    ${state.env},`);
+  lines.push(`    completado:           true,`);
+  lines.push(`    fecha_onboarding:     "${new Date().toISOString().slice(0,10)}",`);
+  lines.push('  },');
+
+  document.getElementById('config-output').textContent = lines.join('\n');
+
+  // clientes.json entry
+  const id = 'cliente_' + Date.now().toString().slice(-6);
+  const configFile = 'config_' + (state.nombre||'cliente').toLowerCase().replace(/[^a-z0-9]/g,'_').slice(0,20) + '.js';
+  document.getElementById('deploy-config-file').textContent = configFile;
+  const clienteEntry = {
+    id,
+    nombre: state.nombre || 'Nuevo Cliente S.A.',
+    cuit: state.cuit || '30-00000000-0',
+    email: state.email || 'compliance@empresa.com',
+    password_hash: 'cambiar_en_produccion',
+    config_file: configFile,
+    plan: state.plan,
+    activo: true,
+    fecha_alta: new Date().toISOString().slice(0,10),
+    fecha_vencimiento: new Date(Date.now()+365*24*3600*1000*2).toISOString().slice(0,10),
+    sector: state.sector,
+    pais: state.pais,
+    responsable: state.responsable || '',
+    notas: `Creado via wizard de onboarding — ${new Date().toLocaleDateString('es-AR')}`,
+  };
+  document.getElementById('cliente-output').textContent = JSON.stringify(clienteEntry, null, 2);
+}
+
+// ══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════
+function goStep(n){
+  if(n > state.step && n === 2 && !document.getElementById('nombre').value.trim()){
+    return; // no saltar sin validar paso 1
+  }
+  state.step = n;
+  document.querySelectorAll('.step-panel').forEach((p,i)=>{
+    p.classList.toggle('active', i+1===n);
+  });
+  // Progress circles
+  [1,2,3].forEach(i=>{
+    const circ = document.getElementById('sc'+i);
+    const lbl  = document.getElementById('sl'+i);
+    if(i < n){ circ.className='step-circle done'; circ.textContent='✓'; lbl.className='step-label done'; }
+    else if(i===n){ circ.className='step-circle active'; circ.textContent=i; lbl.className='step-label active'; }
+    else { circ.className='step-circle'; circ.textContent=i; lbl.className='step-label'; }
+  });
+  // Progress fill
+  const fills = [0, 50, 100];
+  document.getElementById('progress-fill').style.width = fills[n-1]+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===2){ updatePreviews(); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// COPY / DOWNLOAD
+// ══════════════════════════════════════════════════════════════
+function copyConfig(){
+  const text = document.getElementById('config-output').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✅ Copiado'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='📋 Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+function copyCliente(){
+  const text = document.getElementById('cliente-output').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('copy-btn2');
+    btn.textContent = '✅ Copiado'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='📋 Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function downloadConfig(){
+  const configOut = document.getElementById('config-output').textContent;
+  const full = `// partial config generated by the onboarding wizard — ${new Date().toLocaleDateString('es-AR')}\n// Replace the block modulos_activos + onboarding in the config.js of the client.\n\n// ── PEGAR DENTRO DEL OBJETO CONFIG: ──\n${configOut}`;
+  const blob = new Blob([full], {type:'text/javascript'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const safeName = (state.nombre||'cliente').toLowerCase().replace(/[^a-z0-9]/g,'_').slice(0,20);
+  a.download = `modulos_${safeName}.js`;
+  a.click();
+}
+
+function nuevoCliente(){
+  if(!confirm('Start a new client? What you filled in will be cleared.')) return;
+  document.getElementById('nombre').value='';
+  document.getElementById('cuit').value='';
+  document.getElementById('email').value='';
+  document.getElementById('responsable').value='';
+  state = { step:1, sector:'construccion', tamanio:'grande', pais:'Argentina', plan:'professional',
+    brasil:false, ue:false, usa:false, uk:false, bolsa:false, tarjetas:false, fintech:false, sst:false, ia:false, env:true, modulos:{} };
+  document.querySelectorAll('.sector-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelector('[data-sector="construccion"]').classList.add('selected');
+  goStep(1);
+}
+
+// Init
+calcModulos();
+</script>
+</body>
+</html>

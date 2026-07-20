@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Client Portal — Compliance Monitor</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pri:#1a3a5c;--sec:#2196f3;--verde:#2e7d32;--rojo:#c62828;
+  --naranja:#e65100;--bg:#f0f4f8;--card:#fff;--texto:#1a1a2e;
+  --muted:#6b7280;--borde:#dde3ea;--radius:10px;
+}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--texto);line-height:1.5}
+
+/* ── Nav ── */
+nav{background:var(--pri);color:#fff;padding:.65rem 1.2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-brand{font-size:.9rem;font-weight:700}
+.nav-sub{font-size:.68rem;opacity:.5;margin-top:.05rem}
+.nav-actions{display:flex;gap:.5rem}
+.nav-btn{background:rgba(255,255,255,.12);border:none;color:#fff;font-size:.75rem;font-weight:600;padding:.35rem .8rem;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem}
+.nav-btn:hover{background:rgba(255,255,255,.22)}
+.nav-btn.pri{background:var(--sec)}.nav-btn.pri:hover{background:#1976d2}
+
+/* ── Layout ── */
+.wrap{max-width:1100px;margin:0 auto;padding:1.4rem 1rem 3rem}
+
+/* ── KPIs ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.kpi{background:var(--card);border-radius:var(--radius);padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:3px solid var(--borde);text-align:center}
+.kpi.verde{border-top-color:var(--verde)}.kpi.azul{border-top-color:var(--sec)}.kpi.naranja{border-top-color:var(--naranja)}.kpi.rojo{border-top-color:var(--rojo)}
+.kpi-num{font-size:2rem;font-weight:800;line-height:1;color:var(--pri)}
+.kpi.verde .kpi-num{color:var(--verde)}.kpi.azul .kpi-num{color:var(--sec)}.kpi.naranja .kpi-num{color:var(--naranja)}.kpi.rojo .kpi-num{color:var(--rojo)}
+.kpi-label{font-size:.7rem;color:var(--muted);font-weight:600;margin-top:.3rem;text-transform:uppercase;letter-spacing:.04em}
+
+/* ── Filtros ── */
+.toolbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.search-input{flex:1;min-width:200px;font-family:inherit;font-size:.84rem;padding:.45rem .8rem;border:1.5px solid var(--borde);border-radius:7px;background:#fff}
+.search-input:focus{outline:none;border-color:var(--sec)}
+.filter-btn{font-family:inherit;font-size:.76rem;font-weight:600;padding:.38rem .8rem;border-radius:6px;border:1.5px solid var(--borde);background:#fff;color:var(--muted);cursor:pointer}
+.filter-btn.active{background:var(--sec);color:#fff;border-color:var(--sec)}
+
+/* ── Tabla de clientes ── */
+.clientes-grid{display:flex;flex-direction:column;gap:.6rem}
+.cliente-card{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.06);border:1.5px solid var(--borde);overflow:hidden;transition:box-shadow .2s}
+.cliente-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.1)}
+.cliente-header{display:flex;align-items:center;gap:.8rem;padding:.85rem 1rem;cursor:pointer}
+.cliente-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0}
+.cliente-info{flex:1;min-width:0}
+.cliente-nombre{font-size:.92rem;font-weight:700;color:var(--pri);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cliente-meta{font-size:.72rem;color:var(--muted);margin-top:.1rem;display:flex;gap:.6rem;flex-wrap:wrap}
+.cliente-badges{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin-left:auto;flex-shrink:0}
+.badge{font-size:.65rem;font-weight:700;padding:.18rem .5rem;border-radius:5px}
+.badge-plan-starter{background:#f5f5f5;color:#666}
+.badge-plan-professional{background:#e3f2fd;color:#1565c0}
+.badge-plan-enterprise{background:#e8f5e9;color:#2e7d32}
+.badge-activo{background:#dcfce7;color:#166534}
+.badge-inactivo{background:#fef2f2;color:#991b1b}
+
+/* Score mini */
+.score-mini{display:flex;align-items:center;gap:.4rem;font-size:.76rem;font-weight:700;padding:.2rem .55rem;border-radius:5px}
+.score-mini.alta{background:#e8f5e9;color:var(--verde)}
+.score-mini.media{background:#fff3e0;color:var(--naranja)}
+.score-mini.baja{background:#fdecea;color:var(--rojo)}
+
+/* ── Detalle expandible ── */
+.cliente-detalle{display:none;border-top:1.5px solid var(--borde);padding:1rem}
+.cliente-detalle.open{display:block}
+
+/* Tabs del detalle */
+.det-tabs{display:flex;gap:.3rem;margin-bottom:.9rem;border-bottom:1.5px solid var(--borde);padding-bottom:.5rem;flex-wrap:wrap}
+.det-tab{font-size:.76rem;font-weight:600;padding:.3rem .7rem;border-radius:5px;border:none;background:transparent;color:var(--muted);cursor:pointer}
+.det-tab.active{background:var(--sec);color:#fff}
+
+.det-panel{display:none}.det-panel.active{display:block}
+
+/* Info general */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem;margin-bottom:.9rem}
+.info-item{background:#f8fafc;border-radius:7px;padding:.6rem .8rem}
+.info-label{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.info-value{font-size:.85rem;font-weight:600;color:var(--pri);margin-top:.15rem}
+
+/* ── Sugeridor de módulos ── */
+.sugeridor{background:#fff;border-radius:var(--radius)}
+.sug-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem}
+.sug-header h3{font-size:.88rem;font-weight:700;color:var(--pri)}
+.sug-score-bar{height:6px;border-radius:3px;background:#e0e7ef;margin-bottom:.9rem;overflow:hidden}
+.sug-score-fill{height:100%;border-radius:3px;background:var(--sec);transition:width .5s}
+
+.sug-grupos{display:flex;flex-direction:column;gap:.6rem}
+.sug-grupo{border:1.5px solid var(--borde);border-radius:8px;overflow:hidden}
+.sug-grupo-header{display:flex;align-items:center;justify-content:space-between;padding:.55rem .8rem;background:#f8fafc;cursor:pointer}
+.sug-grupo-header:hover{background:#f0f4f8}
+.sug-grupo-title{font-size:.8rem;font-weight:700;color:var(--pri);display:flex;align-items:center;gap:.4rem}
+.sug-grupo-stats{font-size:.7rem;color:var(--muted)}
+.sug-items{display:none;padding:.5rem .8rem;display:flex;flex-wrap:wrap;gap:.35rem}
+.sug-mod{display:inline-flex;align-items:center;gap:.3rem;font-size:.73rem;font-weight:600;padding:.28rem .65rem;border-radius:6px;border:1.5px solid}
+.sug-mod.activo{background:#e8f5e9;border-color:#a5d6a7;color:#1b5e20}
+.sug-mod.sugerido{background:#fff8e1;border-color:#ffe082;color:#e65100;cursor:pointer}
+.sug-mod.sugerido:hover{background:#fff3e0}
+.sug-mod.inactivo{background:#f5f5f5;border-color:#e0e0e0;color:#9e9e9e}
+
+/* Botones acción sugeridor */
+.sug-actions{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
+.btn-sug-apply{background:var(--verde);color:#fff;border:none;font-family:inherit;font-size:.78rem;font-weight:600;padding:.4rem .9rem;border-radius:6px;cursor:pointer}
+.btn-sug-apply:hover{background:#1b5e20}
+.btn-sug-wizard{background:#fff;color:var(--sec);border:1.5px solid var(--sec);font-family:inherit;font-size:.78rem;font-weight:600;padding:.4rem .9rem;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-sug-wizard:hover{background:#e3f2fd}
+
+/* Active modules compacto */
+.mod-chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}
+.mod-chip{font-size:.7rem;font-weight:600;padding:.2rem .55rem;border-radius:5px;background:#e3f2fd;color:#1565c0}
+.mod-chip.off{background:#f5f5f5;color:#9e9e9e;text-decoration:line-through;opacity:.6}
+
+/* ── Estado de onboarding ── */
+.onb-status{display:flex;align-items:center;gap:.5rem;font-size:.78rem;padding:.45rem .75rem;border-radius:7px;margin-bottom:.8rem}
+.onb-status.completo{background:#dcfce7;color:#166534}
+.onb-status.pendiente{background:#fff3e0;color:#92400e}
+.onb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.onb-dot.verde{background:#22c55e}.onb-dot.naranja{background:#f59e0b}
+
+/* ── Acciones del cliente ── */
+.acciones-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--borde)}
+.btn-accion{font-family:inherit;font-size:.76rem;font-weight:600;padding:.38rem .85rem;border-radius:6px;border:1.5px solid;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;text-decoration:none}
+.btn-accion.pri{background:var(--sec);color:#fff;border-color:var(--sec)}.btn-accion.pri:hover{background:#1976d2}
+.btn-accion.sec{background:#fff;color:var(--pri);border-color:var(--borde)}.btn-accion.sec:hover{background:#f0f4f8}
+.btn-accion.warn{background:#fff;color:var(--naranja);border-color:#ffd180}.btn-accion.warn:hover{background:#fff8e1}
+.btn-accion.danger{background:#fff;color:var(--rojo);border-color:#ffcdd2}.btn-accion.danger:hover{background:#fdecea}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:1.5rem;right:1rem;padding:.7rem 1.1rem;border-radius:8px;font-size:.84rem;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:opacity .3s;opacity:0;pointer-events:none;max-width:320px}
+.toast.ok{background:#e8f5e9;color:var(--verde);border-left:4px solid var(--verde)}
+.toast.err{background:#fdecea;color:var(--rojo);border-left:4px solid var(--rojo)}
+.toast.show{opacity:1;pointer-events:auto}
+
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;padding:1.4rem;max-width:500px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal h3{color:var(--pri);font-size:1rem;margin-bottom:.8rem}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
+
+/* ── Empty state ── */
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-ico{font-size:2.5rem;margin-bottom:.7rem}
+.empty-txt{font-size:.88rem}
+
+@media(max-width:560px){
+  .cliente-badges{display:none}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ── Login PIN ── */
+#login-overlay{position:fixed;inset:0;background:rgba(26,58,92,.97);display:flex;align-items:center;justify-content:center;z-index:1000}
+#login-overlay.hidden{display:none}
+.login-box{background:#fff;border-radius:12px;padding:2rem 2.5rem;width:100%;max-width:360px;text-align:center}
+.login-box h2{color:var(--pri);font-size:1.1rem;margin-bottom:.3rem}
+.login-box p{font-size:.82rem;color:var(--muted);margin-bottom:1.2rem}
+.pin-input{width:100%;font-size:1.8rem;letter-spacing:.4rem;text-align:center;border:2px solid var(--borde);border-radius:8px;padding:.7rem;font-family:monospace;margin-bottom:.8rem}
+.pin-input:focus{border-color:var(--pri);outline:none}
+.login-error{color:var(--rojo);font-size:.83rem;margin-bottom:.7rem;min-height:1.2rem}
+</style>
+</head>
+<body><div style="position:fixed;top:8px;right:8px;z-index:99999;display:flex;gap:.2rem;background:#1a3a5c;padding:.3rem;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.25);font-family:system-ui,sans-serif"><a href="portal.html" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:pointer">ES</a><a href="portal-en.html" style="background:#2196f3;color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:default">EN</a><a href="portal-fr.html" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:pointer">FR</a><a href="portal-pt.html" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:700;padding:.22rem .4rem;border-radius:4px;text-decoration:none;cursor:pointer">PT</a></div>
+
+<!-- ══════════ LOGIN OVERLAY ══════════ -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div style="font-size:2rem;margin-bottom:.5rem">🔐</div>
+    <h2>Admin Portal</h2>
+    <p>Enter your PIN to access the client list.</p>
+    <input type="password" class="pin-input" id="pin-input" maxlength="8"
+      placeholder="••••" onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-error" id="login-error"></div>
+    <button class="nav-btn pri" style="width:100%;justify-content:center;padding:.6rem" onclick="doLogin()">Enter →</button>
+  </div>
+</div>
+
+<nav>
+  <div>
+    <div class="nav-brand">🛡️ Compliance Monitor — Admin Portal</div>
+    <div class="nav-sub">Client and module management</div>
+  </div>
+  <div class="nav-actions">
+    <a href="onboarding-en.html" class="nav-btn pri">✚ New client</a>
+    <a href="index-en.html" class="nav-btn">📊 Demo dashboard</a>
+    <button class="nav-btn" onclick="doLogout()">🔓 Log out</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- KPIs -->
+  <div class="kpi-row" id="kpi-row">
+    <div class="kpi azul"><div class="kpi-num" id="kpi-total">0</div><div class="kpi-label">Active clients</div></div>
+    <div class="kpi verde"><div class="kpi-num" id="kpi-enterprise">0</div><div class="kpi-label">Enterprise</div></div>
+    <div class="kpi naranja"><div class="kpi-num" id="kpi-sugerencias">0</div><div class="kpi-label">With suggestions</div></div>
+    <div class="kpi rojo"><div class="kpi-num" id="kpi-sin-onboarding">0</div><div class="kpi-label">No onboarding</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input type="text" class="search-input" placeholder="🔍 Search client, sector, country..." oninput="filtrar(this.value)" id="search-input">
+    <button class="filter-btn active" onclick="setFiltro('todos',this)">All</button>
+    <button class="filter-btn" onclick="setFiltro('enterprise',this)">Enterprise</button>
+    <button class="filter-btn" onclick="setFiltro('professional',this)">Professional</button>
+    <button class="filter-btn" onclick="setFiltro('starter',this)">Starter</button>
+    <button class="filter-btn" onclick="setFiltro('sugerencias',this)">⚡ With suggestions</button>
+  </div>
+
+  <!-- Lista -->
+  <div class="clientes-grid" id="clientes-grid"></div>
+  <div class="empty" id="empty-state" style="display:none">
+    <div class="empty-ico">🔍</div>
+    <div class="empty-txt">No clients found matching that filter.</div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Modal confirmar activación -->
+<div class="modal-overlay" id="modal-activar">
+  <div class="modal">
+    <h3 id="modal-title">Activate suggested modules</h3>
+    <p id="modal-desc" style="font-size:.84rem;color:var(--muted);margin-bottom:.8rem"></p>
+    <div id="modal-mods" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem"></div>
+    <div class="modal-actions">
+      <button class="btn-accion sec" onclick="cerrarModal()">Cancel</button>
+      <button class="btn-accion pri" id="modal-confirm-btn">✅ Activate</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// DATOS — en producción esto viene de /api/v1/clientes
+// Por ahora se lee de clientes.json vía fetch, con fallback a datos demo
+// ══════════════════════════════════════════════════════════════
+
+const TODOS_MODULOS = [
+  {id:'dashboard',   label:'📊 Dashboard',      grupo:'core'},
+  {id:'board',       label:'🏛️ Board View',      grupo:'core'},
+  {id:'planaccion',  label:'📋 Action Plan',  grupo:'core'},
+  {id:'reporte',     label:'📄 Reporte',          grupo:'core'},
+  {id:'calendario',  label:'📅 Calendario',       grupo:'core'},
+  {id:'riesgo',      label:'🗺️ Riesgo',           grupo:'core'},
+  {id:'capacitacion',label:'📚 Training',     grupo:'core'},
+  {id:'duediligence',label:'🔍 Due Diligence',   grupo:'core'},
+  {id:'mejoras',     label:'📈 Mejoras & Alertas',grupo:'core'},
+  {id:'denuncias',   label:'🔒 Denuncias',        grupo:'core'},
+  {id:'ley27401',    label:'⚖️ Law 27,401',       grupo:'anticorrupcion'},
+  {id:'brasil',      label:'🇧🇷 Lei 12.846',       grupo:'anticorrupcion'},
+  {id:'fcpa',        label:'🇺🇸 FCPA',             grupo:'anticorrupcion'},
+  {id:'ocde',        label:'🌐 OCDE',              grupo:'anticorrupcion'},
+  {id:'iso37001',    label:'🚫 ISO 37001',         grupo:'anticorrupcion'},
+  {id:'rite',        label:'🏛️ RITE',              grupo:'anticorrupcion'},
+  {id:'lgpd',        label:'🇧🇷 LGPD',             grupo:'privacidad'},
+  {id:'gdpr',        label:'🇪🇺 GDPR',             grupo:'privacidad'},
+  {id:'ccpa',        label:'🌴 CCPA',              grupo:'privacidad'},
+  {id:'iso27701',    label:'🔏 ISO 27701',         grupo:'privacidad'},
+  {id:'iso27001',    label:'🔐 ISO 27001',         grupo:'seguridad'},
+  {id:'soc2',        label:'☁️ SOC 2',             grupo:'seguridad'},
+  {id:'nis2',        label:'🛡️ NIS2',              grupo:'seguridad'},
+  {id:'pcidss',      label:'💳 PCI DSS',           grupo:'seguridad'},
+  {id:'iso14001',    label:'🌿 ISO 14001',         grupo:'ambiental'},
+  {id:'esg',         label:'🌱 ESG',               grupo:'ambiental'},
+  {id:'iso45001',    label:'🦺 ISO 45001',         grupo:'gobernanza'},
+  {id:'cobit',       label:'🖥️ COBIT 2019',        grupo:'gobernanza'},
+  {id:'sox',         label:'📈 SOX',               grupo:'gobernanza'},
+  {id:'euaiact',     label:'🤖 EU AI Act',         grupo:'digital'},
+  {id:'dora',        label:'⚡ DORA',              grupo:'digital'},
+  {id:'crossmap',    label:'🗺️ Cross-Framework',   grupo:'cross'},
+  {id:'internacional',label:'🌍 Internacional',    grupo:'core'},
+  {id:'legislacion', label:'📋 Legislation',       grupo:'core'},
+];
+
+const GRUPO_LABELS = {
+  core:'⚙️ Core',anticorrupcion:'⚖️ Anti-corruption',
+  privacidad:'🔒 Privacidad',seguridad:'🔐 Seguridad',
+  ambiental:'🌿 Ambiental',gobernanza:'🏛️ Gobernanza',
+  digital:'🤖 Digital',cross:'🗺️ Cross',
+};
+
+// Reglas del sugeridor por perfil
+function calcSugerencias(cliente) {
+  const onb = cliente.onboarding || {};
+  const ma  = cliente.modulos_activos || {};
+  const sugeridos = new Set();
+
+  // Por sector
+  const sectorMods = {
+    construccion: ['iso45001','iso14001','esg','iso37001','ocde'],
+    industria:    ['iso45001','iso14001','esg','iso37001','ocde'],
+    energia:      ['iso45001','iso14001','esg','iso37001','ocde'],
+    mineria:      ['iso45001','iso14001','esg','iso37001','ocde'],
+    salud:        ['iso45001','iso27001','gdpr','iso27701','esg','ocde'],
+    finanzas:     ['cobit','dora','pcidss','iso27001','soc2','ocde'],
+    tecnologia:   ['iso27001','soc2','gdpr','ccpa','iso27701','euaiact','ocde'],
+    servicios:    ['iso27001','soc2','gdpr','iso27701','ocde'],
+    comercio:     ['iso27001','pcidss','gdpr','ccpa','ocde'],
+    agro:         ['iso45001','iso14001','esg','ocde'],
+  };
+  (sectorMods[onb.sector] || []).forEach(m => sugeridos.add(m));
+
+  // Por flags operacionales
+  if(onb.opera_en_brasil)       { sugeridos.add('brasil'); sugeridos.add('lgpd'); }
+  if(onb.opera_en_ue)           { sugeridos.add('gdpr'); sugeridos.add('nis2'); sugeridos.add('euaiact'); }
+  if(onb.opera_en_usa)          { sugeridos.add('fcpa'); sugeridos.add('ccpa'); }
+  if(onb.opera_en_uk)           { sugeridos.add('fcpa'); }
+  if(onb.cotiza_en_bolsa)       { sugeridos.add('sox'); }
+  if(onb.maneja_tarjetas)       { sugeridos.add('pcidss'); }
+  if(onb.sector_financiero_reg) { sugeridos.add('cobit'); sugeridos.add('dora'); }
+  if(onb.sector_salud_industria){ sugeridos.add('iso45001'); }
+  if(onb.usa_ia)                { sugeridos.add('euaiact'); }
+  if(onb.impacto_ambiental)     { sugeridos.add('iso14001'); sugeridos.add('esg'); }
+
+  // Filtrar: solo los que NO están ya activos
+  return [...sugeridos].filter(m => !ma[m]);
+}
+
+// Colores de avatar por sector
+const SECTOR_COLORS = {
+  construccion:'#e65100',industria:'#37474f',energia:'#f9a825',
+  finanzas:'#1565c0',tecnologia:'#6a1b9a',salud:'#c62828',
+  comercio:'#2e7d32',servicios:'#0277bd',agro:'#558b2f',
+  mineria:'#4e342e',
+};
+
+// Datos demo (fallback si no hay backend)
+const CLIENTES_DEMO = [
+  {
+    id:'cliente_001', nombre:'Empresa Demo S.A.', cuit:'30-00000000-0',
+    email:'compliance@empresademo.com.ar', plan:'enterprise', activo:true,
+    fecha_alta:'2024-03-01', fecha_vencimiento:'2026-12-31',
+    sector:'construccion', pais:'Argentina',
+    responsable:'Dr. María González',
+    onboarding:{
+      sector:'construccion', tamanio:'grande', pais:'Argentina',
+      opera_internacional:true, opera_en_brasil:true, opera_en_ue:false,
+      opera_en_usa:false, opera_en_uk:false, cotiza_en_bolsa:false,
+      maneja_tarjetas:false, sector_financiero_reg:false,
+      sector_salud_industria:true, usa_ia:false, impacto_ambiental:true,
+      completado:true, fecha_onboarding:'2025-06-01',
+    },
+    modulos_activos:{
+      dashboard:true, board:true, planaccion:true, reporte:true,
+      calendario:true, riesgo:true, capacitacion:true, duediligence:true,
+      mejoras:true, denuncias:true, ley27401:true, brasil:true, fcpa:true,
+      ocde:true, iso37001:true, rite:true, lgpd:true, gdpr:false, ccpa:false,
+      iso27701:false, iso27001:false, soc2:false, nis2:false, pcidss:false,
+      iso14001:true, esg:true, iso45001:true, cobit:false, sox:false,
+      euaiact:false, dora:false, crossmap:true, internacional:true, legislacion:true,
+    },
+  },
+  {
+    id:'demo', nombre:'Constructora del Sur S.A.', cuit:'30-99887766-5',
+    email:'compliance@constructoradelsur.com.ar', plan:'professional', activo:true,
+    fecha_alta:'2024-01-15', fecha_vencimiento:'2026-12-31',
+    sector:'construccion', pais:'Argentina',
+    responsable:'',
+    onboarding:{
+      sector:'construccion', tamanio:'grande', pais:'Argentina',
+      opera_internacional:false, opera_en_brasil:false, opera_en_ue:false,
+      opera_en_usa:false, opera_en_uk:false, cotiza_en_bolsa:false,
+      maneja_tarjetas:false, sector_financiero_reg:false,
+      sector_salud_industria:true, usa_ia:false, impacto_ambiental:true,
+      completado:true, fecha_onboarding:'2024-01-15',
+    },
+    modulos_activos:{
+      dashboard:true, board:true, planaccion:true, reporte:true,
+      calendario:true, riesgo:true, capacitacion:true, duediligence:true,
+      mejoras:true, denuncias:true, ley27401:true, brasil:false, fcpa:false,
+      ocde:true, iso37001:true, rite:true, lgpd:false, gdpr:false, ccpa:false,
+      iso27701:false, iso27001:true, soc2:false, nis2:false, pcidss:false,
+      iso14001:true, esg:true, iso45001:true, cobit:false, sox:false,
+      euaiact:false, dora:false, crossmap:true, internacional:true, legislacion:true,
+    },
+  },
+  {
+    id:'cliente_fin', nombre:'Fintech Norte S.A.', cuit:'30-55566677-8',
+    email:'compliance@fintechnorte.com', plan:'enterprise', activo:true,
+    fecha_alta:'2025-02-01', fecha_vencimiento:'2027-02-01',
+    sector:'finanzas', pais:'Argentina',
+    responsable:'Lic. Carlos Ruiz',
+    onboarding:{
+      sector:'finanzas', tamanio:'mediana', pais:'Argentina',
+      opera_internacional:true, opera_en_brasil:false, opera_en_ue:true,
+      opera_en_usa:true, opera_en_uk:false, cotiza_en_bolsa:false,
+      maneja_tarjetas:true, sector_financiero_reg:true,
+      sector_salud_industria:false, usa_ia:true, impacto_ambiental:false,
+      completado:true, fecha_onboarding:'2025-02-10',
+    },
+    modulos_activos:{
+      dashboard:true, board:true, planaccion:true, reporte:true,
+      calendario:true, riesgo:true, capacitacion:true, duediligence:true,
+      mejoras:true, denuncias:true, ley27401:true, brasil:false, fcpa:true,
+      ocde:true, iso37001:true, rite:false, lgpd:false, gdpr:true, ccpa:true,
+      iso27701:true, iso27001:true, soc2:true, nis2:true, pcidss:true,
+      iso14001:false, esg:false, iso45001:false, cobit:false, sox:false,
+      euaiact:false, dora:false, crossmap:true, internacional:true, legislacion:true,
+    },
+  },
+  {
+    id:'cliente_tech', nombre:'TechSoft Argentina S.R.L.', cuit:'30-44433322-1',
+    email:'compliance@techsoft.ar', plan:'professional', activo:true,
+    fecha_alta:'2025-05-01', fecha_vencimiento:'2026-05-01',
+    sector:'tecnologia', pais:'Argentina',
+    responsable:'',
+    onboarding:null, // sin onboarding completado
+    modulos_activos:{
+      dashboard:true, board:true, planaccion:true, reporte:true,
+      calendario:true, riesgo:true, capacitacion:true, duediligence:true,
+      mejoras:true, denuncias:true, ley27401:true, brasil:false, fcpa:false,
+      ocde:false, iso37001:false, rite:false, lgpd:false, gdpr:false, ccpa:false,
+      iso27701:false, iso27001:true, soc2:false, nis2:false, pcidss:false,
+      iso14001:false, esg:false, iso45001:false, cobit:false, sox:false,
+      euaiact:false, dora:false, crossmap:false, internacional:false, legislacion:true,
+    },
+  },
+];
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let clientes = [];
+let filtroActual = 'todos';
+let busqueda = '';
+let modalCallback = null;
+const API = '/api/v1';
+let sessionToken = localStorage.getItem('denuncias_token') || '';
+let sessionRol   = localStorage.getItem('denuncias_rol')   || '';
+
+// ── Auth / Login ─────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pin = document.getElementById('pin-input').value.trim();
+  if (!pin) return;
+  document.getElementById('login-error').textContent = '';
+  try {
+    const r = await fetch(`${API}/denuncias/auth/login`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ pin })
+    });
+    if (!r.ok) {
+      const e = await r.json();
+      document.getElementById('login-error').textContent = e.detail || 'PIN incorrecto.';
+      document.getElementById('pin-input').value = '';
+      return;
+    }
+    const data = await r.json();
+    sessionToken = data.token;
+    sessionRol   = data.rol;
+    localStorage.setItem('denuncias_token', sessionToken);
+    localStorage.setItem('denuncias_rol',   sessionRol);
+    document.getElementById('login-overlay').classList.add('hidden');
+    init();
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Connection error.';
+  }
+}
+
+async function doLogout() {
+  if (sessionToken) {
+    await fetch(`${API}/denuncias/auth/logout`, {
+      method: 'POST', headers: {'X-Session-Token': sessionToken}
+    }).catch(() => {});
+  }
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  location.reload();
+}
+
+async function verificarSesion() {
+  if (!sessionToken) return false;
+  try {
+    const r = await fetch(`${API}/denuncias/auth/estado`, { headers: {'X-Session-Token': sessionToken} });
+    if (r.ok) return true;
+  } catch(e) {}
+  sessionToken = '';
+  localStorage.removeItem('denuncias_token');
+  localStorage.removeItem('denuncias_rol');
+  return false;
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+async function iniciarApp() {
+  const ok = await verificarSesion();
+  if (!ok) {
+    document.getElementById('pin-input').focus();
+    return;
+  }
+  document.getElementById('login-overlay').classList.add('hidden');
+  await init();
+}
+
+async function init() {
+  try {
+    const r = await fetch(`${API}/clientes`, { headers: {'X-Session-Token': sessionToken} });
+    if(r.ok){ const d = await r.json(); clientes = d.clientes || CLIENTES_DEMO; }
+    else { clientes = CLIENTES_DEMO; }
+  } catch(e) { clientes = CLIENTES_DEMO; }
+  renderKPIs();
+  renderClientes();
+}
+
+// ══════════════════════════════════════════════════════════════
+// KPIs
+// ══════════════════════════════════════════════════════════════
+function renderKPIs() {
+  const activos = clientes.filter(c=>c.activo);
+  const enterprise = activos.filter(c=>c.plan==='enterprise').length;
+  const conSug = activos.filter(c=>c.onboarding && calcSugerencias(c).length > 0).length;
+  const sinOnb = activos.filter(c=>!c.onboarding || !c.onboarding.completado).length;
+  document.getElementById('kpi-total').textContent = activos.length;
+  document.getElementById('kpi-enterprise').textContent = enterprise;
+  document.getElementById('kpi-sugerencias').textContent = conSug;
+  document.getElementById('kpi-sin-onboarding').textContent = sinOnb;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER LISTA
+// ══════════════════════════════════════════════════════════════
+function clientesFiltrados() {
+  return clientes.filter(c => {
+    const busq = busqueda.toLowerCase();
+    const matchBusq = !busqueda ||
+      c.nombre.toLowerCase().includes(busq) ||
+      (c.sector||'').toLowerCase().includes(busq) ||
+      (c.pais||'').toLowerCase().includes(busq) ||
+      (c.email||'').toLowerCase().includes(busq);
+    const sugs = c.onboarding ? calcSugerencias(c) : [];
+    const matchFiltro =
+      filtroActual === 'todos' ? true :
+      filtroActual === 'enterprise' ? c.plan === 'enterprise' :
+      filtroActual === 'professional' ? c.plan === 'professional' :
+      filtroActual === 'starter' ? c.plan === 'starter' :
+      filtroActual === 'sugerencias' ? sugs.length > 0 : true;
+    return matchBusq && matchFiltro;
+  });
+}
+
+function renderClientes() {
+  const lista = clientesFiltrados();
+  const grid = document.getElementById('clientes-grid');
+  const empty = document.getElementById('empty-state');
+  if(!lista.length){ grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  grid.innerHTML = lista.map(c => renderClienteCard(c)).join('');
+}
+
+function renderClienteCard(c) {
+  const sugs = c.onboarding ? calcSugerencias(c) : [];
+  const activos = TODOS_MODULOS.filter(m => c.modulos_activos && c.modulos_activos[m.id]).length;
+  const total = TODOS_MODULOS.length;
+  const pct = Math.round(activos/total*100);
+  const color = SECTOR_COLORS[c.sector] || '#1a3a5c';
+  const iniciales = c.nombre.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  const scoreClass = pct >= 70 ? 'alta' : pct >= 40 ? 'media' : 'baja';
+  const planClass = `badge-plan-${c.plan}`;
+  const onbOk = c.onboarding && c.onboarding.completado;
+
+  return `<div class="cliente-card" id="card-${c.id}">
+    <div class="cliente-header" onclick="toggleDetalle('${c.id}')">
+      <div class="cliente-avatar" style="background:${color}">${iniciales}</div>
+      <div class="cliente-info">
+        <div class="cliente-nombre">${c.nombre}</div>
+        <div class="cliente-meta">
+          <span>${c.sector || '—'}</span>
+          <span>${c.pais || '—'}</span>
+          <span>${c.email || ''}</span>
+        </div>
+      </div>
+      <div class="cliente-badges">
+        ${sugs.length > 0 ? `<span class="badge" style="background:#fff3e0;color:#e65100">⚡ ${sugs.length} sugerencias</span>` : ''}
+        <span class="badge ${planClass}">${c.plan}</span>
+        <span class="badge ${c.activo?'badge-activo':'badge-inactivo'}">${c.activo?'Activo':'Inactivo'}</span>
+        <span class="score-mini ${scoreClass}">${pct}% módulos</span>
+      </div>
+    </div>
+    <div class="cliente-detalle" id="det-${c.id}">
+      ${renderDetalle(c, sugs)}
+    </div>
+  </div>`;
+}
+
+function renderDetalle(c, sugs) {
+  const onb = c.onboarding;
+  const onbOk = onb && onb.completado;
+  const activos = TODOS_MODULOS.filter(m => c.modulos_activos && c.modulos_activos[m.id]);
+  const pct = Math.round(activos.length/TODOS_MODULOS.length*100);
+
+  return `
+  <div class="det-tabs">
+    <button class="det-tab active" onclick="showDetTab(this,'${c.id}','info')">📋 Info</button>
+    <button class="det-tab" onclick="showDetTab(this,'${c.id}','modulos')">🧩 Módulos (${activos.length}/${TODOS_MODULOS.length})</button>
+    <button class="det-tab" onclick="showDetTab(this,'${c.id}','sugeridor')">💡 Sugeridor ${sugs.length>0?`<span style="background:#e65100;color:#fff;border-radius:4px;padding:.05rem .35rem;font-size:.62rem;margin-left:.2rem">${sugs.length}</span>`:''}</button>
+  </div>
+
+  <!-- Tab Info -->
+  <div class="det-panel active" id="tab-${c.id}-info">
+    <div class="${onbOk?'onb-status completo':'onb-status pendiente'}">
+      <div class="onb-dot ${onbOk?'verde':'naranja'}"></div>
+      ${onbOk ? `Onboarding completado · ${onb.fecha_onboarding}` : '⚠️ Onboarding pending — complete it to activate the module suggester'}
+    </div>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">CUIT (Tax ID)</div><div class="info-value">${c.cuit||'—'}</div></div>
+      <div class="info-item"><div class="info-label">Plan</div><div class="info-value">${c.plan}</div></div>
+      <div class="info-item"><div class="info-label">Sector</div><div class="info-value">${c.sector||'—'}</div></div>
+      <div class="info-item"><div class="info-label">Size</div><div class="info-value">${onb?.tamanio||'—'}</div></div>
+      <div class="info-item"><div class="info-label">Country</div><div class="info-value">${c.pais||'—'}</div></div>
+      <div class="info-item"><div class="info-label">Owner</div><div class="info-value">${c.responsable||'—'}</div></div>
+      <div class="info-item"><div class="info-label">High</div><div class="info-value">${c.fecha_alta||'—'}</div></div>
+      <div class="info-item"><div class="info-label">Vencimiento</div><div class="info-value">${c.fecha_vencimiento||'—'}</div></div>
+    </div>
+    ${onb ? `<div style="font-size:.76rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.5rem">
+      ${onb.opera_en_brasil?'<span style="background:#e8f5e9;color:#2e7d32;padding:.15rem .5rem;border-radius:4px;font-weight:600">🇧🇷 Brazil</span>':''}
+      ${onb.opera_en_ue?'<span style="background:#e3f2fd;color:#1565c0;padding:.15rem .5rem;border-radius:4px;font-weight:600">🇪🇺 UE</span>':''}
+      ${onb.opera_en_usa?'<span style="background:#f3e5f5;color:#6a1b9a;padding:.15rem .5rem;border-radius:4px;font-weight:600">🇺🇸 EE.UU.</span>':''}
+      ${onb.cotiza_en_bolsa?'<span style="background:#fff3e0;color:#e65100;padding:.15rem .5rem;border-radius:4px;font-weight:600">📈 Bolsa</span>':''}
+      ${onb.maneja_tarjetas?'<span style="background:#fdecea;color:#c62828;padding:.15rem .5rem;border-radius:4px;font-weight:600">💳 Tarjetas</span>':''}
+      ${onb.sector_financiero_reg?'<span style="background:#e8eaf6;color:#3949ab;padding:.15rem .5rem;border-radius:4px;font-weight:600">🏦 Financiero</span>':''}
+      ${onb.sector_salud_industria?'<span style="background:#fff8e1;color:#e65100;padding:.15rem .5rem;border-radius:4px;font-weight:600">🦺 SST</span>':''}
+    </div>` : ''}
+    <div class="acciones-row">
+      <a href="onboarding-en.html" class="btn-accion pri">✏️ Editar onboarding</a>
+      <button class="btn-accion sec" onclick="copiarLink('${c.id}')">🔗 Copiar link</button>
+      <button class="btn-accion warn">📧 Enviar acceso</button>
+      <button class="btn-accion danger">🗑️ Desactivar</button>
+    </div>
+  </div>
+
+  <!-- Tab Módulos -->
+  <div class="det-panel" id="tab-${c.id}-modulos">
+    <div class="sug-score-bar"><div class="sug-score-fill" style="width:${pct}%"></div></div>
+    <p style="font-size:.76rem;color:var(--muted);margin-bottom:.7rem">${activos.length} de ${TODOS_MODULOS.length} active modules (${pct}%)</p>
+    ${renderModulosPorGrupo(c)}
+  </div>
+
+  <!-- Tab Sugeridor -->
+  <div class="det-panel" id="tab-${c.id}-sugeridor">
+    ${renderSugeridor(c, sugs)}
+  </div>`;
+}
+
+function renderModulosPorGrupo(c) {
+  const grupos = ['core','anticorrupcion','privacidad','seguridad','ambiental','gobernanza','digital','cross'];
+  return grupos.map(g => {
+    const items = TODOS_MODULOS.filter(m=>m.grupo===g);
+    const activosGrupo = items.filter(m=>c.modulos_activos && c.modulos_activos[m.id]).length;
+    return `<div style="margin-bottom:.5rem">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.04em">${GRUPO_LABELS[g]} · ${activosGrupo}/${items.length}</div>
+      <div class="mod-chips">
+        ${items.map(m=>`<span class="mod-chip ${c.modulos_activos&&c.modulos_activos[m.id]?'':'off'}">${m.label}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSugeridor(c, sugs) {
+  if(!c.onboarding || !c.onboarding.completado) {
+    return `<div style="text-align:center;padding:1.5rem;color:var(--muted)">
+      <div style="font-size:1.8rem;margin-bottom:.5rem">🧭</div>
+      <div style="font-size:.85rem;font-weight:600">Onboarding no completado</div>
+      <div style="font-size:.78rem;margin-top:.3rem">Complete the client profile to see personalized suggestions.</div>
+      <a href="onboarding-en.html" style="display:inline-block;margin-top:.8rem;font-size:.78rem;font-weight:600;color:var(--sec);text-decoration:none;border:1.5px solid var(--sec);padding:.35rem .8rem;border-radius:6px">✚ Completar onboarding</a>
+    </div>`;
+  }
+  if(sugs.length === 0) {
+    return `<div style="text-align:center;padding:1.5rem;color:var(--muted)">
+      <div style="font-size:1.8rem;margin-bottom:.5rem">✅</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--verde)">All up to date</div>
+      <div style="font-size:.78rem;margin-top:.3rem">No suggested modules pending for this profile.</div>
+    </div>`;
+  }
+
+  const grupos = [...new Set(sugs.map(sid => TODOS_MODULOS.find(m=>m.id===sid)?.grupo).filter(Boolean))];
+
+  return `
+  <div class="sug-header">
+    <h3>💡 ${sugs.length} módulo${sugs.length>1?'s':''} sugerido${sugs.length>1?'s':''} para el perfil</h3>
+    <span style="font-size:.72rem;color:var(--muted)">Sector: ${c.onboarding.sector} · ${c.pais}</span>
+  </div>
+  <div class="sug-grupos">
+    ${grupos.map(g => {
+      const items = sugs.filter(sid => TODOS_MODULOS.find(m=>m.id===sid)?.grupo === g);
+      return `<div class="sug-grupo">
+        <div class="sug-grupo-header">
+          <div class="sug-grupo-title">${GRUPO_LABELS[g]}</div>
+          <div class="sug-grupo-stats">${items.length} sugerido${items.length>1?'s':''}</div>
+        </div>
+        <div class="sug-items">
+          ${items.map(sid => {
+            const mod = TODOS_MODULOS.find(m=>m.id===sid);
+            return mod ? `<span class="sug-mod sugerido" title="Click to activate only this module" onclick="activarModulo('${c.id}','${sid}',event)">${mod.label} ＋</span>` : '';
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="sug-actions">
+    <button class="btn-sug-apply" onclick="abrirModalActivar('${c.id}')">⚡ Activar todos los sugeridos</button>
+    <a href="onboarding-en.html" class="btn-sug-wizard">✏️ Re-configurar perfil</a>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// INTERACCIONES
+// ══════════════════════════════════════════════════════════════
+function toggleDetalle(id) {
+  const det = document.getElementById('det-'+id);
+  det.classList.toggle('open');
+}
+
+function showDetTab(btn, clienteId, tab) {
+  const det = document.getElementById('det-'+clienteId);
+  det.querySelectorAll('.det-tab').forEach(b=>b.classList.remove('active'));
+  det.querySelectorAll('.det-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`tab-${clienteId}-${tab}`).classList.add('active');
+}
+
+function filtrar(val) { busqueda = val; renderClientes(); }
+
+function setFiltro(f, btn) {
+  filtroActual = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderClientes();
+}
+
+function activarModulo(clienteId, modId, e) {
+  e.stopPropagation();
+  const c = clientes.find(x=>x.id===clienteId);
+  if(!c) return;
+  c.modulos_activos[modId] = true;
+  const mod = TODOS_MODULOS.find(m=>m.id===modId);
+  toast(`✅ ${mod?.label || modId} activated for ${c.nombre}`, 'ok');
+  // Re-render la card
+  document.getElementById('card-'+clienteId).outerHTML = renderClienteCard(c);
+  document.getElementById('det-'+clienteId).classList.add('open');
+}
+
+function abrirModalActivar(clienteId) {
+  const c = clientes.find(x=>x.id===clienteId);
+  if(!c) return;
+  const sugs = calcSugerencias(c);
+  document.getElementById('modal-title').textContent = `Activate suggested modules — ${c.nombre}`;
+  document.getElementById('modal-desc').textContent = `Will be activated ${sugs.length} módulo${sugs.length>1?'s':''} based on the client's profile.`;
+  document.getElementById('modal-mods').innerHTML = sugs.map(sid => {
+    const mod = TODOS_MODULOS.find(m=>m.id===sid);
+    return mod ? `<span style="background:#e8f5e9;color:#1b5e20;font-size:.72rem;font-weight:600;padding:.2rem .55rem;border-radius:5px">${mod.label}</span>` : '';
+  }).join('');
+  modalCallback = () => activarTodos(clienteId, sugs);
+  document.getElementById('modal-confirm-btn').onclick = () => { modalCallback(); cerrarModal(); };
+  document.getElementById('modal-activar').classList.add('open');
+}
+
+function activarTodos(clienteId, sugs) {
+  const c = clientes.find(x=>x.id===clienteId);
+  if(!c) return;
+  sugs.forEach(sid => { c.modulos_activos[sid] = true; });
+  toast(`✅ ${sugs.length} modules activated for ${c.nombre}`, 'ok');
+  renderKPIs();
+  document.getElementById('card-'+clienteId).outerHTML = renderClienteCard(c);
+  document.getElementById('det-'+clienteId).classList.add('open');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-activar').classList.remove('open');
+}
+
+function copiarLink(clienteId) {
+  navigator.clipboard.writeText(`${window.location.origin}/?cliente=${clienteId}`);
+  toast('🔗 Link copiado al portapapeles', 'ok');
+}
+
+function toast(msg, tipo='ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = `toast ${tipo} show`;
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// Click fuera del modal lo cierra
+document.getElementById('modal-activar').addEventListener('click', function(e){
+  if(e.target === this) cerrarModal();
+});
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+iniciarApp();
+</script>
+</body>
+</html>
