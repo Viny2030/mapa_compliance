@@ -152,6 +152,24 @@
 </style>
 </head>
 <body>
+<div id="lang-selector" style="position:fixed;top:10px;right:10px;z-index:9999;display:flex;gap:4px;background:#1a3a5c;padding:6px 8px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.3);">
+  <a data-lang="es" style="color:#fff;text-decoration:none;font:bold 12px sans-serif;padding:2px 6px;border-radius:4px;">ES</a>
+  <a data-lang="en" style="color:#fff;text-decoration:none;font:bold 12px sans-serif;padding:2px 6px;border-radius:4px;">EN</a>
+  <a data-lang="pt" style="color:#fff;text-decoration:none;font:bold 12px sans-serif;padding:2px 6px;border-radius:4px;">PT</a>
+  <a data-lang="fr" style="color:#fff;text-decoration:none;font:bold 12px sans-serif;padding:2px 6px;border-radius:4px;">FR</a>
+</div>
+<script>
+(function(){
+  var file = location.pathname.split('/').pop() || 'index.html';
+  var stem = file.replace(/-(en|fr|pt)\.html$/,'.html').replace(/\.html$/,'');
+  var current = /-(en|fr|pt)\.html$/.test(file) ? RegExp.$1 : 'es';
+  document.querySelectorAll('#lang-selector a').forEach(function(a){
+    var lang = a.getAttribute('data-lang');
+    a.href = lang === 'es' ? stem + '.html' : stem + '-' + lang + '.html';
+    if (lang === current) a.style.background = '#2196f3';
+  });
+})();
+</script>
 
 <!-- ══════════ LOGIN OVERLAY ══════════ -->
 <div id="login-overlay">
