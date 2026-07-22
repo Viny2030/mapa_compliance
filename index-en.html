@@ -290,7 +290,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <button class="tab-btn" data-panel="brasil" data-modulo="brasil">🇧🇷 Lei 12.846</button>
     <button class="tab-btn" data-panel="fcpa" data-modulo="fcpa">🇺🇸🇬🇧 FCPA & Bribery</button>
     <button class="tab-btn" data-panel="lgpd" data-modulo="lgpd">🇧🇷 LGPD</button>
-    <button class="tab-btn" data-panel="ocde" data-modulo="ocde">🌐 OCDE</button>
+    <button class="tab-btn" data-panel="ocde" data-modulo="ocde">🌐 OECD</button>
     <button class="tab-btn" data-panel="iso37001" data-modulo="iso37001">🚫 ISO 37001</button>
     <button class="tab-btn" data-panel="iso14001" data-modulo="iso14001">🌿 ISO 14001</button>
     <button class="tab-btn" data-panel="iso45001" data-modulo="iso45001">🦺 ISO 45001</button>
@@ -308,7 +308,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <button class="tab-btn" data-panel="sox" data-modulo="sox">📈 SOX</button>
     <button class="tab-btn" data-panel="crossmap" data-modulo="crossmap">🗺️ Cross-Framework</button>
     <button class="tab-btn" data-panel="dora" data-modulo="dora">⚡ DORA</button>
-    <button class="tab-btn" data-panel="planaccion" data-modulo="planaccion">📋 Plan de Acción</button>
+    <button class="tab-btn" data-panel="planaccion" data-modulo="planaccion">📋 Action Plan</button>
     <div class="tab-row-sep"></div>
     <button class="tab-btn" data-panel="capacitacion" data-modulo="capacitacion">📚 Capacitación</button>
     <button class="tab-btn" data-panel="duediligence" data-modulo="duediligence">🔍 Due Diligence</button>
@@ -320,12 +320,12 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <button class="tab-btn" data-panel="reporte" data-modulo="reporte">📄 Reporte</button>
     <button class="tab-btn" data-panel="denuncias" data-modulo="denuncias">🔒 Canal de Denuncias</button>
     <button class="tab-btn" onclick="window.location='benchmark.html'">📊 Benchmark</button>
-    <button class="tab-btn" onclick="window.location='conflicto_interes.html'">⚖️ Conflictos</button>
+    <button class="tab-btn" onclick="window.location='conflicto_interes.html'">⚖️ Conflicts of Interest</button>
     <button class="tab-btn" onclick="window.location='predictor.html'">🤖 Predictor</button>
-    <button class="tab-btn" onclick="window.location='incidentes.html'">🚨 Incidentes</button>
-    <button class="tab-btn" onclick="window.location='controles.html'">🛡️ Controles</button>
-    <button class="tab-btn" onclick="window.location='capacitaciones.html'">✍️ Firmas</button>
-    <button class="tab-btn" onclick="window.location='documentos.html'">📁 Documentos</button>
+    <button class="tab-btn" onclick="window.location='incidentes.html'">🚨 Incidents</button>
+    <button class="tab-btn" onclick="window.location='controles.html'">🛡️ Controls</button>
+    <button class="tab-btn" onclick="window.location='capacitaciones.html'">✍️ Signatures</button>
+    <button class="tab-btn" onclick="window.location='documentos.html'">📁 Documents</button>
   </div>
 </nav>
 
@@ -359,11 +359,11 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card"><h2 data-i18n="riesgo_por_area">Riesgo por área</h2><div class="chart-wrap" style="height:200px"><canvas id="ch-riesgo-dash"></canvas></div></div>
     <div class="card"><h2 id="t-alertas" data-i18n="alertas_activas">Alertas activas</h2><div id="alertas-cont"></div></div>
     <div class="card">
-      <h2>🌐 Cobertura por Framework</h2>
-      <p style="color:var(--muted);font-size:.82rem;margin-bottom:.8rem">Score de implementación de cada marco normativo — calculado sobre los controles del Cross-Framework Mapping.</p>
+      <h2>🌐 Framework Coverage</h2>
+      <p style="color:var(--muted);font-size:.82rem;margin-bottom:.8rem">Implementation score for each regulatory framework — calculated from the Cross-Framework Mapping controls.</p>
       <div id="dash-frameworks-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-bottom:.8rem"></div>
       <div class="prog-bar-wrap" style="margin-top:.5rem">
-        <div class="prog-label"><span>📊 Score global multi-framework</span><span id="dash-global-fw-pct">—</span></div>
+        <div class="prog-label"><span>📊 Global multi-framework score</span><span id="dash-global-fw-pct">—</span></div>
         <div class="prog-track"><div class="prog-fill verde" id="dash-global-fw-bar" style="width:0%"></div></div>
       </div>
     </div>
@@ -378,12 +378,12 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card" style="border-top:4px solid var(--pri);margin-bottom:1rem">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.6rem">
         <div>
-          <h2 style="font-size:1.15rem" id="board-titulo">Vista Ejecutiva — Programa de Integridad</h2>
+          <h2 style="font-size:1.15rem" id="board-titulo">Executive View — Integrity Program</h2>
           <div style="font-size:.8rem;color:var(--muted)" id="board-subtitulo"></div>
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
           <span id="board-fecha" style="font-size:.76rem;color:var(--muted)"></span>
-          <button class="board-printbtn" onclick="window.print()">🖨️ Imprimir</button>
+          <button class="board-printbtn" onclick="window.print()">🖨️ Print</button>
         </div>
       </div>
     </div>
@@ -392,33 +392,33 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <!-- Semáforo de ejes -->
     <div class="grid2" style="margin-bottom:1rem">
       <div class="card" style="margin-bottom:0">
-        <h2 style="margin-bottom:.7rem">🚦 Estado por eje</h2>
+        <h2 style="margin-bottom:.7rem">🚦 Status by axis</h2>
         <div id="board-semaforos"></div>
       </div>
       <div class="card" style="margin-bottom:0">
-        <h2 style="margin-bottom:.7rem">📊 Evolución del score</h2>
+        <h2 style="margin-bottom:.7rem">📊 Score evolution</h2>
         <div style="position:relative;height:180px"><canvas id="ch-board-evol"></canvas></div>
       </div>
     </div>
     <!-- Riesgos críticos + alertas -->
     <div class="grid2" style="margin-bottom:1rem">
       <div class="card" style="margin-bottom:0">
-        <h2 style="margin-bottom:.7rem">🔴 Riesgos críticos</h2>
+        <h2 style="margin-bottom:.7rem">🔴 Critical risks</h2>
         <div id="board-riesgos"></div>
       </div>
       <div class="card" style="margin-bottom:0">
-        <h2 style="margin-bottom:.7rem">⚠️ Alertas para el directorio</h2>
+        <h2 style="margin-bottom:.7rem">⚠️ Alerts for the board</h2>
         <div id="board-alertas"></div>
       </div>
     </div>
     <!-- Próximas acciones -->
     <div class="card" style="margin-bottom:1rem">
-      <h2 style="margin-bottom:.7rem">📋 Próximas acciones prioritarias</h2>
+      <h2 style="margin-bottom:.7rem">📋 Upcoming priority actions</h2>
       <div id="board-acciones"></div>
     </div>
     <!-- Cobertura multi-framework -->
     <div class="card" style="margin-bottom:1rem">
-      <h2 style="margin-bottom:.7rem">🌐 Cobertura Multi-Framework</h2>
+      <h2 style="margin-bottom:.7rem">🌐 Multi-Framework Coverage</h2>
       <div id="board-frameworks"></div>
     </div>
     <!-- Firma -->
@@ -455,9 +455,9 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-brasil">
   <div class="wrap">
     <div class="card">
-      <h2>🇧🇷 Lei Anticorrupção 12.846/2013 — Brasil</h2>
+      <h2>🇧🇷 Lei Anticorrupção 12.846/2013 — Brazil</h2>
       <p style="font-size:.83rem;color:var(--muted);margin-bottom:.9rem">
-        Responsabilidade objetiva · Acordo de Leniência · CGU/AGU
+        Strict liability · Leniency Agreement · CGU/AGU
       </p>
       <div class="score-wrap">
         <div class="score-ring">
@@ -476,21 +476,21 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     </div>
     <div class="grid2">
       <div class="card" style="margin-bottom:0">
-        <h2>✅ Elementos obrigatórios</h2>
+        <h2>✅ Mandatory elements</h2>
         <div id="brasil-check-obrig"></div>
       </div>
       <div class="card" style="margin-bottom:0">
-        <h2>⚖️ Fatores atenuantes</h2>
+        <h2>⚖️ Mitigating factors</h2>
         <div id="brasil-check-aten"></div>
       </div>
     </div><br>
     <div class="card">
-      <h2>📋 Referência normativa</h2>
+      <h2>📋 Legal reference</h2>
       <div style="font-size:.83rem;color:var(--muted);line-height:1.7">
-        <div style="margin-bottom:.4rem">🔹 <strong>Art. 7</strong> — Fatores que atenuam a sanção, incluindo a existência de programa de integridade</div>
-        <div style="margin-bottom:.4rem">🔹 <strong>Art. 16</strong> — Acordo de Leniência: redução de até 2/3 da multa para empresas colaboradoras</div>
-        <div style="margin-bottom:.4rem">🔹 <strong>Art. 41-D</strong> (Decreto 11.129/2022) — Parâmetros mínimos do Programa de Integridade</div>
-        <div>🔹 <strong>Portaria CGU 909/2015</strong> — Avaliação do programa para fins de redução de sanções</div>
+        <div style="margin-bottom:.4rem">🔹 <strong>Art. 7</strong> — Factors that mitigate sanctions, including the existence of an integrity program</div>
+        <div style="margin-bottom:.4rem">🔹 <strong>Art. 16</strong> — Leniency Agreement: reduction of up to 2/3 of the fine for cooperating companies</div>
+        <div style="margin-bottom:.4rem">🔹 <strong>Art. 41-D</strong> (Decreto 11.129/2022) — Minimum parameters of the Integrity Program</div>
+        <div>🔹 <strong>Portaria CGU 909/2015</strong> — Program assessment for purposes of sanction reduction</div>
       </div>
     </div>
   </div>
@@ -505,7 +505,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card" style="border-top-color:#1a3a5c">
       <h2>🇺🇸 FCPA — Foreign Corrupt Practices Act (1977)</h2>
       <p style="font-size:.83rem;color:var(--muted);margin-bottom:.9rem">
-        USA · DOJ + SEC · Aplicación extraterritorial · 15 U.S.C. §§ 78dd-1, -2, -3
+        USA · DOJ + SEC · Extraterritorial application · 15 U.S.C. §§ 78dd-1, -2, -3
       </p>
       <div class="score-wrap">
         <div class="score-ring">
@@ -519,7 +519,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
           <div id="fcpa-nivel" style="font-size:1rem;font-weight:700;margin-bottom:.35rem"></div>
           <div id="fcpa-aplica-badge" style="margin-bottom:.5rem"></div>
           <div style="font-size:.8rem;color:var(--muted);line-height:1.5">
-            El FCPA aplica a empresas con nexo con EE.UU.: cotización en bolsa americana, pagos en USD, filiales o empleados en territorio americano.
+            The FCPA applies to companies with a US nexus: listing on a US stock exchange, payments in USD, subsidiaries or employees in US territory.
           </div>
         </div>
       </div>
@@ -530,7 +530,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card" style="border-top-color:#c62828;margin-top:.5rem">
       <h2>🇬🇧 UK Bribery Act 2010</h2>
       <p style="font-size:.83rem;color:var(--muted);margin-bottom:.9rem">
-        Reino Unido · SFO · Strict liability · La más estricta del mundo
+        United Kingdom · SFO · Strict liability · The strictest in the world
       </p>
       <div class="score-wrap">
         <div class="score-ring">
@@ -544,7 +544,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
           <div id="uk-nivel" style="font-size:1rem;font-weight:700;margin-bottom:.35rem"></div>
           <div id="uk-aplica-badge" style="margin-bottom:.5rem"></div>
           <div style="font-size:.8rem;color:var(--muted);line-height:1.5">
-            La Sección 7 impone strict liability a empresas con presencia en UK o que hagan negocios allí, por soborno cometido por "personas asociadas".
+            Section 7 imposes strict liability on companies with a presence in the UK or that do business there, for bribery committed by "associated persons".
           </div>
         </div>
       </div>
@@ -553,12 +553,12 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 
     <!-- Comparativa -->
     <div class="card">
-      <h2>⚖️ Comparativa FCPA vs UK Bribery Act</h2>
+      <h2>⚖️ FCPA vs UK Bribery Act Comparison</h2>
       <div style="overflow-x:auto">
         <table style="width:100%;font-size:.82rem;border-collapse:collapse">
           <thead>
             <tr style="background:#f0f4f8">
-              <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Dimensión</th>
+              <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Dimension</th>
               <th style="padding:.5rem .7rem;text-align:center">🇺🇸 FCPA</th>
               <th style="padding:.5rem .7rem;text-align:center">🇬🇧 UK Bribery Act</th>
             </tr>
@@ -570,25 +570,25 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 
     <!-- Referencia normativa -->
     <div class="card">
-      <h2>📋 Artículos clave</h2>
+      <h2>📋 Key provisions</h2>
       <div class="grid2">
         <div>
           <div style="font-size:.78rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">🇺🇸 FCPA</div>
           <div style="font-size:.8rem;color:var(--muted);line-height:1.7">
-            <div>📌 <strong>§ 78dd-1/2/3</strong> — Prohibición de soborno a funcionarios extranjeros</div>
-            <div>📌 <strong>§ 78m(b)</strong> — Books & Records: registros contables precisos</div>
-            <div>📌 <strong>§ 78m(b)(2)(B)</strong> — Internal Controls: controles internos adecuados</div>
-            <div>📌 <strong>DOJ/SEC Guidance 2012</strong> — Programa efectivo de compliance</div>
+            <div>📌 <strong>§ 78dd-1/2/3</strong> — Prohibition of bribery of foreign officials</div>
+            <div>📌 <strong>§ 78m(b)</strong> — Books & Records: accurate accounting records</div>
+            <div>📌 <strong>§ 78m(b)(2)(B)</strong> — Internal Controls: adequate internal controls</div>
+            <div>📌 <strong>DOJ/SEC Guidance 2012</strong> — Effective compliance program</div>
           </div>
         </div>
         <div>
           <div style="font-size:.78rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">🇬🇧 UK Bribery Act</div>
           <div style="font-size:.8rem;color:var(--muted);line-height:1.7">
-            <div>📌 <strong>Sec. 1</strong> — Delito de soborno activo</div>
-            <div>📌 <strong>Sec. 2</strong> — Delito de soborno pasivo</div>
-            <div>📌 <strong>Sec. 6</strong> — Soborno a funcionario público extranjero</div>
-            <div>📌 <strong>Sec. 7</strong> — Falla corporativa en prevención (strict liability)</div>
-            <div>📌 <strong>MoJ Guidance</strong> — 6 principios de "Adequate Procedures"</div>
+            <div>📌 <strong>Sec. 1</strong> — Offense of active bribery</div>
+            <div>📌 <strong>Sec. 2</strong> — Offense of passive bribery</div>
+            <div>📌 <strong>Sec. 6</strong> — Bribery of a foreign public official</div>
+            <div>📌 <strong>Sec. 7</strong> — Corporate failure to prevent (strict liability)</div>
+            <div>📌 <strong>MoJ Guidance</strong> — 6 principles of "Adequate Procedures"</div>
           </div>
         </div>
       </div>
@@ -605,63 +605,63 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card">
       <h2>🇧🇷 LGPD — Lei Geral de Proteção de Dados (Lei 13.709/2018)</h2>
       <p style="color:var(--texto-sec);font-size:.87rem;margin-bottom:1rem">
-        Checklist de adecuación basado en los capítulos clave de la LGPD. Aplica a toda empresa que trate datos de personas físicas en Brasil o que ofrezca bienes/servicios en Brasil.
+        Compliance checklist based on the key chapters of the LGPD. Applies to any company that processes personal data of individuals in Brazil or offers goods/services in Brazil.
       </p>
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.2rem">
         <div style="background:var(--fondo);border-radius:10px;padding:1rem 1.5rem;text-align:center;min-width:130px">
           <div id="lgpd-ring" style="font-size:2.2rem;font-weight:800;color:var(--sec)">—</div>
-          <div style="font-size:.78rem;color:var(--texto-sec)">Score LGPD</div>
+          <div style="font-size:.78rem;color:var(--texto-sec)">LGPD Score</div>
         </div>
         <div style="background:var(--fondo);border-radius:10px;padding:1rem 1.5rem;text-align:center;min-width:130px">
           <div id="lgpd-nivel" style="font-size:1rem;font-weight:700;color:var(--sec)">—</div>
-          <div style="font-size:.78rem;color:var(--texto-sec)">Nivel de adecuación</div>
+          <div style="font-size:.78rem;color:var(--texto-sec)">Compliance level</div>
         </div>
         <div style="background:var(--fondo);border-radius:10px;padding:1rem 1.5rem;text-align:center;min-width:130px">
           <div id="lgpd-ok" style="font-size:2rem;font-weight:800;color:#16a34a">0</div>
-          <div style="font-size:.78rem;color:var(--texto-sec)">Ítems cumplidos</div>
+          <div style="font-size:.78rem;color:var(--texto-sec)">Items completed</div>
         </div>
         <div style="background:var(--fondo);border-radius:10px;padding:1rem 1.5rem;text-align:center;min-width:130px">
           <div id="lgpd-pendiente" style="font-size:2rem;font-weight:800;color:#dc2626">13</div>
-          <div style="font-size:.78rem;color:var(--texto-sec)">Ítems pendientes</div>
+          <div style="font-size:.78rem;color:var(--texto-sec)">Items pending</div>
         </div>
       </div>
       <table style="width:100%;border-collapse:collapse;font-size:.83rem">
         <thead>
           <tr style="background:var(--fondo)">
             <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Art.</th>
-            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Requisito</th>
-            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Descripción</th>
-            <th style="padding:.5rem .7rem;text-align:center;color:var(--pri)">Cumple</th>
-            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Evidencia</th>
+            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Requirement</th>
+            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Description</th>
+            <th style="padding:.5rem .7rem;text-align:center;color:var(--pri)">Compliant</th>
+            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Evidence</th>
           </tr>
         </thead>
         <tbody id="lgpd-tbody"></tbody>
       </table>
-      <h3 style="margin-top:1.5rem;color:var(--pri)">📋 Bases legales de tratamiento (Art. 7 LGPD)</h3>
+      <h3 style="margin-top:1.5rem;color:var(--pri)">📋 Legal bases for processing (Art. 7 LGPD)</h3>
       <table style="width:100%;border-collapse:collapse;font-size:.82rem">
         <thead>
           <tr style="background:var(--fondo)">
-            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Base legal</th>
-            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Cuándo aplica</th>
-            <th style="padding:.5rem .7rem;text-align:center;color:var(--pri)">¿La usa tu empresa?</th>
+            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Legal basis</th>
+            <th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">When it applies</th>
+            <th style="padding:.5rem .7rem;text-align:center;color:var(--pri)">Does your company use it?</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Consentimiento</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Libre, informado, específico y previo (opt-in)</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
-          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Obligación legal</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Cumplimiento de norma legal o regulatoria</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
-          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Ejecución de contrato</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Tratamiento necesario para cumplir contrato con el titular</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
-          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Interés legítimo</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Basado en legítimo interés del controlador (requiere LIA)</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
-          <tr><td style="padding:.45rem .7rem">Protección del crédito</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Tratamiento para análisis crediticio</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
+          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Consent</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Free, informed, specific, and prior (opt-in)</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
+          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Legal obligation</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Compliance with a legal or regulatory requirement</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
+          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Contract performance</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Processing necessary to fulfill a contract with the data subject</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
+          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)">Legitimate interest</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Based on the controller's legitimate interest (requires LIA)</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
+          <tr><td style="padding:.45rem .7rem">Credit protection</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Processing for credit analysis</td><td style="text-align:center"><input type="checkbox" onchange="lgpdRecalc()"></td></tr>
         </tbody>
       </table>
       <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:1rem;margin-top:1.2rem">
-        <strong style="color:#dc2626">⚠️ Sanciones ANPD (Art. 52 LGPD):</strong>
+        <strong style="color:#dc2626">⚠️ ANPD Sanctions (Art. 52 LGPD):</strong>
         <ul style="margin:.5rem 0 0 1rem;font-size:.83rem;color:#7f1d1d">
-          <li>Advertencia con plazo para adopción de medidas correctivas</li>
-          <li>Multa simple: hasta el 2% de la facturación en Brasil — máx. R$ 50 millones por infracción</li>
-          <li>Multa diaria: hasta R$ 50 millones por día</li>
-          <li>Publicación pública de la infracción</li>
-          <li>Bloqueo o eliminación de los datos personales afectados</li>
+          <li>Warning with a deadline to adopt corrective measures</li>
+          <li>Simple fine: up to 2% of revenue in Brazil — max. R$ 50 million per infraction</li>
+          <li>Daily fine: up to R$ 50 million per day</li>
+          <li>Public disclosure of the infraction</li>
+          <li>Blocking or deletion of the affected personal data</li>
         </ul>
       </div>
     </div>
@@ -672,38 +672,38 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-iso37001">
   <div class="wrap">
     <div class="card">
-      <h2>🚫 ISO 37001 — Sistema de Gestión Antisoborno</h2>
+      <h2>🚫 ISO 37001 — Anti-Bribery Management System</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Norma internacional para prevenir, detectar y responder al soborno. Complementa Ley 27.401 (Argentina), Lei 12.846 (Brasil) y FCPA. Certificable por tercero independiente.
+        International standard to prevent, detect, and respond to bribery. Complements Ley 27.401 (Argentina), Lei 12.846 (Brazil), and the FCPA. Certifiable by an independent third party.
       </p>
       <div class="grid2" style="margin-bottom:1rem">
         <div style="background:#fdecea;border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.2rem">🚫</div>
           <div id="iso37001-score" style="font-size:2rem;font-weight:800;color:var(--rojo)">—</div>
-          <div style="font-size:.75rem;color:var(--muted)">Score ISO 37001</div>
+          <div style="font-size:.75rem;color:var(--muted)">ISO 37001 Score</div>
         </div>
         <div style="background:#f0f4f8;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--pri);margin-bottom:.4rem">🔗 Relación con otros marcos</div>
-          <div>✅ <strong>Ley 27.401</strong> — Programa de Integridad requerido</div>
-          <div>✅ <strong>FCPA</strong> — Due diligence de terceros</div>
-          <div>✅ <strong>UK Bribery Act</strong> — Procedimientos adecuados</div>
-          <div>✅ <strong>Lei 12.846</strong> — Programa de Compliance</div>
+          <div style="font-weight:700;color:var(--pri);margin-bottom:.4rem">🔗 Relationship with other frameworks</div>
+          <div>✅ <strong>Ley 27.401</strong> — Integrity Program required</div>
+          <div>✅ <strong>FCPA</strong> — Third-party due diligence</div>
+          <div>✅ <strong>UK Bribery Act</strong> — Adequate procedures</div>
+          <div>✅ <strong>Lei 12.846</strong> — Compliance Program</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h3>📋 Cláusulas clave ISO 37001:2016</h3>
+      <h3>📋 Key clauses ISO 37001:2016</h3>
       <div id="iso37001-checklist"></div>
     </div>
 
     <div class="card">
-      <h3>🎯 Diferencial vs. Ley 27.401</h3>
+      <h3>🎯 Key differences vs. Ley 27.401</h3>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.82rem">
           <thead>
             <tr style="background:#1a3a5c;color:#fff">
-              <th style="padding:.5rem .7rem;text-align:left">Aspecto</th>
+              <th style="padding:.5rem .7rem;text-align:left">Aspect</th>
               <th style="padding:.5rem .7rem;text-align:center">Ley 27.401</th>
               <th style="padding:.5rem .7rem;text-align:center">ISO 37001</th>
             </tr>
@@ -713,7 +713,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
       </div>
       <div class="alerta naranja" style="margin-top:.8rem">
         <span class="alerta-ico">⚠️</span>
-        <span>La certificación ISO 37001 puede ser presentada ante la CNV/UIF como evidencia de programa de integridad robusto — potencial atenuante en sanciones.</span>
+        <span>ISO 37001 certification can be presented to the CNV/UIF as evidence of a robust integrity program — a potential mitigating factor in sanctions.</span>
       </div>
     </div>
   </div>
@@ -723,51 +723,51 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-iso14001">
   <div class="wrap">
     <div class="card">
-      <h2>🌿 ISO 14001 — Sistema de Gestión Ambiental</h2>
+      <h2>🌿 ISO 14001 — Environmental Management System</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Estándar internacional para sistemas de gestión ambiental (SGA). Profundiza el eje Ambiental del ESG. Certifica que la organización identifica y controla su impacto ambiental, mejorando continuamente.
+        International standard for environmental management systems (EMS). Deepens the Environmental axis of ESG. Certifies that the organization identifies and controls its environmental impact, continuously improving.
       </p>
       <div class="grid4">
         <div class="eje verde">
           <div class="eje-num" id="iso14001-e">—</div>
-          <div class="eje-name">Contexto<br>Org.</div>
+          <div class="eje-name">Org.<br>Context</div>
         </div>
         <div class="eje naranja">
           <div class="eje-num" id="iso14001-p">—</div>
-          <div class="eje-name">Planifi-<br>cación</div>
+          <div class="eje-name">Plan-<br>ning</div>
         </div>
         <div class="eje naranja">
           <div class="eje-num" id="iso14001-o">—</div>
-          <div class="eje-name">Oper-<br>ación</div>
+          <div class="eje-name">Oper-<br>ation</div>
         </div>
         <div class="eje rojo">
           <div class="eje-num" id="iso14001-m">—</div>
-          <div class="eje-name">Mejora<br>Contínua</div>
+          <div class="eje-name">Continuous<br>Improvement</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h3>📋 Requisitos ISO 14001:2015 — Cláusulas 4 a 10</h3>
+      <h3>📋 ISO 14001:2015 Requirements — Clauses 4 to 10</h3>
       <div id="iso14001-checklist"></div>
     </div>
 
     <div class="card">
-      <h3>🌍 Integración con ESG</h3>
+      <h3>🌍 Integration with ESG</h3>
       <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:.9rem;font-size:.83rem;margin-bottom:.7rem">
-        <div style="font-weight:700;color:#166534;margin-bottom:.5rem">ISO 14001 alimenta directamente los KPIs del eje E (Environmental) del ESG:</div>
+        <div style="font-weight:700;color:#166534;margin-bottom:.5rem">ISO 14001 directly feeds the KPIs of the E (Environmental) axis of ESG:</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem">
-          <div>🌡️ Emisiones GEI (Alcance 1, 2, 3)</div>
-          <div>💧 Gestión de efluentes</div>
-          <div>♻️ Economía circular</div>
-          <div>🌲 Biodiversidad</div>
-          <div>⚡ Eficiencia energética</div>
-          <div>📦 Ciclo de vida de productos</div>
+          <div>🌡️ GHG emissions (Scope 1, 2, 3)</div>
+          <div>💧 Effluent management</div>
+          <div>♻️ Circular economy</div>
+          <div>🌲 Biodiversity</div>
+          <div>⚡ Energy efficiency</div>
+          <div>📦 Product life cycle</div>
         </div>
       </div>
       <div class="alerta verde">
         <span class="alerta-ico">✅</span>
-        <span>Certificación ISO 14001 requerida en licitaciones públicas (Ley 25.675 Argentina) y cadenas de suministro globales (automotriz, retail, exportaciones).</span>
+        <span>ISO 14001 certification required in public tenders (Ley 25.675 Argentina) and global supply chains (automotive, retail, exports).</span>
       </div>
     </div>
   </div>
@@ -777,9 +777,9 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-gdpr">
   <div class="wrap">
     <div class="card">
-      <h2>🇪🇺 GDPR — Reglamento General de Protección de Datos</h2>
+      <h2>🇪🇺 GDPR — General Data Protection Regulation</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Reglamento (UE) 2016/679. Aplica a toda organización que trate datos de personas en la UE, independientemente de dónde esté establecida. Régimen sancionatorio más severo que LGPD.
+        Regulation (EU) 2016/679. Applies to any organization that processes personal data of people in the EU, regardless of where it is established. A stricter sanctions regime than the LGPD.
       </p>
       <div class="grid2" style="margin-bottom:1rem">
         <div style="background:#e8eaf6;border-radius:10px;padding:1rem;text-align:center">
@@ -788,26 +788,26 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
           <div style="font-size:.75rem;color:var(--muted)">Score GDPR</div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">⚠️ Sanciones GDPR</div>
-          <div>• Nivel 1: hasta <strong>€10M</strong> o 2% facturación global</div>
-          <div style="margin-top:.25rem">• Nivel 2: hasta <strong>€20M</strong> o 4% facturación global</div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Se aplica la cifra mayor. Meta: €1.2B (2023)</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">⚠️ GDPR sanctions</div>
+          <div>• Tier 1: up to <strong>€10M</strong> or 2% of global revenue</div>
+          <div style="margin-top:.25rem">• Tier 2: up to <strong>€20M</strong> or 4% of global revenue</div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">The higher figure applies. Meta: €1.2B (2023)</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h3>📋 Checklist GDPR — 7 Principios + Derechos</h3>
+      <h3>📋 GDPR Checklist — 7 Principles + Rights</h3>
       <div id="gdpr-checklist"></div>
     </div>
 
     <div class="card">
-      <h3>⚖️ GDPR vs. LGPD — Diferencias clave</h3>
+      <h3>⚖️ GDPR vs. LGPD — Key differences</h3>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.82rem">
           <thead>
             <tr style="background:#1a3a5c;color:#fff">
-              <th style="padding:.5rem .7rem;text-align:left">Dimensión</th>
+              <th style="padding:.5rem .7rem;text-align:left">Dimension</th>
               <th style="padding:.5rem .7rem;text-align:center">🇪🇺 GDPR</th>
               <th style="padding:.5rem .7rem;text-align:center">🇧🇷 LGPD</th>
             </tr>
@@ -823,38 +823,38 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-iso27001">
   <div class="wrap">
     <div class="card">
-      <h2>🔐 ISO 27001 — Seguridad de la Información</h2>
+      <h2>🔐 ISO 27001 — Information Security</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Estándar internacional para Sistemas de Gestión de Seguridad de la Información (SGSI). Anexo A: 93 controles en 4 dominios (ISO 27001:2022). Certificable. Clave para contratos con el sector público y empresas multinacionales.
+        International standard for Information Security Management Systems (ISMS). Annex A: 93 controls across 4 domains (ISO 27001:2022). Certifiable. Key for public sector contracts and multinational companies.
       </p>
       <div class="grid4">
-        <div class="eje rojo"><div class="eje-num" id="iso27001-org">—</div><div class="eje-name">Org.<br>Controles</div></div>
-        <div class="eje rojo"><div class="eje-num" id="iso27001-per">—</div><div class="eje-name">Personas<br>Controles</div></div>
-        <div class="eje rojo"><div class="eje-num" id="iso27001-fis">—</div><div class="eje-name">Físico<br>Controles</div></div>
-        <div class="eje rojo"><div class="eje-num" id="iso27001-tec">—</div><div class="eje-name">Tecnológico<br>Controles</div></div>
+        <div class="eje rojo"><div class="eje-num" id="iso27001-org">—</div><div class="eje-name">Org.<br>Controls</div></div>
+        <div class="eje rojo"><div class="eje-num" id="iso27001-per">—</div><div class="eje-name">People<br>Controls</div></div>
+        <div class="eje rojo"><div class="eje-num" id="iso27001-fis">—</div><div class="eje-name">Physical<br>Controls</div></div>
+        <div class="eje rojo"><div class="eje-num" id="iso27001-tec">—</div><div class="eje-name">Tech.<br>Controls</div></div>
       </div>
       <div style="margin-top:.5rem;background:#e8f5e9;border-radius:8px;padding:.7rem 1rem;font-size:.82rem;display:flex;gap:1.5rem;flex-wrap:wrap">
-        <span>📊 Score global: <strong id="iso27001-score-txt">—</strong></span>
-        <span>✅ Controles OK: <strong id="iso27001-ok-count">0</strong></span>
-        <span>⏳ En proceso: <strong id="iso27001-prog-count">0</strong></span>
-        <span>❌ Pendientes: <strong id="iso27001-pend-count">0</strong></span>
+        <span>📊 Global score: <strong id="iso27001-score-txt">—</strong></span>
+        <span>✅ Controls OK: <strong id="iso27001-ok-count">0</strong></span>
+        <span>⏳ In progress: <strong id="iso27001-prog-count">0</strong></span>
+        <span>❌ Pending: <strong id="iso27001-pend-count">0</strong></span>
       </div>
     </div>
 
     <div class="card">
-      <h3>🏢 Dominio A.5 — Controles Organizacionales (37 controles)</h3>
+      <h3>🏢 Domain A.5 — Organizational Controls (37 controls)</h3>
       <div id="iso27001-org-list"></div>
     </div>
     <div class="card">
-      <h3>👤 Dominio A.6 — Controles de Personas (8 controles)</h3>
+      <h3>👤 Domain A.6 — People Controls (8 controls)</h3>
       <div id="iso27001-per-list"></div>
     </div>
     <div class="card">
-      <h3>🏗️ Dominio A.7 — Controles Físicos (14 controles)</h3>
+      <h3>🏗️ Domain A.7 — Physical Controls (14 controls)</h3>
       <div id="iso27001-fis-list"></div>
     </div>
     <div class="card">
-      <h3>💻 Dominio A.8 — Controles Tecnológicos (34 controles)</h3>
+      <h3>💻 Domain A.8 — Technological Controls (34 controls)</h3>
       <div id="iso27001-tec-list"></div>
     </div>
   </div>
@@ -866,35 +866,35 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card">
       <h2>☁️ SOC 2 — Service Organization Control 2</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Marco del AICPA para proveedores de servicios en la nube y SaaS. Evalúa 5 Trust Service Criteria (TSC). Requerido por clientes enterprise de EE.UU. y mercados anglosajones. Tipo I: diseño. Tipo II: efectividad operativa (12 meses).
+        AICPA framework for cloud and SaaS service providers. Evaluates 5 Trust Service Criteria (TSC). Required by US enterprise clients and English-speaking markets. Type I: design. Type II: operating effectiveness (12 months).
       </p>
       <div class="grid2" style="margin-bottom:1rem">
         <div style="background:#e8eaf6;border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.2rem">☁️</div>
           <div id="soc2-score" style="font-size:2rem;font-weight:800;color:#3949ab">—</div>
-          <div style="font-size:.75rem;color:var(--muted)">Score SOC 2</div>
+          <div style="font-size:.75rem;color:var(--muted)">SOC 2 Score</div>
         </div>
         <div style="background:#f0f4f8;border-radius:10px;padding:.9rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--pri);margin-bottom:.4rem">📋 Tipo de reporte</div>
-          <div>• <strong>SOC 2 Tipo I</strong> — Diseño de controles (punto en el tiempo)</div>
-          <div style="margin-top:.3rem">• <strong>SOC 2 Tipo II</strong> — Efectividad operativa (período ≥6 meses)</div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Security (CC) es obligatorio. Los otros 4 TSC son opcionales según el servicio.</div>
+          <div style="font-weight:700;color:var(--pri);margin-bottom:.4rem">📋 Report type</div>
+          <div>• <strong>SOC 2 Type I</strong> — Design of controls (point in time)</div>
+          <div style="margin-top:.3rem">• <strong>SOC 2 Type II</strong> — Operating effectiveness (period ≥6 months)</div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Security (CC) is mandatory. The other 4 TSC are optional depending on the service.</div>
         </div>
       </div>
     </div>
     <div class="card">
-      <h3>🔒 CC — Security (Common Criteria) — Obligatorio</h3>
+      <h3>🔒 CC — Security (Common Criteria) — Mandatory</h3>
       <div id="soc2-cc-list"></div>
     </div>
     <div class="card">
-      <h3>⚡ Los 4 TSC Opcionales</h3>
+      <h3>⚡ The 4 Optional TSC</h3>
       <div id="soc2-optional-list"></div>
     </div>
     <div class="card">
       <h3>⚖️ SOC 2 vs ISO 27001</h3>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">
         <thead><tr style="background:#1a3a5c;color:#fff">
-          <th style="padding:.5rem .7rem;text-align:left">Dimensión</th>
+          <th style="padding:.5rem .7rem;text-align:left">Dimension</th>
           <th style="padding:.5rem .7rem;text-align:center">☁️ SOC 2</th>
           <th style="padding:.5rem .7rem;text-align:center">🔐 ISO 27001</th>
         </tr></thead>
@@ -910,32 +910,32 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card">
       <h2>🌴 CCPA / CPRA — California Consumer Privacy Act</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Ley de privacidad del estado de California (2020, ampliada por CPRA 2023). Aplica a empresas que recolectan datos de residentes de California con ingresos &gt;$25M, datos de &gt;100k personas, o que venden datos. Referente de privacidad en EE.UU.
+        California state privacy law (2020, expanded by CPRA 2023). Applies to companies that collect data from California residents with revenue &gt;$25M, data from &gt;100k individuals, or that sell data. A benchmark for privacy in the US.
       </p>
       <div class="grid2" style="margin-bottom:1rem">
         <div style="background:#fff3e0;border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.2rem">🌴</div>
           <div id="ccpa-score" style="font-size:2rem;font-weight:800;color:var(--naranja)">—</div>
-          <div style="font-size:.75rem;color:var(--muted)">Score CCPA/CPRA</div>
+          <div style="font-size:.75rem;color:var(--muted)">CCPA/CPRA Score</div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:.9rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">⚠️ Sanciones CCPA</div>
-          <div>• Violación intencional: <strong>$7,500</strong> por consumidor</div>
-          <div style="margin-top:.25rem">• Violación no intencional: <strong>$2,500</strong> por consumidor</div>
-          <div style="margin-top:.25rem">• Acción privada (brecha de datos): <strong>$100–$750</strong> por consumidor</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">⚠️ CCPA sanctions</div>
+          <div>• Intentional violation: <strong>$7,500</strong> per consumer</div>
+          <div style="margin-top:.25rem">• Unintentional violation: <strong>$2,500</strong> per consumer</div>
+          <div style="margin-top:.25rem">• Private right of action (data breach): <strong>$100–$750</strong> per consumer</div>
           <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Enforcement: California Privacy Protection Agency (CPPA)</div>
         </div>
       </div>
     </div>
     <div class="card">
-      <h3>📋 Checklist CCPA/CPRA — Derechos y Obligaciones</h3>
+      <h3>📋 CCPA/CPRA Checklist — Rights and Obligations</h3>
       <div id="ccpa-checklist"></div>
     </div>
     <div class="card">
       <h3>⚖️ CCPA vs GDPR vs LGPD</h3>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.81rem">
         <thead><tr style="background:#1a3a5c;color:#fff">
-          <th style="padding:.5rem .7rem;text-align:left">Dimensión</th>
+          <th style="padding:.5rem .7rem;text-align:left">Dimension</th>
           <th style="padding:.5rem .7rem;text-align:center">🌴 CCPA/CPRA</th>
           <th style="padding:.5rem .7rem;text-align:center">🇪🇺 GDPR</th>
           <th style="padding:.5rem .7rem;text-align:center">🇧🇷 LGPD</th>
@@ -951,50 +951,50 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
   <div class="wrap">
     <div class="card" style="border-top-color:#c62828">
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem;flex-wrap:wrap">
-        <h2 style="margin:0">🛡️ NIS2 — Directiva de Ciberseguridad UE</h2>
-        <span style="background:#c62828;color:#fff;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:5px">⏰ DEADLINE: 17 oct 2024 → transposición nacional en curso</span>
+        <h2 style="margin:0">🛡️ NIS2 — EU Cybersecurity Directive</h2>
+        <span style="background:#c62828;color:#fff;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:5px">⏰ DEADLINE: Oct 17, 2024 → national transposition underway</span>
       </div>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Directiva (UE) 2022/2555. Reemplaza NIS1. Amplía sectores obligados (18 sectores críticos), endurece sanciones y exige gestión de riesgos, notificación de incidentes en 24/72h y responsabilidad directiva. Aplica a entidades <strong>esenciales</strong> e <strong>importantes</strong>.
+        Directive (EU) 2022/2555. Replaces NIS1. Expands the sectors covered (18 critical sectors), toughens sanctions, and requires risk management, 24/72h incident notification, and management accountability. Applies to <strong>essential</strong> and <strong>important</strong> entities.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#fdecea;border-radius:10px;padding:1rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.5rem;font-size:.85rem">⚠️ Sanciones NIS2</div>
-          <div style="font-size:.82rem">• Entidades <strong>Esenciales</strong>: hasta <strong>€10M</strong> o 2% facturación global</div>
-          <div style="font-size:.82rem;margin-top:.3rem">• Entidades <strong>Importantes</strong>: hasta <strong>€7M</strong> o 1.4% facturación global</div>
-          <div style="font-size:.82rem;margin-top:.3rem">• <strong>Responsabilidad personal</strong> de directivos — inhabilitación</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.5rem;font-size:.85rem">⚠️ NIS2 sanctions</div>
+          <div style="font-size:.82rem">• <strong>Essential</strong> entities: up to <strong>€10M</strong> or 2% of global revenue</div>
+          <div style="font-size:.82rem;margin-top:.3rem">• <strong>Important</strong> entities: up to <strong>€7M</strong> or 1.4% of global revenue</div>
+          <div style="font-size:.82rem;margin-top:.3rem">• <strong>Personal liability</strong> of executives — disqualification</div>
         </div>
         <div style="background:#e8f5e9;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#1b5e20;margin-bottom:.4rem">⏱️ Plazos de notificación</div>
-          <div>• <strong>24h</strong> — alerta temprana a CSIRT/autoridad</div>
-          <div style="margin-top:.25rem">• <strong>72h</strong> — notificación con evaluación inicial</div>
-          <div style="margin-top:.25rem">• <strong>1 mes</strong> — informe final con análisis completo</div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Art. 23 NIS2 — incidentes con impacto significativo</div>
+          <div style="font-weight:700;color:#1b5e20;margin-bottom:.4rem">⏱️ Notification deadlines</div>
+          <div>• <strong>24h</strong> — early warning to CSIRT/authority</div>
+          <div style="margin-top:.25rem">• <strong>72h</strong> — notification with initial assessment</div>
+          <div style="margin-top:.25rem">• <strong>1 month</strong> — final report with full analysis</div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Art. 23 NIS2 — incidents with significant impact</div>
         </div>
       </div>
       <div style="background:#fff3e0;border-radius:8px;padding:.7rem 1rem;font-size:.82rem;margin-bottom:.5rem">
-        <div style="font-weight:700;color:var(--naranja);margin-bottom:.4rem">🏭 18 Sectores — ¿Tu organización aplica?</div>
+        <div style="font-weight:700;color:var(--naranja);margin-bottom:.4rem">🏭 18 Sectors — Does your organization apply?</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem">
-          <div><strong>Esenciales:</strong> Energía · Transporte · Banca · Infraestructura mercados financieros · Salud · Agua potable · Aguas residuales · Infraestructura digital · Gestión servicios TIC · Espacio</div>
-          <div><strong>Importantes:</strong> Servicios postales · Gestión residuos · Química · Alimentación · Fabricación · Proveedores digitales · Investigación</div>
+          <div><strong>Essential:</strong> Energy · Transport · Banking · Financial market infrastructure · Health · Drinking water · Wastewater · Digital infrastructure · ICT service management · Space</div>
+          <div><strong>Important:</strong> Postal services · Waste management · Chemicals · Food · Manufacturing · Digital providers · Research</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h3>📋 Artículo 21 — Medidas de Gestión de Riesgos (obligatorias)</h3>
+      <h3>📋 Article 21 — Risk Management Measures (mandatory)</h3>
       <div id="nis2-art21-list"></div>
     </div>
     <div class="card">
-      <h3>🏛️ Gobernanza y Responsabilidad Directiva (Art. 20)</h3>
+      <h3>🏛️ Governance and Management Accountability (Art. 20)</h3>
       <div id="nis2-gov-list"></div>
     </div>
     <div class="card">
-      <h3>🔗 Cadena de Suministro y Terceros (Art. 21.2.d)</h3>
+      <h3>🔗 Supply Chain and Third Parties (Art. 21.2.d)</h3>
       <div id="nis2-supply-list"></div>
     </div>
     <div class="card">
-      <h3>⚖️ NIS2 vs ISO 27001 — Mapeado de controles</h3>
+      <h3>⚖️ NIS2 vs ISO 27001 — Control mapping</h3>
       <div id="nis2-mapping-tabla"></div>
     </div>
   </div>
@@ -1005,62 +1005,62 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
   <div class="wrap">
     <div class="card" style="border-top-color:#7b1fa2">
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem;flex-wrap:wrap">
-        <h2 style="margin:0">🤖 EU AI Act — Reglamento de IA de la UE</h2>
-        <span style="background:#c62828;color:#fff;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:5px">⏰ DEADLINE: agosto 2026 (sistemas alto riesgo)</span>
+        <h2 style="margin:0">🤖 EU AI Act — EU AI Regulation</h2>
+        <span style="background:#c62828;color:#fff;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:5px">⏰ DEADLINE: August 2026 (high-risk systems)</span>
       </div>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Reglamento (UE) 2024/1689. En vigor agosto 2024. Primer marco regulatorio integral de IA a nivel mundial. Aplica a desarrolladores, importadores y usuarios de sistemas de IA que operen en la UE. Enfoque basado en <strong>niveles de riesgo</strong>.
+        Regulation (EU) 2024/1689. In force since August 2024. The world's first comprehensive AI regulatory framework. Applies to developers, importers, and deployers of AI systems operating in the EU. A <strong>risk-based</strong> approach.
       </p>
       <div class="grid4" style="margin-bottom:.8rem">
         <div style="text-align:center;padding:.7rem .4rem;border-radius:8px;background:#fdecea;border-left:3px solid var(--rojo)">
           <div style="font-size:1.1rem">🚫</div>
-          <div style="font-weight:700;color:var(--rojo);font-size:.78rem">Prohibido</div>
-          <div style="font-size:.7rem;color:var(--muted)">Desde feb 2025</div>
+          <div style="font-weight:700;color:var(--rojo);font-size:.78rem">Prohibited</div>
+          <div style="font-size:.7rem;color:var(--muted)">Since Feb 2025</div>
         </div>
         <div style="text-align:center;padding:.7rem .4rem;border-radius:8px;background:#fff3e0;border-left:3px solid var(--naranja)">
           <div style="font-size:1.1rem">⚠️</div>
-          <div style="font-weight:700;color:var(--naranja);font-size:.78rem">Alto Riesgo</div>
-          <div style="font-size:.7rem;color:var(--muted)">Ago 2026</div>
+          <div style="font-weight:700;color:var(--naranja);font-size:.78rem">High Risk</div>
+          <div style="font-size:.7rem;color:var(--muted)">Aug 2026</div>
         </div>
         <div style="text-align:center;padding:.7rem .4rem;border-radius:8px;background:#e8eaf6;border-left:3px solid #3949ab">
           <div style="font-size:1.1rem">📋</div>
-          <div style="font-weight:700;color:#3949ab;font-size:.78rem">Transp. Oblig.</div>
-          <div style="font-size:.7rem;color:var(--muted)">Ago 2025</div>
+          <div style="font-weight:700;color:#3949ab;font-size:.78rem">Transp. Required</div>
+          <div style="font-size:.7rem;color:var(--muted)">Aug 2025</div>
         </div>
         <div style="text-align:center;padding:.7rem .4rem;border-radius:8px;background:#f0fdf4;border-left:3px solid var(--verde)">
           <div style="font-size:1.1rem">✅</div>
-          <div style="font-weight:700;color:var(--verde);font-size:.78rem">Riesgo Mínimo</div>
-          <div style="font-size:.7rem;color:var(--muted)">Sin oblig.</div>
+          <div style="font-weight:700;color:var(--verde);font-size:.78rem">Minimal Risk</div>
+          <div style="font-size:.7rem;color:var(--muted)">No obligations</div>
         </div>
       </div>
       <div style="background:#f3e5f5;border-radius:8px;padding:.7rem 1rem;font-size:.82rem">
-        <div style="font-weight:700;color:#7b1fa2;margin-bottom:.3rem">⚠️ Sanciones EU AI Act</div>
+        <div style="font-weight:700;color:#7b1fa2;margin-bottom:.3rem">⚠️ EU AI Act sanctions</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem">
-          <div>• IA prohibida: <strong>€35M</strong> o 7% global</div>
-          <div>• Alto riesgo: <strong>€15M</strong> o 3% global</div>
-          <div>• Información falsa: <strong>€7.5M</strong> o 1.5% global</div>
+          <div>• Prohibited AI: <strong>€35M</strong> or 7% global</div>
+          <div>• High risk: <strong>€15M</strong> or 3% global</div>
+          <div>• False information: <strong>€7.5M</strong> or 1.5% global</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h3>🚫 Prácticas de IA Prohibidas (Art. 5) — Vigente desde feb 2025</h3>
+      <h3>🚫 Prohibited AI Practices (Art. 5) — In force since Feb 2025</h3>
       <div id="aiact-prohibidas-list"></div>
     </div>
     <div class="card">
-      <h3>⚠️ Sistemas de Alto Riesgo (Anexo III) — Deadline agosto 2026</h3>
+      <h3>⚠️ High-Risk Systems (Annex III) — Deadline August 2026</h3>
       <div id="aiact-altoriesgo-list"></div>
     </div>
     <div class="card">
-      <h3>📋 Obligaciones para Sistemas de Alto Riesgo (Arts. 9-15)</h3>
+      <h3>📋 Obligations for High-Risk Systems (Arts. 9-15)</h3>
       <div id="aiact-obligaciones-list"></div>
     </div>
     <div class="card">
-      <h3>📢 Obligaciones de Transparencia (Art. 50) — Vigente agosto 2025</h3>
+      <h3>📢 Transparency Obligations (Art. 50) — In force August 2025</h3>
       <div id="aiact-transparencia-list"></div>
     </div>
     <div class="card">
-      <h3>🗓️ Cronograma de implementación</h3>
+      <h3>🗓️ Implementation timeline</h3>
       <div id="aiact-timeline"></div>
     </div>
   </div>
@@ -1070,51 +1070,51 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-ocde">
   <div class="wrap">
     <div class="card" style="border-top-color:#1565c0">
-      <h2>🌐 OCDE — Lineamientos para Empresas Multinacionales (Ed. 2023)</h2>
+      <h2>🌐 OECD — Guidelines for Multinational Enterprises (2023 Ed.)</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Los Lineamientos OCDE son recomendaciones de conducta responsable dirigidas a empresas multinacionales que operan en o desde países adherentes. Argentina adhirió en <strong>1997</strong>. La edición 2023 incorpora debida diligencia en derechos humanos, cambio climático y cadena de suministro.
+        The OECD Guidelines are recommendations for responsible business conduct addressed to multinational enterprises operating in or from adhering countries. Argentina adhered in <strong>1997</strong>. The 2023 edition incorporates due diligence on human rights, climate change, and the supply chain.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#e3f2fd;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#1565c0;margin-bottom:.5rem">🏛️ Marco institucional Argentina</div>
-          <div>• <strong>PCN Argentina</strong>: Punto de Contacto Nacional en el Ministerio de Relaciones Exteriores</div>
-          <div style="margin-top:.25rem">• Recibe casos de instancias específicas por incumplimiento</div>
-          <div style="margin-top:.25rem">• 60+ casos activos PCN globales en 2023</div>
-          <div style="margin-top:.25rem">• Proceso: notificación → mediación → declaración final</div>
+          <div style="font-weight:700;color:#1565c0;margin-bottom:.5rem">🏛️ Argentina's institutional framework</div>
+          <div>• <strong>NCP Argentina</strong>: National Contact Point at the Ministry of Foreign Affairs</div>
+          <div style="margin-top:.25rem">• Receives specific instance cases for non-compliance</div>
+          <div style="margin-top:.25rem">• 60+ active NCP cases globally in 2023</div>
+          <div style="margin-top:.25rem">• Process: notification → mediation → final statement</div>
         </div>
         <div style="background:#e8f5e9;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#2e7d32;margin-bottom:.5rem">💡 Beneficios competitivos</div>
-          <div>• Acceso a fondos ESG (>USD 35T, 2023)</div>
-          <div style="margin-top:.25rem">• Requisito en licitaciones BID/CAF/Banco Mundial</div>
-          <div style="margin-top:.25rem">• 60–70% de cobertura CSRD/LkSG/CSDDD</div>
-          <div style="margin-top:.25rem">• Reducción de riesgo reputacional en cadena de suministro</div>
+          <div style="font-weight:700;color:#2e7d32;margin-bottom:.5rem">💡 Competitive benefits</div>
+          <div>• Access to ESG funds (>USD 35T, 2023)</div>
+          <div style="margin-top:.25rem">• Requirement in IDB/CAF/World Bank tenders</div>
+          <div style="margin-top:.25rem">• 60–70% coverage of CSRD/LkSG/CSDDD</div>
+          <div style="margin-top:.25rem">• Reduced reputational risk in the supply chain</div>
         </div>
       </div>
       <div style="background:#fff8e1;border-radius:8px;padding:.6rem 1rem;font-size:.82rem;margin-bottom:.8rem">
-        <strong>Score OCDE: </strong><span id="ocde-score-txt" style="color:var(--naranja)">calculando…</span>
+        <strong>OECD Score: </strong><span id="ocde-score-txt" style="color:var(--naranja)">calculating…</span>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.25rem">
-          <span>✅ Cumple: <strong id="ocde-ok">0</strong></span>
-          <span>🔄 Proceso: <strong id="ocde-prog">0</strong></span>
-          <span>⏳ Pendiente: <strong id="ocde-pend">0</strong></span>
+          <span>✅ Compliant: <strong id="ocde-ok">0</strong></span>
+          <span>🔄 In progress: <strong id="ocde-prog">0</strong></span>
+          <span>⏳ Pending: <strong id="ocde-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>Capítulo I — Conceptos y principios</h3><div id="ocde-c1"></div></div>
-    <div class="card"><h3>Capítulo II — Políticas generales</h3><div id="ocde-c2"></div></div>
-    <div class="card"><h3>Capítulo III — Divulgación de información</h3><div id="ocde-c3"></div></div>
-    <div class="card"><h3>Capítulo IV — Derechos humanos</h3><div id="ocde-c4"></div></div>
-    <div class="card"><h3>Capítulo V — Empleo y relaciones laborales</h3><div id="ocde-c5"></div></div>
-    <div class="card"><h3>Capítulo VI — Medioambiente</h3><div id="ocde-c6"></div></div>
-    <div class="card"><h3>Capítulo VII — Lucha contra la corrupción</h3><div id="ocde-c7"></div></div>
-    <div class="card"><h3>Capítulo VIII — Intereses de los consumidores</h3><div id="ocde-c8"></div></div>
-    <div class="card"><h3>Capítulo IX — Ciencia y tecnología</h3><div id="ocde-c9"></div></div>
-    <div class="card"><h3>Capítulo X — Competencia</h3><div id="ocde-c10"></div></div>
-    <div class="card"><h3>Capítulo XI — Tributación</h3><div id="ocde-c11"></div></div>
+    <div class="card"><h3>Chapter I — Concepts and principles</h3><div id="ocde-c1"></div></div>
+    <div class="card"><h3>Chapter II — General policies</h3><div id="ocde-c2"></div></div>
+    <div class="card"><h3>Chapter III — Disclosure</h3><div id="ocde-c3"></div></div>
+    <div class="card"><h3>Chapter IV — Human rights</h3><div id="ocde-c4"></div></div>
+    <div class="card"><h3>Chapter V — Employment and industrial relations</h3><div id="ocde-c5"></div></div>
+    <div class="card"><h3>Chapter VI — Environment</h3><div id="ocde-c6"></div></div>
+    <div class="card"><h3>Chapter VII — Combating corruption</h3><div id="ocde-c7"></div></div>
+    <div class="card"><h3>Chapter VIII — Consumer interests</h3><div id="ocde-c8"></div></div>
+    <div class="card"><h3>Chapter IX — Science and technology</h3><div id="ocde-c9"></div></div>
+    <div class="card"><h3>Chapter X — Competition</h3><div id="ocde-c10"></div></div>
+    <div class="card"><h3>Chapter XI — Taxation</h3><div id="ocde-c11"></div></div>
     <div class="card">
-      <h3>📎 Recursos oficiales OCDE</h3>
+      <h3>📎 Official OECD resources</h3>
       <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem">
-        <a href="https://www.oecd.org/daf/inv/mne/48004323.pdf" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#1565c0;color:#fff;border-radius:6px;display:inline-block">📄 Lineamientos OCDE 2023 (PDF oficial)</a>
-        <a href="https://www.argentina.gob.ar/cancilleria/pcn" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#37474f;color:#fff;border-radius:6px;display:inline-block">🏛️ PCN Argentina</a>
+        <a href="https://www.oecd.org/daf/inv/mne/48004323.pdf" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#1565c0;color:#fff;border-radius:6px;display:inline-block">📄 OECD Guidelines 2023 (official PDF)</a>
+        <a href="https://www.argentina.gob.ar/cancilleria/pcn" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#37474f;color:#fff;border-radius:6px;display:inline-block">🏛️ NCP Argentina</a>
       </div>
     </div>
   </div>
@@ -1124,41 +1124,41 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-iso45001">
   <div class="wrap">
     <div class="card" style="border-top-color:#e65100">
-      <h2>🦺 ISO 45001:2018 — Sistemas de Gestión de SST</h2>
+      <h2>🦺 ISO 45001:2018 — Occupational Health & Safety Management Systems</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Norma internacional para sistemas de gestión de seguridad y salud en el trabajo (SST). Reemplazó a OHSAS 18001. Alta demanda en sectores de <strong>construcción, industria, energía y minería</strong>. Estructura de alto nivel (HLS) compatible con ISO 9001 e ISO 14001.
+        International standard for occupational health and safety (OHS) management systems. Replaced OHSAS 18001. High demand in <strong>construction, industry, energy, and mining</strong> sectors. High-level structure (HLS) compatible with ISO 9001 and ISO 14001.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#fff3e0;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#e65100;margin-bottom:.4rem">⚠️ Alcance & obligatoriedad</div>
-          <div>• Aplica a cualquier organización, cualquier tamaño y sector</div>
-          <div style="margin-top:.25rem">• Requisito habitual en pliegos de licitación pública</div>
-          <div style="margin-top:.25rem">• Condición de proveedores en grandes corporaciones</div>
-          <div style="margin-top:.25rem">• Complementa Ley 19.587 (Higiene y Seguridad, AR)</div>
+          <div style="font-weight:700;color:#e65100;margin-bottom:.4rem">⚠️ Scope & obligation</div>
+          <div>• Applies to any organization, any size and sector</div>
+          <div style="margin-top:.25rem">• Common requirement in public tender specifications</div>
+          <div style="margin-top:.25rem">• Vendor requirement at large corporations</div>
+          <div style="margin-top:.25rem">• Complements Ley 19.587 (Health and Safety, Argentina)</div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">📊 Estadísticas globales</div>
-          <div>• 45.000+ certificaciones activas en 127 países (ISO, 2023)</div>
-          <div style="margin-top:.25rem">• 2,3M muertes anuales por causas laborales (OIT)</div>
-          <div style="margin-top:.25rem">• ROI promedio: USD 2,2 por cada USD 1 invertido en SST</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">📊 Global statistics</div>
+          <div>• 45,000+ active certifications in 127 countries (ISO, 2023)</div>
+          <div style="margin-top:.25rem">• 2.3M annual deaths from work-related causes (ILO)</div>
+          <div style="margin-top:.25rem">• Average ROI: USD 2.2 for every USD 1 invested in OHS</div>
         </div>
       </div>
       <div style="background:#fff8e1;border-radius:8px;padding:.6rem 1rem;font-size:.82rem">
-        <strong>Score ISO 45001: </strong><span id="iso45001-score-txt" style="color:var(--naranja)">calculando…</span>
+        <strong>ISO 45001 Score: </strong><span id="iso45001-score-txt" style="color:var(--naranja)">calculating…</span>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.25rem">
-          <span>✅ Cumple: <strong id="iso45001-ok">0</strong></span>
-          <span>🔄 Proceso: <strong id="iso45001-prog">0</strong></span>
-          <span>⏳ Pendiente: <strong id="iso45001-pend">0</strong></span>
+          <span>✅ Compliant: <strong id="iso45001-ok">0</strong></span>
+          <span>🔄 In progress: <strong id="iso45001-prog">0</strong></span>
+          <span>⏳ Pending: <strong id="iso45001-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>Cláusula 4 — Contexto de la organización</h3><div id="iso45001-c4"></div></div>
-    <div class="card"><h3>Cláusula 5 — Liderazgo y participación de los trabajadores</h3><div id="iso45001-c5"></div></div>
-    <div class="card"><h3>Cláusula 6 — Planificación (identificación de peligros y riesgos)</h3><div id="iso45001-c6"></div></div>
-    <div class="card"><h3>Cláusula 7 — Apoyo (recursos, competencia, comunicación)</h3><div id="iso45001-c7"></div></div>
-    <div class="card"><h3>Cláusula 8 — Operación (gestión del cambio, contratistas)</h3><div id="iso45001-c8"></div></div>
-    <div class="card"><h3>Cláusula 9 — Evaluación del desempeño</h3><div id="iso45001-c9"></div></div>
-    <div class="card"><h3>Cláusula 10 — Mejora continua e investigación de incidentes</h3><div id="iso45001-c10"></div></div>
+    <div class="card"><h3>Clause 4 — Context of the organization</h3><div id="iso45001-c4"></div></div>
+    <div class="card"><h3>Clause 5 — Leadership and worker participation</h3><div id="iso45001-c5"></div></div>
+    <div class="card"><h3>Clause 6 — Planning (hazard identification and risk assessment)</h3><div id="iso45001-c6"></div></div>
+    <div class="card"><h3>Clause 7 — Support (resources, competence, communication)</h3><div id="iso45001-c7"></div></div>
+    <div class="card"><h3>Clause 8 — Operation (management of change, contractors)</h3><div id="iso45001-c8"></div></div>
+    <div class="card"><h3>Clause 9 — Performance evaluation</h3><div id="iso45001-c9"></div></div>
+    <div class="card"><h3>Clause 10 — Continual improvement and incident investigation</h3><div id="iso45001-c10"></div></div>
   </div>
 </div>
 
@@ -1166,41 +1166,41 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-cobit">
   <div class="wrap">
     <div class="card" style="border-top-color:#3949ab">
-      <h2>🖥️ COBIT 2019 — Gobierno y Gestión de TI Empresarial</h2>
+      <h2>🖥️ COBIT 2019 — Enterprise IT Governance and Management</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Marco de gobernanza de TI de ISACA. Alta demanda en <strong>sector financiero, regulado y empresas cotizantes</strong>. Organiza 40 objetivos de gobierno y gestión en 5 dominios. Complementa ISO 27001, SOC 2, DORA y SOX-IT.
+        ISACA's IT governance framework. High demand in the <strong>financial, regulated, and publicly listed</strong> sectors. Organizes 40 governance and management objectives into 5 domains. Complements ISO 27001, SOC 2, DORA, and SOX-IT.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#e8eaf6;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#3949ab;margin-bottom:.4rem">🏦 Dominios COBIT 2019</div>
-          <div>• <strong>EDM</strong> — Evaluar, Dirigir y Monitorear (5 objetivos)</div>
-          <div style="margin-top:.25rem">• <strong>APO</strong> — Alinear, Planificar y Organizar (14 objetivos)</div>
-          <div style="margin-top:.25rem">• <strong>BAI</strong> — Construir, Adquirir e Implementar (10 objetivos)</div>
-          <div style="margin-top:.25rem">• <strong>DSS</strong> — Entregar, Dar Servicio y Soporte (6 objetivos)</div>
-          <div style="margin-top:.25rem">• <strong>MEA</strong> — Monitorear, Evaluar y Valorar (4 objetivos)</div>
+          <div style="font-weight:700;color:#3949ab;margin-bottom:.4rem">🏦 COBIT 2019 domains</div>
+          <div>• <strong>EDM</strong> — Evaluate, Direct and Monitor (5 objectives)</div>
+          <div style="margin-top:.25rem">• <strong>APO</strong> — Align, Plan and Organize (14 objectives)</div>
+          <div style="margin-top:.25rem">• <strong>BAI</strong> — Build, Acquire and Implement (10 objectives)</div>
+          <div style="margin-top:.25rem">• <strong>DSS</strong> — Deliver, Service and Support (6 objectives)</div>
+          <div style="margin-top:.25rem">• <strong>MEA</strong> — Monitor, Evaluate and Assess (4 objectives)</div>
         </div>
         <div style="background:#e3f2fd;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#1565c0;margin-bottom:.4rem">🔗 Integración con otros marcos</div>
-          <div>• COBIT ↔ ISO 27001: alinea 93 controles con objetivos TI</div>
-          <div style="margin-top:.25rem">• COBIT ↔ SOX: cubre controles IT general (ITGC)</div>
-          <div style="margin-top:.25rem">• COBIT ↔ DORA: gobierno de resiliencia TIC</div>
-          <div style="margin-top:.25rem">• COBIT ↔ SOC 2: criterios de servicios de confianza</div>
+          <div style="font-weight:700;color:#1565c0;margin-bottom:.4rem">🔗 Integration with other frameworks</div>
+          <div>• COBIT ↔ ISO 27001: aligns 93 controls with IT objectives</div>
+          <div style="margin-top:.25rem">• COBIT ↔ SOX: covers general IT controls (ITGC)</div>
+          <div style="margin-top:.25rem">• COBIT ↔ DORA: ICT resilience governance</div>
+          <div style="margin-top:.25rem">• COBIT ↔ SOC 2: trust services criteria</div>
         </div>
       </div>
       <div style="background:#e8eaf6;border-radius:8px;padding:.6rem 1rem;font-size:.82rem">
-        <strong>Score COBIT 2019: </strong><span id="cobit-score-txt" style="color:var(--naranja)">calculando…</span>
+        <strong>COBIT 2019 Score: </strong><span id="cobit-score-txt" style="color:var(--naranja)">calculating…</span>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.25rem">
-          <span>✅ Cumple: <strong id="cobit-ok">0</strong></span>
-          <span>🔄 Proceso: <strong id="cobit-prog">0</strong></span>
-          <span>⏳ Pendiente: <strong id="cobit-pend">0</strong></span>
+          <span>✅ Compliant: <strong id="cobit-ok">0</strong></span>
+          <span>🔄 In progress: <strong id="cobit-prog">0</strong></span>
+          <span>⏳ Pending: <strong id="cobit-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>EDM — Evaluar, Dirigir y Monitorear</h3><div id="cobit-edm"></div></div>
-    <div class="card"><h3>APO — Alinear, Planificar y Organizar</h3><div id="cobit-apo"></div></div>
-    <div class="card"><h3>BAI — Construir, Adquirir e Implementar</h3><div id="cobit-bai"></div></div>
-    <div class="card"><h3>DSS — Entregar, Dar Servicio y Soporte</h3><div id="cobit-dss"></div></div>
-    <div class="card"><h3>MEA — Monitorear, Evaluar y Valorar</h3><div id="cobit-mea"></div></div>
+    <div class="card"><h3>EDM — Evaluate, Direct and Monitor</h3><div id="cobit-edm"></div></div>
+    <div class="card"><h3>APO — Align, Plan and Organize</h3><div id="cobit-apo"></div></div>
+    <div class="card"><h3>BAI — Build, Acquire and Implement</h3><div id="cobit-bai"></div></div>
+    <div class="card"><h3>DSS — Deliver, Service and Support</h3><div id="cobit-dss"></div></div>
+    <div class="card"><h3>MEA — Monitor, Evaluate and Assess</h3><div id="cobit-mea"></div></div>
   </div>
 </div>
 
@@ -1208,42 +1208,42 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-sox">
   <div class="wrap">
     <div class="card" style="border-top-color:#4a148c">
-      <h2>📈 Sarbanes-Oxley Act (SOX) — Controles de Reporte Financiero</h2>
+      <h2>📈 Sarbanes-Oxley Act (SOX) — Financial Reporting Controls</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Ley federal de EE.UU. (2002). Aplica a empresas cotizantes en NYSE/NASDAQ y sus subsidiarias globales. Secciones clave: <strong>302</strong> (certificación ejecutiva), <strong>404</strong> (controles internos sobre reporte financiero — ICFR) y <strong>906</strong> (responsabilidad penal). El PCAOB audita el cumplimiento.
+        US federal law (2002). Applies to companies listed on the NYSE/NASDAQ and their global subsidiaries. Key sections: <strong>302</strong> (executive certification), <strong>404</strong> (internal control over financial reporting — ICFR), and <strong>906</strong> (criminal liability). The PCAOB audits compliance.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#f3e5f5;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#4a148c;margin-bottom:.4rem">⚖️ Secciones críticas</div>
-          <div>• <strong>Sec. 302</strong>: CEO/CFO certifican precisión de reportes</div>
-          <div style="margin-top:.25rem">• <strong>Sec. 401</strong>: Divulgación de partidas fuera de balance</div>
-          <div style="margin-top:.25rem">• <strong>Sec. 404</strong>: ICFR — evaluación de controles internos</div>
-          <div style="margin-top:.25rem">• <strong>Sec. 409</strong>: Divulgación en tiempo real de cambios materiales</div>
-          <div style="margin-top:.25rem">• <strong>Sec. 802</strong>: Retención de registros (7 años)</div>
-          <div style="margin-top:.25rem">• <strong>Sec. 906</strong>: Hasta 20 años de prisión por certificación falsa</div>
+          <div style="font-weight:700;color:#4a148c;margin-bottom:.4rem">⚖️ Critical sections</div>
+          <div>• <strong>Sec. 302</strong>: CEO/CFO certify the accuracy of reports</div>
+          <div style="margin-top:.25rem">• <strong>Sec. 401</strong>: Disclosure of off-balance-sheet items</div>
+          <div style="margin-top:.25rem">• <strong>Sec. 404</strong>: ICFR — internal controls assessment</div>
+          <div style="margin-top:.25rem">• <strong>Sec. 409</strong>: Real-time disclosure of material changes</div>
+          <div style="margin-top:.25rem">• <strong>Sec. 802</strong>: Record retention (7 years)</div>
+          <div style="margin-top:.25rem">• <strong>Sec. 906</strong>: Up to 20 years in prison for false certification</div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">🚨 Sanciones SOX</div>
-          <div>• Multas hasta <strong>USD 5M</strong> para personas físicas</div>
-          <div style="margin-top:.25rem">• Hasta <strong>20 años de prisión</strong> para ejecutivos</div>
-          <div style="margin-top:.25rem">• Multas corporativas hasta <strong>USD 25M</strong></div>
-          <div style="margin-top:.25rem">• Prohibición de actuar como director/ejecutivo</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">🚨 SOX sanctions</div>
+          <div>• Fines up to <strong>USD 5M</strong> for individuals</div>
+          <div style="margin-top:.25rem">• Up to <strong>20 years in prison</strong> for executives</div>
+          <div style="margin-top:.25rem">• Corporate fines up to <strong>USD 25M</strong></div>
+          <div style="margin-top:.25rem">• Ban on acting as a director/officer</div>
           <div style="margin-top:.35rem;color:var(--muted);font-size:.76rem">Autoridad: SEC + DOJ + PCAOB</div>
         </div>
       </div>
       <div style="background:#f3e5f5;border-radius:8px;padding:.6rem 1rem;font-size:.82rem">
-        <strong>Score SOX: </strong><span id="sox-score-txt" style="color:var(--naranja)">calculando…</span>
+        <strong>SOX Score: </strong><span id="sox-score-txt" style="color:var(--naranja)">calculating…</span>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.25rem">
-          <span>✅ Cumple: <strong id="sox-ok">0</strong></span>
-          <span>🔄 Proceso: <strong id="sox-prog">0</strong></span>
-          <span>⏳ Pendiente: <strong id="sox-pend">0</strong></span>
+          <span>✅ Compliant: <strong id="sox-ok">0</strong></span>
+          <span>🔄 In progress: <strong id="sox-prog">0</strong></span>
+          <span>⏳ Pending: <strong id="sox-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>Sección 302 — Certificaciones de Divulgación</h3><div id="sox-s302"></div></div>
-    <div class="card"><h3>Sección 404 — Controles Internos sobre Reporte Financiero (ICFR)</h3><div id="sox-s404"></div></div>
-    <div class="card"><h3>Controles IT Generales (ITGC) — Soporte SOX</h3><div id="sox-itgc"></div></div>
-    <div class="card"><h3>Sección 409 & 802 — Divulgación y Retención de Registros</h3><div id="sox-otros"></div></div>
+    <div class="card"><h3>Section 302 — Disclosure Certifications</h3><div id="sox-s302"></div></div>
+    <div class="card"><h3>Section 404 — Internal Controls over Financial Reporting (ICFR)</h3><div id="sox-s404"></div></div>
+    <div class="card"><h3>General IT Controls (ITGC) — SOX Support</h3><div id="sox-itgc"></div></div>
+    <div class="card"><h3>Section 409 & 802 — Disclosure and Record Retention</h3><div id="sox-otros"></div></div>
     <div class="card"><h3>Mapa SOX ↔ COBIT 2019 ↔ ISO 27001</h3><div id="sox-map"></div></div>
   </div>
 </div>
@@ -1252,52 +1252,52 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-crossmap">
   <div class="wrap">
     <div class="card">
-      <h2>🗺️ Cross-Framework Mapping — Un control, múltiples normas</h2>
+      <h2>🗺️ Cross-Framework Mapping — One control, multiple standards</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Cada control implementado puede cubrir requisitos de varios marcos a la vez. Este mapa muestra qué dominios de control satisfacen simultáneamente las normas del programa, maximizando el ROI del compliance.
+        Each implemented control can cover requirements from several frameworks at once. This map shows which control domains simultaneously satisfy the program's standards, maximizing compliance ROI.
       </p>
       <!-- Buscador de controles cross-framework -->
       <div style="display:flex;gap:.4rem;margin-bottom:.7rem;flex-wrap:wrap;align-items:center">
-        <input type="text" id="crossmap-search" placeholder="🔍 Buscar control (ej: MFA, cifrado, backup, due diligence...)" oninput="crossmapSearch(this.value)" style="flex:1;min-width:220px;font-size:.83rem;padding:.4rem .7rem;border:1px solid var(--borde);border-radius:6px;font-family:inherit">
-        <button onclick="crossmapSearch('');document.getElementById('crossmap-search').value=''" style="font-size:.76rem;padding:.38rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#6b7280;color:#fff">✕ Limpiar</button>
+        <input type="text" id="crossmap-search" placeholder="🔍 Search control (e.g. MFA, encryption, backup, due diligence...)" oninput="crossmapSearch(this.value)" style="flex:1;min-width:220px;font-size:.83rem;padding:.4rem .7rem;border:1px solid var(--borde);border-radius:6px;font-family:inherit">
+        <button onclick="crossmapSearch('');document.getElementById('crossmap-search').value=''" style="font-size:.76rem;padding:.38rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#6b7280;color:#fff">✕ Clear</button>
       </div>
       <div id="crossmap-search-results" style="display:none;margin-bottom:.8rem"></div>
       <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem" id="crossmap-filtros"></div>
       <div style="background:#e8f5e9;border-radius:8px;padding:.6rem 1rem;font-size:.82rem;display:flex;gap:1.5rem;flex-wrap:wrap">
-        <span>🎯 Controles mapeados: <strong id="crossmap-total">0</strong></span>
-        <span>⭐ Cobertura promedio: <strong id="crossmap-avg">0</strong> marcos/control</span>
-        <span>🏆 Máxima cobertura: <strong id="crossmap-max">0</strong> marcos</span>
-        <span>📐 Marcos cubiertos: <strong>13</strong> (incl. DORA · ISO 27701 · PCI DSS)</span>
+        <span>🎯 Mapped controls: <strong id="crossmap-total">0</strong></span>
+        <span>⭐ Average coverage: <strong id="crossmap-avg">0</strong> frameworks/control</span>
+        <span>🏆 Maximum coverage: <strong id="crossmap-max">0</strong> frameworks</span>
+        <span>📐 Frameworks covered: <strong>13</strong> (incl. DORA · ISO 27701 · PCI DSS)</span>
       </div>
     </div>
 
     <div class="card">
-      <h3>🔐 Seguridad de la Información</h3>
+      <h3>🔐 Information Security</h3>
       <div id="crossmap-sec"></div>
     </div>
     <div class="card">
-      <h3>🔒 Privacidad y Protección de Datos</h3>
+      <h3>🔒 Privacy and Data Protection</h3>
       <div id="crossmap-priv"></div>
     </div>
     <div class="card">
-      <h3>🤝 Terceros y Cadena de Suministro</h3>
+      <h3>🤝 Third Parties and Supply Chain</h3>
       <div id="crossmap-supply"></div>
     </div>
     <div class="card">
-      <h3>🏛️ Gobernanza y Cultura</h3>
+      <h3>🏛️ Governance and Culture</h3>
       <div id="crossmap-gov"></div>
     </div>
     <div class="card">
-      <h3>🚨 Gestión de Incidentes y Continuidad</h3>
+      <h3>🚨 Incident Management and Continuity</h3>
       <div id="crossmap-incident"></div>
     </div>
     <div class="card">
-      <h3>🤖 Inteligencia Artificial</h3>
+      <h3>🤖 Artificial Intelligence</h3>
       <div id="crossmap-ai"></div>
     </div>
 
     <div class="card">
-      <h3>📊 Matriz de cobertura por marco</h3>
+      <h3>📊 Coverage matrix by framework</h3>
       <div id="crossmap-matrix"></div>
     </div>
   </div>
@@ -1307,43 +1307,43 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-iso27701">
   <div class="wrap">
     <div class="card" style="border-top-color:#4527a0">
-      <h2>🔏 ISO 27701 — Sistema de Gestión de Información de Privacidad (SGIP)</h2>
+      <h2>🔏 ISO 27701 — Privacy Information Management System (PIMS)</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Extensión de ISO 27001 para gestión de privacidad. Alineada con GDPR, LGPD y CCPA. Especifica requisitos para establecer, implementar y mejorar un SGIP para controladores y procesadores de datos personales. Publicada en 2019.
+        Extension of ISO 27001 for privacy management. Aligned with GDPR, LGPD, and CCPA. Specifies requirements for establishing, implementing, and improving a PIMS for controllers and processors of personal data. Published in 2019.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#ede7f6;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#4527a0;margin-bottom:.4rem">🎯 ¿A quién aplica?</div>
-          <div>• Controladores de datos personales</div>
-          <div>• Procesadores de datos personales</div>
-          <div>• Organizaciones sujetas a GDPR / LGPD / CCPA</div>
-          <div>• Proveedores de servicios cloud con datos de clientes</div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Requiere ISO 27001 vigente como base</div>
+          <div style="font-weight:700;color:#4527a0;margin-bottom:.4rem">🎯 Who does it apply to?</div>
+          <div>• Personal data controllers</div>
+          <div>• Personal data processors</div>
+          <div>• Organizations subject to GDPR / LGPD / CCPA</div>
+          <div>• Cloud service providers with customer data</div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Requires a valid ISO 27001 certification as a base</div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">Beneficios clave</div>
-          <div>• Demuestra cumplimiento GDPR Art.28 (procesadores)</div>
-          <div>• Reduce auditorías de clientes enterprise</div>
-          <div>• Marco unificado privacidad + seguridad</div>
-          <div>• Diferencial competitivo en licitaciones internacionales</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">Key benefits</div>
+          <div>• Demonstrates GDPR Art. 28 compliance (processors)</div>
+          <div>• Reduces enterprise client audits</div>
+          <div>• Unified privacy + security framework</div>
+          <div>• Competitive edge in international tenders</div>
         </div>
       </div>
       <div style="background:#e8f5e9;border-radius:8px;padding:.6rem 1rem;font-size:.82rem">
-        <div style="font-weight:700;color:#1b5e20;margin-bottom:.3rem">Score ISO 27701: <span id="iso27701-score-txt" style="color:var(--rojo)">-</span></div>
+        <div style="font-weight:700;color:#1b5e20;margin-bottom:.3rem">ISO 27701 Score: <span id="iso27701-score-txt" style="color:var(--rojo)">-</span></div>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
           <span>OK: <strong id="iso27701-ok">0</strong></span>
-          <span>Proceso: <strong id="iso27701-prog">0</strong></span>
-          <span>Pendiente: <strong id="iso27701-pend">0</strong></span>
+          <span>In progress: <strong id="iso27701-prog">0</strong></span>
+          <span>Pending: <strong id="iso27701-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>Cláusula 5 — Extensiones SGIP a ISO 27001 (Requisitos generales)</h3><div id="iso27701-c5"></div></div>
-    <div class="card"><h3>Cláusula 6 — Planificación (contexto, partes interesadas, riesgos de privacidad)</h3><div id="iso27701-c6"></div></div>
-    <div class="card"><h3>Cláusula 7 — Soporte (recursos, competencia, comunicación)</h3><div id="iso27701-c7"></div></div>
-    <div class="card"><h3>Cláusula 8 — Operación (evaluaciones de impacto DPIA, relaciones con terceros)</h3><div id="iso27701-c8"></div></div>
-    <div class="card"><h3>Anexo A — Controles adicionales para Controladores de datos</h3><div id="iso27701-anxa"></div></div>
-    <div class="card"><h3>Anexo B — Controles adicionales para Procesadores de datos</h3><div id="iso27701-anxb"></div></div>
-    <div class="card"><h3>Alineación ISO 27701 ↔ GDPR ↔ LGPD ↔ CCPA</h3><div id="iso27701-mapping"></div></div>
+    <div class="card"><h3>Clause 5 — PIMS extensions to ISO 27001 (General requirements)</h3><div id="iso27701-c5"></div></div>
+    <div class="card"><h3>Clause 6 — Planning (context, interested parties, privacy risks)</h3><div id="iso27701-c6"></div></div>
+    <div class="card"><h3>Clause 7 — Support (resources, competence, communication)</h3><div id="iso27701-c7"></div></div>
+    <div class="card"><h3>Clause 8 — Operation (DPIA impact assessments, third-party relationships)</h3><div id="iso27701-c8"></div></div>
+    <div class="card"><h3>Annex A — Additional controls for data Controllers</h3><div id="iso27701-anxa"></div></div>
+    <div class="card"><h3>Annex B — Additional controls for data Processors</h3><div id="iso27701-anxb"></div></div>
+    <div class="card"><h3>ISO 27701 ↔ GDPR ↔ LGPD ↔ CCPA alignment</h3><div id="iso27701-mapping"></div></div>
   </div>
 </div>
 
@@ -1353,42 +1353,42 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card" style="border-top-color:#1565c0">
       <h2>💳 PCI DSS v4.0 — Payment Card Industry Data Security Standard</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Estándar global de seguridad para organizaciones que procesan, almacenan o transmiten datos de tarjetas de pago. Emitido por PCI SSC (Visa, Mastercard, Amex, Discover, JCB). Versión 4.0 vigente desde marzo 2024. 12 requisitos en 6 metas.
+        Global security standard for organizations that process, store, or transmit payment card data. Issued by the PCI SSC (Visa, Mastercard, Amex, Discover, JCB). Version 4.0 in effect since March 2024. 12 requirements across 6 goals.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#e3f2fd;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:#1565c0;margin-bottom:.4rem">🏦 ¿A quién aplica?</div>
-          <div>• Comercios que aceptan tarjetas de pago</div>
-          <div>• Procesadores de pagos y pasarelas</div>
-          <div>• Bancos adquirentes y emisores</div>
-          <div>• Proveedores de servicios con acceso a CHD</div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">CHD = Cardholder Data — datos del titular de tarjeta</div>
+          <div style="font-weight:700;color:#1565c0;margin-bottom:.4rem">🏦 Who does it apply to?</div>
+          <div>• Merchants that accept payment cards</div>
+          <div>• Payment processors and gateways</div>
+          <div>• Acquiring and issuing banks</div>
+          <div>• Service providers with access to CHD</div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">CHD = Cardholder Data</div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">Sanciones por incumplimiento</div>
-          <div>Multas: <strong>USD 5.000 – USD 100.000/mes</strong> por entidad</div>
-          <div style="margin-top:.3rem">Pérdida de capacidad de procesar tarjetas</div>
-          <div style="margin-top:.3rem">Responsabilidad por fraudes y chargebacks</div>
-          <div style="margin-top:.3rem">Costos forenses en caso de brecha: <strong>USD 10K–500K+</strong></div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Validación: SAQ (autoeval.) o QSA (auditor externo) según nivel</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">Non-compliance penalties</div>
+          <div>Fines: <strong>USD 5,000 – USD 100,000/month</strong> per entity</div>
+          <div style="margin-top:.3rem">Loss of ability to process cards</div>
+          <div style="margin-top:.3rem">Liability for fraud and chargebacks</div>
+          <div style="margin-top:.3rem">Forensic costs in the event of a breach: <strong>USD 10K–500K+</strong></div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Validation: SAQ (self-assessment) or QSA (external auditor) depending on level</div>
         </div>
       </div>
       <div style="background:#e8f5e9;border-radius:8px;padding:.6rem 1rem;font-size:.82rem">
-        <div style="font-weight:700;color:#1b5e20;margin-bottom:.3rem">Score PCI DSS: <span id="pcidss-score-txt" style="color:var(--rojo)">-</span></div>
+        <div style="font-weight:700;color:#1b5e20;margin-bottom:.3rem">PCI DSS Score: <span id="pcidss-score-txt" style="color:var(--rojo)">-</span></div>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
           <span>OK: <strong id="pcidss-ok">0</strong></span>
-          <span>Proceso: <strong id="pcidss-prog">0</strong></span>
-          <span>Pendiente: <strong id="pcidss-pend">0</strong></span>
+          <span>In progress: <strong id="pcidss-prog">0</strong></span>
+          <span>Pending: <strong id="pcidss-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>Meta 1 — Construir y mantener una red y sistemas seguros (Req. 1-2)</h3><div id="pcidss-m1"></div></div>
-    <div class="card"><h3>Meta 2 — Proteger los datos del titular de la tarjeta (Req. 3-4)</h3><div id="pcidss-m2"></div></div>
-    <div class="card"><h3>Meta 3 — Mantener un programa de gestión de vulnerabilidades (Req. 5-6)</h3><div id="pcidss-m3"></div></div>
-    <div class="card"><h3>Meta 4 — Implementar medidas sólidas de control de acceso (Req. 7-9)</h3><div id="pcidss-m4"></div></div>
-    <div class="card"><h3>Meta 5 — Supervisar y probar regularmente las redes (Req. 10-11)</h3><div id="pcidss-m5"></div></div>
-    <div class="card"><h3>Meta 6 — Mantener una política de seguridad de la información (Req. 12)</h3><div id="pcidss-m6"></div></div>
-    <div class="card"><h3>Niveles de cumplimiento PCI DSS</h3><div id="pcidss-niveles"></div></div>
+    <div class="card"><h3>Goal 1 — Build and maintain a secure network and systems (Req. 1-2)</h3><div id="pcidss-m1"></div></div>
+    <div class="card"><h3>Goal 2 — Protect cardholder data (Req. 3-4)</h3><div id="pcidss-m2"></div></div>
+    <div class="card"><h3>Goal 3 — Maintain a vulnerability management program (Req. 5-6)</h3><div id="pcidss-m3"></div></div>
+    <div class="card"><h3>Goal 4 — Implement strong access control measures (Req. 7-9)</h3><div id="pcidss-m4"></div></div>
+    <div class="card"><h3>Goal 5 — Regularly monitor and test networks (Req. 10-11)</h3><div id="pcidss-m5"></div></div>
+    <div class="card"><h3>Goal 6 — Maintain an information security policy (Req. 12)</h3><div id="pcidss-m6"></div></div>
+    <div class="card"><h3>PCI DSS compliance levels</h3><div id="pcidss-niveles"></div></div>
   </div>
 </div>
 
@@ -1398,44 +1398,44 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card" style="border-top-color:#1565c0">
       <h2>⚡ DORA — Digital Operational Resilience Act</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">
-        Reglamento (UE) 2022/2554. Vigente desde <strong>17 enero 2025</strong>. Aplica a entidades financieras en la UE y sus proveedores críticos de TIC. Objetivo: garantizar resiliencia operativa digital del sector financiero frente a incidentes de TIC.
+        Regulation (EU) 2022/2554. In effect since <strong>January 17, 2025</strong>. Applies to financial entities in the EU and their critical ICT providers. Objective: to ensure the digital operational resilience of the financial sector against ICT incidents.
       </p>
       <div class="grid2" style="margin-bottom:.8rem">
         <div style="background:#e3f2fd;border-radius:10px;padding:1rem">
-          <div style="font-weight:700;color:#1565c0;margin-bottom:.4rem;font-size:.85rem">🏦 Entidades financieras obligadas</div>
+          <div style="font-weight:700;color:#1565c0;margin-bottom:.4rem;font-size:.85rem">🏦 Financial entities subject to DORA</div>
           <div style="font-size:.81rem;display:grid;gap:.2rem">
-            <div>• Bancos y entidades de crédito</div>
-            <div>• Empresas de inversión</div>
-            <div>• Aseguradoras y reaseguradoras</div>
-            <div>• Fondos de inversión (UCITS, AIFM)</div>
-            <div>• Proveedores de servicios de criptoactivos</div>
-            <div>• Plataformas de negociacion</div>
-            <div>• Proveedores criticos de TIC (terceros)</div>
+            <div>• Banks and credit institutions</div>
+            <div>• Investment firms</div>
+            <div>• Insurers and reinsurers</div>
+            <div>• Investment funds (UCITS, AIFM)</div>
+            <div>• Crypto-asset service providers</div>
+            <div>• Trading platforms</div>
+            <div>• Critical ICT third-party providers</div>
           </div>
         </div>
         <div style="background:#fdecea;border-radius:10px;padding:1rem;font-size:.82rem">
-          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">Sanciones DORA</div>
-          <div>Entidades financieras: hasta <strong>1% facturacion diaria</strong> global (max. 6 meses)</div>
-          <div style="margin-top:.3rem">Proveedores TIC criticos: hasta <strong>EUR 5M</strong> o 1% facturacion global diaria</div>
-          <div style="margin-top:.3rem">Personas fisicas responsables: hasta <strong>EUR 1M</strong></div>
-          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Autoridades: EBA, ESMA, EIOPA + autoridades nacionales</div>
+          <div style="font-weight:700;color:var(--rojo);margin-bottom:.4rem">DORA sanctions</div>
+          <div>Financial entities: up to <strong>1% of average daily global turnover</strong> (max. 6 months)</div>
+          <div style="margin-top:.3rem">Critical ICT providers: up to <strong>EUR 5M</strong> or 1% of average daily global turnover</div>
+          <div style="margin-top:.3rem">Responsible individuals: up to <strong>EUR 1M</strong></div>
+          <div style="margin-top:.4rem;font-size:.76rem;color:var(--muted)">Authorities: EBA, ESMA, EIOPA + national authorities</div>
         </div>
       </div>
       <div style="background:#e8f5e9;border-radius:8px;padding:.6rem 1rem;font-size:.82rem">
-        <div style="font-weight:700;color:#1b5e20;margin-bottom:.3rem">Score DORA: <span id="dora-score-txt" style="color:var(--rojo)">-</span></div>
+        <div style="font-weight:700;color:#1b5e20;margin-bottom:.3rem">DORA Score: <span id="dora-score-txt" style="color:var(--rojo)">-</span></div>
         <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
           <span>OK: <strong id="dora-ok">0</strong></span>
-          <span>Proceso: <strong id="dora-prog">0</strong></span>
-          <span>Pendiente: <strong id="dora-pend">0</strong></span>
+          <span>In progress: <strong id="dora-prog">0</strong></span>
+          <span>Pending: <strong id="dora-pend">0</strong></span>
         </div>
       </div>
     </div>
-    <div class="card"><h3>Pilar 1 - Gestion de Riesgos TIC (Arts. 5-16)</h3><div id="dora-p1"></div></div>
-    <div class="card"><h3>Pilar 2 - Gestion y Notificacion de Incidentes TIC (Arts. 17-23)</h3><div id="dora-p2"></div></div>
-    <div class="card"><h3>Pilar 3 - Pruebas de Resiliencia Operativa Digital (Arts. 24-27)</h3><div id="dora-p3"></div></div>
-    <div class="card"><h3>Pilar 4 - Riesgo de Terceros Proveedores TIC (Arts. 28-44)</h3><div id="dora-p4"></div></div>
-    <div class="card"><h3>Pilar 5 - Intercambio de Informacion (Art. 45)</h3><div id="dora-p5"></div></div>
-    <div class="card"><h3>DORA vs NIS2 vs ISO 27001 - Mapeado</h3><div id="dora-mapping"></div></div>
+    <div class="card"><h3>Pillar 1 - ICT Risk Management (Arts. 5-16)</h3><div id="dora-p1"></div></div>
+    <div class="card"><h3>Pillar 2 - ICT Incident Management and Reporting (Arts. 17-23)</h3><div id="dora-p2"></div></div>
+    <div class="card"><h3>Pillar 3 - Digital Operational Resilience Testing (Arts. 24-27)</h3><div id="dora-p3"></div></div>
+    <div class="card"><h3>Pillar 4 - ICT Third-Party Risk (Arts. 28-44)</h3><div id="dora-p4"></div></div>
+    <div class="card"><h3>Pillar 5 - Information Sharing (Art. 45)</h3><div id="dora-p5"></div></div>
+    <div class="card"><h3>DORA vs NIS2 vs ISO 27001 - Mapping</h3><div id="dora-mapping"></div></div>
   </div>
 </div>
 
@@ -1443,22 +1443,22 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 <div class="panel" id="panel-planaccion">
   <div class="wrap">
     <div class="card">
-      <h2>Plan de Accion - Controles Pendientes</h2>
+      <h2>Action Plan - Pending Controls</h2>
       <p style="color:var(--muted);font-size:.87rem;margin-bottom:.8rem">
-        Controles pendientes del Cross-Framework Mapping organizados por prioridad, con responsable sugerido y plazo estimado. Exportable a CSV.
+        Pending controls from the Cross-Framework Mapping organized by priority, with a suggested owner and estimated timeline. Exportable to CSV.
       </p>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem">
-        <button onclick="filtrarPlan('todo')" id="plan-f-todo" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#1a3a5c;color:#fff">Todos</button>
-        <button onclick="filtrarPlan('alta')" id="plan-f-alta" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#c62828;color:#fff">Alta prioridad</button>
-        <button onclick="filtrarPlan('media')" id="plan-f-media" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#e65100;color:#fff">Media prioridad</button>
-        <button onclick="filtrarPlan('baja')" id="plan-f-baja" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#2e7d32;color:#fff">Baja prioridad</button>
-        <button onclick="exportarPlanCSV()" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#37474f;color:#fff;margin-left:auto">Exportar CSV</button>
+        <button onclick="filtrarPlan('todo')" id="plan-f-todo" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#1a3a5c;color:#fff">All</button>
+        <button onclick="filtrarPlan('alta')" id="plan-f-alta" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#c62828;color:#fff">High priority</button>
+        <button onclick="filtrarPlan('media')" id="plan-f-media" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#e65100;color:#fff">Medium priority</button>
+        <button onclick="filtrarPlan('baja')" id="plan-f-baja" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#2e7d32;color:#fff">Low priority</button>
+        <button onclick="exportarPlanCSV()" style="font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:5px;border:none;cursor:pointer;background:#37474f;color:#fff;margin-left:auto">Export CSV</button>
       </div>
       <div style="background:#e8f5e9;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:.8rem">
-        <span>Total pendientes: <strong id="plan-total">0</strong></span>
-        <span>Alta: <strong id="plan-alta-cnt">0</strong></span>
-        <span>Media: <strong id="plan-media-cnt">0</strong></span>
-        <span>Baja: <strong id="plan-baja-cnt">0</strong></span>
+        <span>Total pending: <strong id="plan-total">0</strong></span>
+        <span>High: <strong id="plan-alta-cnt">0</strong></span>
+        <span>Medium: <strong id="plan-media-cnt">0</strong></span>
+        <span>Low: <strong id="plan-baja-cnt">0</strong></span>
       </div>
     </div>
     <div id="plan-accion-lista"></div>
@@ -1471,13 +1471,13 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <div class="card">
       <h2>🌱 ESG — Environmental, Social &amp; Governance</h2>
       <p style="color:var(--texto-sec);font-size:.87rem;margin-bottom:1rem">
-        Módulo básico de seguimiento ESG. Tres dimensiones: Ambiental (emisiones GEI), Social (diversidad de directorio) y Gobernanza (canal de denuncias). Referencia: GRI 2021 + SASB.
+        Basic ESG tracking module. Three dimensions: Environmental (GHG emissions), Social (board diversity), and Governance (whistleblower channel). Reference: GRI 2021 + SASB.
       </p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem">
         <div style="flex:1;min-width:160px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.4rem">🌍</div>
           <div id="esg-e-score" style="font-size:2rem;font-weight:800;color:#16a34a">—</div>
-          <div style="font-size:.78rem;color:#166534">Ambiental</div>
+          <div style="font-size:.78rem;color:#166534">Environmental</div>
         </div>
         <div style="flex:1;min-width:160px;background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.4rem">🤝</div>
@@ -1487,73 +1487,73 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
         <div style="flex:1;min-width:160px;background:#fdf4ff;border:1px solid #d8b4fe;border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.4rem">🏛️</div>
           <div id="esg-g-score" style="font-size:2rem;font-weight:800;color:#7c3aed">—</div>
-          <div style="font-size:.78rem;color:#4c1d95">Gobernanza</div>
+          <div style="font-size:.78rem;color:#4c1d95">Governance</div>
         </div>
         <div style="flex:1;min-width:160px;background:var(--fondo);border:2px solid var(--sec);border-radius:10px;padding:1rem;text-align:center">
           <div style="font-size:1.4rem">⭐</div>
           <div id="esg-total" style="font-size:2rem;font-weight:800;color:var(--sec)">—</div>
-          <div style="font-size:.78rem;color:var(--texto-sec)">Score ESG total</div>
+          <div style="font-size:.78rem;color:var(--texto-sec)">Total ESG Score</div>
         </div>
       </div>
-      <h3 style="color:#166534;margin-bottom:.8rem">🌍 E — Ambiental (Emisiones GEI)</h3>
+      <h3 style="color:#166534;margin-bottom:.8rem">🌍 E — Environmental (GHG Emissions)</h3>
       <table style="width:100%;border-collapse:collapse;font-size:.83rem;margin-bottom:1.2rem">
         <thead><tr style="background:#f0fdf4">
-          <th style="padding:.5rem .7rem;text-align:left;color:#166534">Alcance</th>
-          <th style="padding:.5rem .7rem;text-align:left;color:#166534">Descripción (GRI 305)</th>
+          <th style="padding:.5rem .7rem;text-align:left;color:#166534">Scope</th>
+          <th style="padding:.5rem .7rem;text-align:left;color:#166534">Description (GRI 305)</th>
           <th style="padding:.5rem .7rem;text-align:right;color:#166534">tCO₂e</th>
-          <th style="padding:.5rem .7rem;text-align:left;color:#166534">Estado</th>
+          <th style="padding:.5rem .7rem;text-align:left;color:#166534">Status</th>
         </tr></thead>
         <tbody>
-          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);font-weight:600">Alcance 1</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Emisiones directas (combustión propia, flotilla)</td><td style="padding:.45rem;border-bottom:1px solid var(--borde);text-align:right"><input type="number" id="e-alc1" min="0" placeholder="0" style="width:80px;text-align:right;border:1px solid var(--borde);border-radius:4px;padding:.2rem .4rem;font-size:.83rem" oninput="esgRecalc()"></td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)"><span id="e-alc1-st">—</span></td></tr>
-          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);font-weight:600">Alcance 2</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Emisiones indirectas (electricidad comprada)</td><td style="padding:.45rem;border-bottom:1px solid var(--borde);text-align:right"><input type="number" id="e-alc2" min="0" placeholder="0" style="width:80px;text-align:right;border:1px solid var(--borde);border-radius:4px;padding:.2rem .4rem;font-size:.83rem" oninput="esgRecalc()"></td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)"><span id="e-alc2-st">—</span></td></tr>
-          <tr><td style="padding:.45rem .7rem;font-weight:600">Alcance 3</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Otras emisiones indirectas (cadena de valor, viajes)</td><td style="padding:.45rem;text-align:right"><input type="number" id="e-alc3" min="0" placeholder="0" style="width:80px;text-align:right;border:1px solid var(--borde);border-radius:4px;padding:.2rem .4rem;font-size:.83rem" oninput="esgRecalc()"></td><td style="padding:.45rem .7rem"><span id="e-alc3-st">—</span></td></tr>
+          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);font-weight:600">Scope 1</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Direct emissions (own combustion, fleet)</td><td style="padding:.45rem;border-bottom:1px solid var(--borde);text-align:right"><input type="number" id="e-alc1" min="0" placeholder="0" style="width:80px;text-align:right;border:1px solid var(--borde);border-radius:4px;padding:.2rem .4rem;font-size:.83rem" oninput="esgRecalc()"></td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)"><span id="e-alc1-st">—</span></td></tr>
+          <tr><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);font-weight:600">Scope 2</td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde);color:var(--texto-sec)">Indirect emissions (purchased electricity)</td><td style="padding:.45rem;border-bottom:1px solid var(--borde);text-align:right"><input type="number" id="e-alc2" min="0" placeholder="0" style="width:80px;text-align:right;border:1px solid var(--borde);border-radius:4px;padding:.2rem .4rem;font-size:.83rem" oninput="esgRecalc()"></td><td style="padding:.45rem .7rem;border-bottom:1px solid var(--borde)"><span id="e-alc2-st">—</span></td></tr>
+          <tr><td style="padding:.45rem .7rem;font-weight:600">Scope 3</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Other indirect emissions (value chain, travel)</td><td style="padding:.45rem;text-align:right"><input type="number" id="e-alc3" min="0" placeholder="0" style="width:80px;text-align:right;border:1px solid var(--borde);border-radius:4px;padding:.2rem .4rem;font-size:.83rem" oninput="esgRecalc()"></td><td style="padding:.45rem .7rem"><span id="e-alc3-st">—</span></td></tr>
         </tbody>
       </table>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
         <div style="flex:1;min-width:200px">
-          <label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">¿Tiene plan de reducción de emisiones?</label>
-          <select id="e-plan" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No</option><option value="1">En elaboración</option><option value="2">Aprobado y publicado</option></select>
+          <label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Does it have an emissions reduction plan?</label>
+          <select id="e-plan" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No</option><option value="1">In progress</option><option value="2">Approved and published</option></select>
         </div>
         <div style="flex:1;min-width:200px">
-          <label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">¿Reporta según GRI / TCFD?</label>
-          <select id="e-reporte" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No reporta</option><option value="1">Reporte interno</option><option value="2">Reporte público (GRI/TCFD)</option></select>
+          <label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Does it report according to GRI / TCFD?</label>
+          <select id="e-reporte" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">Does not report</option><option value="1">Internal report</option><option value="2">Public report (GRI/TCFD)</option></select>
         </div>
       </div>
-      <h3 style="color:#1e3a8a;margin:1.2rem 0 .8rem">🤝 S — Social (Diversidad &amp; Equidad)</h3>
+      <h3 style="color:#1e3a8a;margin:1.2rem 0 .8rem">🤝 S — Social (Diversity &amp; Equity)</h3>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem">
-        <div style="flex:1;min-width:180px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">% mujeres en directorio (GRI 405-1)</label><input type="number" id="s-mujeres-dir" min="0" max="100" placeholder="%" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
-        <div style="flex:1;min-width:180px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">% mujeres en gerencia media</label><input type="number" id="s-mujeres-ger" min="0" max="100" placeholder="%" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
-        <div style="flex:1;min-width:180px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Brecha salarial género (%) — 0% = ideal</label><input type="number" id="s-brecha" min="0" max="100" placeholder="%" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
+        <div style="flex:1;min-width:180px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">% women on the board (GRI 405-1)</label><input type="number" id="s-mujeres-dir" min="0" max="100" placeholder="%" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
+        <div style="flex:1;min-width:180px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">% women in middle management</label><input type="number" id="s-mujeres-ger" min="0" max="100" placeholder="%" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
+        <div style="flex:1;min-width:180px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Gender pay gap (%) — 0% = ideal</label><input type="number" id="s-brecha" min="0" max="100" placeholder="%" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
-        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">¿Tiene política DEI (Diversidad, Equidad, Inclusión)?</label><select id="s-dei" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No</option><option value="1">En elaboración</option><option value="2">Publicada y activa</option></select></div>
-        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">¿Auditoría salarial realizada?</label><select id="s-audit" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No</option><option value="1">En proceso</option><option value="2">Realizada y publicada</option></select></div>
+        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Does it have a DEI (Diversity, Equity, Inclusion) policy?</label><select id="s-dei" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No</option><option value="1">In progress</option><option value="2">Published and active</option></select></div>
+        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Has a pay audit been conducted?</label><select id="s-audit" onchange="esgRecalc()" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem"><option value="0">No</option><option value="1">In progress</option><option value="2">Conducted and published</option></select></div>
       </div>
-      <h3 style="color:#4c1d95;margin:1.2rem 0 .8rem">🏛️ G — Gobernanza</h3>
+      <h3 style="color:#4c1d95;margin:1.2rem 0 .8rem">🏛️ G — Governance</h3>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.7rem;margin-bottom:1rem">
-        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-canal" onchange="esgRecalc()"> Canal de denuncias anónimo operativo</label>
-        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-codigo" onchange="esgRecalc()"> Código de ética publicado y firmado</label>
-        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-directorio" onchange="esgRecalc()"> Directorio con miembros independientes</label>
-        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-auditoria" onchange="esgRecalc()"> Auditoría interna / comité de auditoría</label>
-        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-anticorr" onchange="esgRecalc()"> Política anticorrupción (Ley 27.401 / Lei 12.846)</label>
-        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-esg-report" onchange="esgRecalc()"> Reporte ESG publicado anualmente</label>
+        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-canal" onchange="esgRecalc()"> Operational anonymous whistleblower channel</label>
+        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-codigo" onchange="esgRecalc()"> Code of ethics published and signed</label>
+        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-directorio" onchange="esgRecalc()"> Board with independent members</label>
+        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-auditoria" onchange="esgRecalc()"> Internal audit / audit committee</label>
+        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-anticorr" onchange="esgRecalc()"> Anti-corruption policy (Ley 27.401 / Lei 12.846)</label>
+        <label style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;cursor:pointer"><input type="checkbox" id="g-esg-report" onchange="esgRecalc()"> ESG report published annually</label>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Denuncias recibidas (últimos 12 meses)</label><input type="number" id="g-denuncias" min="0" value="0" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
-        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Denuncias resueltas / cerradas</label><input type="number" id="g-resueltas" min="0" value="0" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
+        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Complaints received (last 12 months)</label><input type="number" id="g-denuncias" min="0" value="0" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
+        <div style="flex:1;min-width:200px"><label style="font-size:.8rem;color:var(--texto-sec);display:block;margin-bottom:.3rem">Complaints resolved / closed</label><input type="number" id="g-resueltas" min="0" value="0" style="width:100%;border:1px solid var(--borde);border-radius:6px;padding:.35rem .6rem;font-size:.83rem" oninput="esgRecalc()"></div>
       </div>
       <div id="g-ratio-box" style="display:none;margin-top:.8rem;background:var(--fondo);border-radius:8px;padding:.7rem 1rem;font-size:.84rem">
-        Ratio resolución: <strong id="g-ratio-val">—</strong> — <span id="g-ratio-msg"></span>
+        Resolution ratio: <strong id="g-ratio-val">—</strong> — <span id="g-ratio-msg"></span>
       </div>
-      <h3 style="margin-top:1.5rem;color:var(--pri)">📐 Marcos normativos de referencia</h3>
+      <h3 style="margin-top:1.5rem;color:var(--pri)">📐 Reference frameworks</h3>
       <table style="width:100%;border-collapse:collapse;font-size:.82rem">
-        <thead><tr style="background:var(--fondo)"><th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Estándar</th><th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Dimensión</th><th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Uso principal</th></tr></thead>
+        <thead><tr style="background:var(--fondo)"><th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Standard</th><th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Dimension</th><th style="padding:.5rem .7rem;text-align:left;color:var(--pri)">Main use</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">GRI 2021</td><td style="padding:.45rem .7rem">E+S+G</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Reporte de materialidad y divulgación universal</td></tr>
-          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">TCFD</td><td style="padding:.45rem .7rem">E</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Divulgación de riesgos climáticos para inversores</td></tr>
-          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">SASB</td><td style="padding:.45rem .7rem">E+S</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Métricas por industria, comparables entre pares</td></tr>
-          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">ODS / SDG ONU</td><td style="padding:.45rem .7rem">E+S+G</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Alineación con objetivos de desarrollo sostenible</td></tr>
-          <tr><td style="padding:.45rem .7rem">CNV Res. 896/2021</td><td style="padding:.45rem .7rem">G</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Gobierno corporativo para empresas que cotizan en Argentina</td></tr>
+          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">GRI 2021</td><td style="padding:.45rem .7rem">E+S+G</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Materiality reporting and universal disclosure</td></tr>
+          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">TCFD</td><td style="padding:.45rem .7rem">E</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Climate risk disclosure for investors</td></tr>
+          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">SASB</td><td style="padding:.45rem .7rem">E+S</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Industry metrics, comparable among peers</td></tr>
+          <tr style="border-bottom:1px solid var(--borde)"><td style="padding:.45rem .7rem">SDGs / UN SDG</td><td style="padding:.45rem .7rem">E+S+G</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Alignment with sustainable development goals</td></tr>
+          <tr><td style="padding:.45rem .7rem">CNV Res. 896/2021</td><td style="padding:.45rem .7rem">G</td><td style="padding:.45rem .7rem;color:var(--texto-sec)">Corporate governance for publicly listed companies in Argentina</td></tr>
         </tbody>
       </table>
     </div>
@@ -1627,121 +1627,121 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 
     <!-- OCDE Lineamientos para Empresas Multinacionales -->
     <div class="card" style="border-top-color:#0d47a1">
-      <h2>🌐 Lineamientos OCDE para Empresas Multinacionales — Edición 2023</h2>
+      <h2>🌐 OECD Guidelines for Multinational Enterprises — 2023 Edition</h2>
       <p style="color:var(--muted);font-size:.85rem;margin-bottom:.9rem">
-        Recomendaciones de los gobiernos adherentes (50 países, incluida Argentina desde 1997) a las empresas multinacionales para una conducta empresarial responsable. Actualizados en junio 2023. No son vinculantes para las empresas, pero sí para los gobiernos signatarios. El incumplimiento puede afectar reputación, acceso a mercados y relación con inversores ESG.
+        Recommendations from adhering governments (50 countries, including Argentina since 1997) to multinational enterprises for responsible business conduct. Updated in June 2023. They are not binding on companies, but are binding on signatory governments. Non-compliance can affect reputation, market access, and relationships with ESG investors.
       </p>
       <div style="background:#e3f2fd;border-radius:8px;padding:.7rem 1rem;font-size:.82rem;margin-bottom:.8rem">
-        <strong>🇦🇷 Argentina y los Lineamientos OCDE:</strong> Argentina adhirió a la Declaración en 1997 y dispone de un <strong>Punto de Contacto Nacional (PCN)</strong> en el Ministerio de Relaciones Exteriores para recibir denuncias por incumplimiento de las directrices.
+        <strong>🇦🇷 Argentina and the OECD Guidelines:</strong> Argentina adhered to the Declaration in 1997 and has a <strong>National Contact Point (NCP)</strong> at the Ministry of Foreign Affairs to receive complaints of non-compliance with the guidelines.
       </div>
 
       <!-- Los 11 capítulos -->
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.6rem;margin-bottom:1rem">
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #1565c0">
-          <div style="font-weight:700;font-size:.84rem;color:#1565c0;margin-bottom:.3rem">I. Políticas generales</div>
-          <div style="font-size:.78rem;color:var(--muted)">Contribución al desarrollo sostenible, derechos humanos, cadena de suministro, debida diligencia.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#1565c0;margin-bottom:.3rem">I. General policies</div>
+          <div style="font-size:.78rem;color:var(--muted)">Contribution to sustainable development, human rights, supply chain, due diligence.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #1565c0">
-          <div style="font-weight:700;font-size:.84rem;color:#1565c0;margin-bottom:.3rem">II. Divulgación de información</div>
-          <div style="font-size:.78rem;color:var(--muted)">Reportes financieros y no financieros, gobernanza, estructura, riesgos, impacto ESG.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#1565c0;margin-bottom:.3rem">II. Disclosure</div>
+          <div style="font-size:.78rem;color:var(--muted)">Financial and non-financial reports, governance, structure, risks, ESG impact.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #c62828">
-          <div style="font-weight:700;font-size:.84rem;color:#c62828;margin-bottom:.3rem">III. Derechos humanos</div>
-          <div style="font-size:.78rem;color:var(--muted)">Debida diligencia en DDHH, prevenir impactos adversos, remediación efectiva. Alineado con UNGP.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#c62828;margin-bottom:.3rem">III. Human rights</div>
+          <div style="font-size:.78rem;color:var(--muted)">Human rights due diligence, preventing adverse impacts, effective remediation. Aligned with the UNGPs.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #e65100">
-          <div style="font-weight:700;font-size:.84rem;color:#e65100;margin-bottom:.3rem">IV. Empleo y relaciones laborales</div>
-          <div style="font-size:.78rem;color:var(--muted)">Derechos sindicales, trabajo infantil, trabajo forzoso, salud y seguridad, capacitación.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#e65100;margin-bottom:.3rem">IV. Employment and industrial relations</div>
+          <div style="font-size:.78rem;color:var(--muted)">Union rights, child labor, forced labor, health and safety, training.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #2e7d32">
-          <div style="font-weight:700;font-size:.84rem;color:#2e7d32;margin-bottom:.3rem">V. Medio ambiente</div>
-          <div style="font-size:.78rem;color:var(--muted)">Gestión ambiental, información sobre impactos, cambio climático, biodiversidad, economía circular.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#2e7d32;margin-bottom:.3rem">V. Environment</div>
+          <div style="font-size:.78rem;color:var(--muted)">Environmental management, impact disclosure, climate change, biodiversity, circular economy.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #4527a0">
-          <div style="font-weight:700;font-size:.84rem;color:#4527a0;margin-bottom:.3rem">VI. Lucha contra la corrupción</div>
-          <div style="font-size:.78rem;color:var(--muted)">Soborno activo y pasivo, extorsión, programa antisoborno, canal de denuncias, due diligence.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#4527a0;margin-bottom:.3rem">VI. Combating corruption</div>
+          <div style="font-size:.78rem;color:var(--muted)">Active and passive bribery, extortion, anti-bribery program, whistleblower channel, due diligence.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #1565c0">
-          <div style="font-weight:700;font-size:.84rem;color:#1565c0;margin-bottom:.3rem">VII. Intereses de los consumidores</div>
-          <div style="font-size:.78rem;color:var(--muted)">Publicidad leal, privacidad del consumidor, comercio electrónico seguro, servicio post-venta.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#1565c0;margin-bottom:.3rem">VII. Consumer interests</div>
+          <div style="font-size:.78rem;color:var(--muted)">Fair advertising, consumer privacy, secure e-commerce, after-sales service.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #00695c">
-          <div style="font-weight:700;font-size:.84rem;color:#00695c;margin-bottom:.3rem">VIII. Ciencia y tecnología</div>
-          <div style="font-size:.78rem;color:var(--muted)">Transferencia de tecnología, I+D local, ciberseguridad responsable, IA ética.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#00695c;margin-bottom:.3rem">VIII. Science and technology</div>
+          <div style="font-size:.78rem;color:var(--muted)">Technology transfer, local R&D, responsible cybersecurity, ethical AI.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #bf360c">
-          <div style="font-weight:700;font-size:.84rem;color:#bf360c;margin-bottom:.3rem">IX. Competencia</div>
-          <div style="font-size:.78km;color:var(--muted)">Prácticas anticompetitivas, carteles, abuso de posición dominante.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#bf360c;margin-bottom:.3rem">IX. Competition</div>
+          <div style="font-size:.78km;color:var(--muted)">Anticompetitive practices, cartels, abuse of dominant position.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #37474f">
-          <div style="font-weight:700;font-size:.84rem;color:#37474f;margin-bottom:.3rem">X. Fiscalidad</div>
-          <div style="font-size:.78rem;color:var(--muted)">Cumplimiento fiscal, precios de transferencia, transparencia, BEPS, responsabilidad corporativa.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#37474f;margin-bottom:.3rem">X. Taxation</div>
+          <div style="font-size:.78rem;color:var(--muted)">Tax compliance, transfer pricing, transparency, BEPS, corporate responsibility.</div>
         </div>
         <div style="background:#f8fafc;border-radius:8px;padding:.7rem;border-left:3px solid #1a237e">
-          <div style="font-weight:700;font-size:.84rem;color:#1a237e;margin-bottom:.3rem">XI. Gestión responsable de cadenas de suministro (2023 ★)</div>
-          <div style="font-size:.78rem;color:var(--muted)">Nuevo capítulo 2023: debida diligencia en toda la cadena de valor — DDHH, trabajo, medio ambiente, anticorrupción.</div>
+          <div style="font-weight:700;font-size:.84rem;color:#1a237e;margin-bottom:.3rem">XI. Responsible supply chain management (2023 ★)</div>
+          <div style="font-size:.78rem;color:var(--muted)">New chapter 2023: due diligence across the entire value chain — human rights, labor, environment, anti-corruption.</div>
         </div>
       </div>
 
       <!-- Experiencia sector empresarial -->
       <div style="background:#ede7f6;border-radius:10px;padding:1rem;margin-bottom:.8rem">
-        <h3 style="color:#4527a0;font-size:.95rem;margin-bottom:.6rem">🏢 La experiencia del sector empresarial en la aplicación de los Lineamientos</h3>
-        <p style="font-size:.82rem;color:var(--texto);margin-bottom:.5rem">Las empresas que han adoptado los Lineamientos OCDE como marco de referencia reportan consistentemente tres áreas de aprendizaje:</p>
+        <h3 style="color:#4527a0;font-size:.95rem;margin-bottom:.6rem">🏢 Business sector experience applying the Guidelines</h3>
+        <p style="font-size:.82rem;color:var(--texto);margin-bottom:.5rem">Companies that have adopted the OECD Guidelines as a reference framework consistently report three areas of learning:</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;font-size:.81rem">
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #7e57c2">
-            <strong style="color:#4527a0">Debida diligencia integrada</strong><br>
-            <span style="color:var(--muted)">Las empresas líderes integran la DDHD (Debida Diligencia en DDHH) al sistema de gestión de riesgos existente en lugar de crear un proceso paralelo. Vinculan directamente con ISO 37001 y marcos anticorrupción.</span>
+            <strong style="color:#4527a0">Integrated due diligence</strong><br>
+            <span style="color:var(--muted)">Leading companies integrate HRDD (Human Rights Due Diligence) into their existing risk management system rather than creating a parallel process. They link directly with ISO 37001 and anti-corruption frameworks.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #7e57c2">
-            <strong style="color:#4527a0">Cadena de suministro como oportunidad</strong><br>
-            <span style="color:var(--muted)">El Capítulo XI 2023 convirtió la gestión de proveedores en una exigencia explícita. Las empresas que ya tenían due diligence de terceros (ISO 37001, NIS2) se adaptaron más rápido y con menor costo.</span>
+            <strong style="color:#4527a0">Supply chain as an opportunity</strong><br>
+            <span style="color:var(--muted)">Chapter XI 2023 turned supplier management into an explicit requirement. Companies that already had third-party due diligence (ISO 37001, NIS2) adapted faster and at a lower cost.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #7e57c2">
-            <strong style="color:#4527a0">PCN como mecanismo de alerta temprana</strong><br>
-            <span style="color:var(--muted)">Los Puntos de Contacto Nacionales recibieron 60+ casos activos en 2023 (OCDE). Las empresas con programas de compliance sólidos resolvieron casos en etapa de mediación, evitando publicidad negativa.</span>
+            <strong style="color:#4527a0">NCP as an early-warning mechanism</strong><br>
+            <span style="color:var(--muted)">National Contact Points received 60+ active cases in 2023 (OECD). Companies with solid compliance programs resolved cases at the mediation stage, avoiding negative publicity.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #7e57c2">
-            <strong style="color:#4527a0">Reporte no financiero como herramienta de gestión</strong><br>
-            <span style="color:var(--muted)">El Capítulo II exige divulgación de impactos ESG. Las empresas que usan GRI, SASB o CSRD como base para el reporte cumplen simultáneamente con los requisitos de divulgación OCDE y con expectativas de inversores ESG.</span>
+            <strong style="color:#4527a0">Non-financial reporting as a management tool</strong><br>
+            <span style="color:var(--muted)">Chapter II requires disclosure of ESG impacts. Companies that use GRI, SASB, or CSRD as a reporting basis simultaneously meet OECD disclosure requirements and ESG investor expectations.</span>
           </div>
         </div>
       </div>
 
       <!-- Beneficios competitivos -->
       <div style="background:#e8f5e9;border-radius:10px;padding:1rem;margin-bottom:.8rem">
-        <h3 style="color:#1b5e20;font-size:.95rem;margin-bottom:.6rem">🏆 Aplicación de los Lineamientos OCDE: beneficios y ventajas competitivas</h3>
+        <h3 style="color:#1b5e20;font-size:.95rem;margin-bottom:.6rem">🏆 Applying the OECD Guidelines: benefits and competitive advantages</h3>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;font-size:.81rem">
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #43a047">
-            <strong style="color:#1b5e20">✅ Acceso a capital e inversión ESG</strong><br>
-            <span style="color:var(--muted)">Fondos ESG gestionan más de USD 35T en activos (2023). La alineación con OCDE es criterio de screening positivo para inversores institucionales y fondos de pensión europeos.</span>
+            <strong style="color:#1b5e20">✅ Access to capital and ESG investment</strong><br>
+            <span style="color:var(--muted)">ESG funds manage more than USD 35T in assets (2023). Alignment with the OECD is a positive screening criterion for institutional investors and European pension funds.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #43a047">
-            <strong style="color:#1b5e20">✅ Diferencial en licitaciones internacionales</strong><br>
-            <span style="color:var(--muted)">Organismos multilaterales (BID, CAF, Banco Mundial) y compras públicas europeas exigen cada vez más evidencia de due diligence en DDHH y anticorrupción alineado con estándares OCDE.</span>
+            <strong style="color:#1b5e20">✅ Edge in international tenders</strong><br>
+            <span style="color:var(--muted)">Multilateral organizations (IDB, CAF, World Bank) and European public procurement increasingly demand evidence of human rights and anti-corruption due diligence aligned with OECD standards.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #43a047">
-            <strong style="color:#1b5e20">✅ Reducción de riesgo reputacional</strong><br>
-            <span style="color:var(--muted)">El 73% de los ejecutivos de Fortune 500 identifican el riesgo reputacional asociado a la cadena de suministro como uno de los tres riesgos más críticos (PwC, 2023). Los Lineamientos OCDE proveen un marco de referencia internacionalmente reconocido.</span>
+            <strong style="color:#1b5e20">✅ Reduced reputational risk</strong><br>
+            <span style="color:var(--muted)">73% of Fortune 500 executives identify supply chain reputational risk as one of the three most critical risks (PwC, 2023). The OECD Guidelines provide an internationally recognized reference framework.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #43a047">
-            <strong style="color:#1b5e20">✅ Sinergias con marcos regulatorios</strong><br>
-            <span style="color:var(--muted)">Quien cumple los Lineamientos OCDE ya tiene el 60-70% de los requisitos de la Directiva CSRD europea, Ley de Debida Diligencia alemana (LkSG) y la Directiva UE de Debida Diligencia Corporativa en Sostenibilidad (CSDDD).</span>
+            <strong style="color:#1b5e20">✅ Synergies with regulatory frameworks</strong><br>
+            <span style="color:var(--muted)">Companies that comply with the OECD Guidelines already meet 60-70% of the requirements of the European CSRD Directive, the German Supply Chain Due Diligence Act (LkSG), and the EU Corporate Sustainability Due Diligence Directive (CSDDD).</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #43a047">
-            <strong style="color:#1b5e20">✅ Gestión proactiva de conflictos</strong><br>
-            <span style="color:var(--muted)">La adhesión pública a los Lineamientos y la existencia de canales de denuncia operativos reduce la probabilidad de casos ante el PCN y, si ocurren, facilita la resolución por mediación en lugar de litigios costosos.</span>
+            <strong style="color:#1b5e20">✅ Proactive conflict management</strong><br>
+            <span style="color:var(--muted)">Public adherence to the Guidelines and the existence of operational complaint channels reduces the likelihood of cases before the NCP and, if they occur, facilitates resolution through mediation instead of costly litigation.</span>
           </div>
           <div style="background:#fff;border-radius:6px;padding:.6rem;border-left:2px solid #43a047">
-            <strong style="color:#1b5e20">✅ Marco de referencia para Directorio</strong><br>
-            <span style="color:var(--muted)">Los Lineamientos proveen al Directorio y al Compliance Officer un lenguaje común internacionalmente aceptado para reportar sobre gestión de riesgos no financieros, fortaleciendo el gobierno corporativo.</span>
+            <strong style="color:#1b5e20">✅ Reference framework for the Board</strong><br>
+            <span style="color:var(--muted)">The Guidelines provide the Board and the Compliance Officer with a common, internationally accepted language for reporting on non-financial risk management, strengthening corporate governance.</span>
           </div>
         </div>
       </div>
 
       <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <a href="https://www.oecd.org/daf/inv/mne/48004323.pdf" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#1565c0;color:#fff;border-radius:6px;display:inline-block">📄 Lineamientos OCDE 2023 (PDF oficial)</a>
-        <a href="https://www.cancilleria.gob.ar/es/iniciativas/pcn" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#37474f;color:#fff;border-radius:6px;display:inline-block">🇦🇷 PCN Argentina</a>
-        <a href="https://meaci-production.up.railway.app" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#0d47a1;color:#fff;border-radius:6px;display:inline-block">🔍 Abrir MEACI →</a>
+        <a href="https://www.oecd.org/daf/inv/mne/48004323.pdf" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#1565c0;color:#fff;border-radius:6px;display:inline-block">📄 OECD Guidelines 2023 (official PDF)</a>
+        <a href="https://www.cancilleria.gob.ar/es/iniciativas/pcn" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#37474f;color:#fff;border-radius:6px;display:inline-block">🇦🇷 NCP Argentina</a>
+        <a href="https://meaci-production.up.railway.app" target="_blank" class="btn" style="font-size:.8rem;padding:.45rem .9rem;text-decoration:none;background:#0d47a1;color:#fff;border-radius:6px;display:inline-block">🔍 Open MEACI →</a>
       </div>
     </div>
 
@@ -1820,19 +1820,19 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     </div>
     <!-- Accesos directos a módulos relacionados -->
     <div class="card" style="margin-top:1rem;border-top:3px solid var(--naranja)">
-      <h2 style="margin-bottom:.8rem">⚡ Accesos rápidos</h2>
+      <h2 style="margin-bottom:.8rem">⚡ Quick access</h2>
       <div style="display:flex;gap:.6rem;flex-wrap:wrap">
         <a href="incidentes-en.html" class="btn" style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;text-decoration:none;background:#c62828">
-          🚨 Gestionar Incidentes →
+          🚨 Manage Incidents →
         </a>
         <a href="controles-en.html" class="btn" style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;text-decoration:none;background:#1565c0">
-          🛡️ Ver Controles →
+          🛡️ View Controls →
         </a>
         <a href="predictor-en.html" class="btn" style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;text-decoration:none;background:#4a148c">
-          🤖 Simulador de Score →
+          🤖 Score Simulator →
         </a>
         <a href="benchmark-en.html" class="btn" style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;text-decoration:none;background:#00695c">
-          📊 Benchmark Sectorial →
+          📊 Sector Benchmark →
         </a>
       </div>
     </div>
@@ -1880,27 +1880,27 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 
     <!-- PDF Export Bar -->
     <div class="pdf-export-bar" style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem;background:#1a3a5c;border-radius:10px;padding:.8rem 1rem">
-      <span style="color:#fff;font-size:.85rem;font-weight:700">📄 Reporte Ejecutivo de Compliance</span>
-      <span style="color:#a8c7e8;font-size:.78rem;flex:1">Generado automáticamente — apto para Oficina Anticorrupción, directorio y auditores</span>
-      <button onclick="exportarPDF()" style="background:#2196f3;color:#fff;border:none;border-radius:6px;padding:.45rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer">🖨️ Exportar PDF</button>
+      <span style="color:#fff;font-size:.85rem;font-weight:700">📄 Executive Compliance Report</span>
+      <span style="color:#a8c7e8;font-size:.78rem;flex:1">Automatically generated — suitable for the Anti-Corruption Office, the board, and auditors</span>
+      <button onclick="exportarPDF()" style="background:#2196f3;color:#fff;border:none;border-radius:6px;padding:.45rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer">🖨️ Export PDF</button>
       <button onclick="exportarPDFFrameworks()" style="background:#2e7d32;color:#fff;border:none;border-radius:6px;padding:.45rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer">🌐 PDF Frameworks</button>
     </div>
 
     <!-- Portada -->
     <div class="card" id="rep-portada" style="border-top:4px solid var(--pri);text-align:center;padding:2rem 1.5rem">
       <div style="font-size:2rem;margin-bottom:.5rem">⚖️</div>
-      <h1 style="color:var(--pri);font-size:1.4rem;margin-bottom:.3rem">Reporte Ejecutivo de Compliance</h1>
-      <div style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Programa de Integridad · Ley 27.401 · Estándares Internacionales</div>
+      <h1 style="color:var(--pri);font-size:1.4rem;margin-bottom:.3rem">Executive Compliance Report</h1>
+      <div style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Integrity Program · Ley 27.401 · International Standards</div>
       <div id="rep-portada-empresa" style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:.4rem"></div>
       <div id="rep-portada-fecha" style="font-size:.82rem;color:var(--muted)"></div>
       <div style="margin-top:1rem;padding:.6rem 1rem;background:#e3f2fd;border-radius:8px;display:inline-block">
-        <span style="font-size:.8rem;color:#1565c0">Responsable: </span><span id="rep-portada-resp" style="font-size:.8rem;font-weight:700;color:#1565c0"></span>
+        <span style="font-size:.8rem;color:#1565c0">Responsible: </span><span id="rep-portada-resp" style="font-size:.8rem;font-weight:700;color:#1565c0"></span>
       </div>
     </div>
 
     <!-- Score global -->
     <div class="card" id="rep-score-card">
-      <h2 style="color:var(--pri);margin-bottom:.8rem">📊 Score Global de Compliance</h2>
+      <h2 style="color:var(--pri);margin-bottom:.8rem">📊 Global Compliance Score</h2>
       <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
         <div style="text-align:center;min-width:100px">
           <div id="rep-score-num" style="font-size:3rem;font-weight:900;color:var(--rojo)">—</div>
@@ -1912,61 +1912,61 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
 
     <!-- Sección 1 — Organización -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">1. Datos de la organización</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">1. Organization data</h3>
       <dl id="rep-empresa"></dl>
     </div>
 
     <!-- Sección 2 — Programa -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">2. Estado del Programa de Integridad (Ley 27.401)</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">2. Status of the Integrity Program (Ley 27.401)</h3>
       <dl id="rep-programa"></dl>
     </div>
 
     <!-- Sección 3 — Score detalle -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">3. Score de compliance por eje</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">3. Compliance score by axis</h3>
       <dl id="rep-score"></dl>
     </div>
 
     <!-- Sección 4 — Pendientes -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">4. Elementos pendientes</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">4. Pending items</h3>
       <div id="rep-pend"></div>
     </div>
 
     <!-- Sección 5 — Capacitación -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">5. Capacitación</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">5. Training</h3>
       <dl id="rep-cap"></dl>
     </div>
 
     <!-- Sección 6 — RITE -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">6. Registro RITE</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">6. RITE Registration</h3>
       <dl id="rep-rite"></dl>
     </div>
 
     <!-- Sección 7 — Plan de mejora -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">7. Plan de mejora</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">7. Improvement plan</h3>
       <div id="rep-plan"></div>
     </div>
 
     <!-- Sección 8 — Frameworks -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">8. Cobertura por Framework Internacional</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">8. International Framework Coverage</h3>
       <div id="rep-frameworks"></div>
     </div>
 
     <!-- Sección 9 — Plan de Acción Multi-Framework -->
     <div class="card rep-sec">
-      <h3 style="color:var(--pri);margin-bottom:.6rem">9. Plan de Acción — Controles Prioritarios</h3>
+      <h3 style="color:var(--pri);margin-bottom:.6rem">9. Action Plan — Priority Controls</h3>
       <div id="rep-plan-accion"></div>
     </div>
 
     <!-- Disclaimer -->
     <div style="background:#f0f4f8;border-radius:8px;padding:.8rem;font-size:.76rem;color:var(--muted);margin-top:.7rem">
-      Reporte generado por el <strong>Monitor de Compliance Empresarial</strong>. No reemplaza la evaluación profesional de un abogado o compliance officer.
+      Report generated by the <strong>Corporate Compliance Monitor</strong>. It does not replace the professional assessment of a lawyer or compliance officer.
       Ph.D. Vicente H. Monteverde · <a href="https://mapatransparencia-production.up.railway.app" target="_blank">Ecosistema Transparencia</a>
     </div>
 
@@ -1979,7 +1979,7 @@ a{color:var(--sec);text-decoration:none}a:hover{text-decoration:underline}
     <iframe
       src="canal_denuncias.html"
       style="width:100%;height:calc(100vh - 108px);border:none;display:block"
-      title="Canal de Denuncias"
+      title="Whistleblower Channel"
     ></iframe>
   </div>
 </div>
